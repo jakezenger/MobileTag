@@ -41,11 +41,42 @@ namespace MobileTag
 			}
 		}
 		
+		public partial class Id
+		{
+			
+			// aapt resource value: 0x7f040004
+			public const int createAccountButton = 2130968580;
+			
+			// aapt resource value: 0x7f040001
+			public const int createAccountHeader = 2130968577;
+			
+			// aapt resource value: 0x7f040000
+			public const int linearLayout1 = 2130968576;
+			
+			// aapt resource value: 0x7f040003
+			public const int selectTeamSpinner = 2130968579;
+			
+			// aapt resource value: 0x7f040002
+			public const int usernameField = 2130968578;
+			
+			static Id()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Id()
+			{
+			}
+		}
+		
 		public partial class Layout
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int Main = 2130837504;
+			public const int CreateAccount = 2130837504;
+			
+			// aapt resource value: 0x7f020001
+			public const int Main = 2130837505;
 			
 			static Layout()
 			{
@@ -62,6 +93,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f030000
 			public const int app_name = 2130903040;
+			
+			// aapt resource value: 0x7f030001
+			public const int select_team_prompt = 2130903041;
 			
 			static String()
 			{
