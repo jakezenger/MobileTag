@@ -10,7 +10,8 @@
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout1">
+        android:id="@+id/linearLayout1"
+        android:layout_marginTop="36.5dp">
         <TextView
             android:text="Create Account"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/usernameField"
         android:hint="username"
+        android:singleLine="true"
         android:layout_marginTop="23.0dp" />
     <Spinner
         android:layout_width="278.5dp"
@@ -35,5 +37,6 @@
         android:layout_width="138.0dp"
         android:layout_height="wrap_content"
         android:id="@+id/createAccountButton"
-        android:layout_marginTop="30.0dp" />
+        android:layout_marginTop="30.0dp"
+        android:enabled="false" />
 </LinearLayout>
