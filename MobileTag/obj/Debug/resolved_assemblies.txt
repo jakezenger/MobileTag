@@ -2,6 +2,8 @@ C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\Mob
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\Java.Interop.dll
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\Mono.Android.dll
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Core.dll
+C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Data.dll
+C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Data.Services.Client.dll
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.dll
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Xml.dll
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\mscorlib.dll
@@ -19,4 +21,8 @@ C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\Sys
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Net.Http.dll
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Runtime.Serialization.dll
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.ServiceModel.Internals.dll
+C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Numerics.dll
+C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Transactions.dll
+C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\Mono.Data.Tds.dll
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\Mono.Security.dll
+C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\System.Xml.Linq.dll
