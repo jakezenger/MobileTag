@@ -40,3 +40,5 @@ C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\res\layout\main.xm
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\res\values\strings.xml
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\R.cs.flag
 C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\uploadflags.txt
+C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\bin\Debug\MobileTag.dll.mdb
+C:\Users\EthanHome\Source\Repos\MobileTag\MobileTag\obj\Debug\android\assets\MobileTag.dll.mdb
