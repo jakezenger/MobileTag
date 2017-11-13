@@ -15,9 +15,11 @@ namespace MobileTag
     [Activity(Label = "Create Account")]
     public class CreateAccountActivity : Activity
     {
-        bool validTeamSelected = false;
-        bool validUsername = false;
-        bool usernameChanged = false;
+        private bool validTeamSelected = false;
+        private bool validUsername = false;
+        private bool usernameChanged = false;
+        private bool passwordChanged = false;
+        private bool validPassword = false;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -32,11 +34,51 @@ namespace MobileTag
             ArrayAdapter adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleSpinnerDropDownItem, teams);
             selectTeam.Adapter = adapter;
 
-            // Set event handlers on username and team spinner for data validation
+            // Set event handlers on username, password, and team spinner for data validation
             selectTeam.ItemSelected += SelectTeam_ItemSelected;
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
+            EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
             usernameField.FocusChange += UsernameField_FocusChange;
             usernameField.TextChanged += UsernameField_TextChanged;
+            passwordField.FocusChange += PasswordField_FocusChange;
+            passwordField.TextChanged += PasswordField_TextChanged;
+
+            // Set event handler for "Done" button
+            Button doneButton = FindViewById<Button>(Resource.Id.createAccountButton);
+            doneButton.Click += DoneButton_Click;
+        }
+
+        private void PasswordField_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
+        {
+            if (!passwordChanged)
+                passwordChanged = true;
+
+            EditText field = (EditText)sender;
+
+            if (field.Text == "")
+                validPassword = false;
+            else
+                validPassword = true;
+
+            Validate();
+        }
+
+        private void PasswordField_FocusChange(object sender, View.FocusChangeEventArgs e)
+        {
+            Validate();
+        }
+
+        private void DoneButton_Click(object sender, EventArgs e)
+        {
+            EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
+            EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
+            Spinner teamSpinner = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
+
+            int teamID = (int)teamSpinner.SelectedItemId;
+            string username = usernameField.Text;
+            string password = passwordField.Text;
+
+            SQLtest.TestInsert(username, password, teamID);
         }
 
         // Validates usernameField
@@ -81,6 +123,7 @@ namespace MobileTag
         {
             Button doneButton = FindViewById<Button>(Resource.Id.createAccountButton);
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
+            EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
             Spinner selectTeam = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
 
             if (!validUsername && usernameChanged)
@@ -92,7 +135,16 @@ namespace MobileTag
                 usernameField.Error = null;
             }
 
-            if (validTeamSelected && validUsername)
+            if (!validPassword && passwordChanged)
+            {
+                passwordField.Error = "Please enter a valid password.";
+            }
+            else
+            {
+                passwordField.Error = null;
+            }
+
+            if (validTeamSelected && validUsername && validPassword)
             {
                 doneButton.Enabled = true;
             }

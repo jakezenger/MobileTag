@@ -44,8 +44,8 @@ namespace MobileTag
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f040004
-			public const int createAccountButton = 2130968580;
+			// aapt resource value: 0x7f040005
+			public const int createAccountButton = 2130968581;
 			
 			// aapt resource value: 0x7f040001
 			public const int createAccountHeader = 2130968577;
@@ -54,10 +54,13 @@ namespace MobileTag
 			public const int linearLayout1 = 2130968576;
 			
 			// aapt resource value: 0x7f040003
-			public const int selectTeamSpinner = 2130968579;
+			public const int passwordField = 2130968579;
 			
-			// aapt resource value: 0x7f040005
-			public const int testCreateAccountActivity = 2130968581;
+			// aapt resource value: 0x7f040004
+			public const int selectTeamSpinner = 2130968580;
+			
+			// aapt resource value: 0x7f040006
+			public const int testCreateAccountActivity = 2130968582;
 			
 			// aapt resource value: 0x7f040002
 			public const int usernameField = 2130968578;

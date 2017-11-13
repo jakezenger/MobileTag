@@ -27,6 +27,12 @@
         android:hint="username"
         android:singleLine="true"
         android:layout_marginTop="23.0dp" />
+    <EditText
+        android:inputType="textPassword"
+        android:layout_width="278.5dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/passwordField"
+        android:hint="password" />
     <Spinner
         android:layout_width="278.5dp"
         android:layout_height="wrap_content"
