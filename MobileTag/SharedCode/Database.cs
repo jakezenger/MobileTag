@@ -9,69 +9,90 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace MobileTag
 {
     public static class Database
     {
-        const string CONNECTION_STRING = "Server = tcpmobiletag.database.windows.net,1433; Initial Catalog = MobileTagDB; Persist Security Info=False;User ID ={eallgood}; Password={orangeChicken17}; MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        
+        private static string CONNECTION_STRING = "";
+        private static bool initialized = false;
+
+        public static void Init_()
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            builder.DataSource = "mobiletag.database.windows.net";
+            builder.UserID = "eallgood";
+            builder.Password = "orangeChicken17";
+            builder.InitialCatalog = "MobileTagDB";
+
+            CONNECTION_STRING = builder.ConnectionString.ToString();
+            initialized = true;
+        }
+
         public static void AddUser(string username, string password, int teamID)
-    {
-        using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
         {
-            string commandString = String.Format("EXECUTE AddUser '{0}', '{1}', {2};", username, password, teamID);
-
-            using (SqlCommand command = new SqlCommand(commandString, connection))
+            if (!initialized) Init_();
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             {
-                try
+                using (SqlCommand cmd = new SqlCommand("AddPlayer", connection))
                 {
-                    command.Connection.Open();
-                    command.ExecuteNonQuery();
-                    command.Connection.Close();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine(e.ToString());
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+                    cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+                    cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+
+                    try
+                    {
+                        cmd.Connection.Open();
+                        cmd.ExecuteNonQuery();
+                        cmd.Connection.Close();
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
                 }
             }
         }
-    }
 
-    static int LookUpUser(string username, string password)
-    {
-        int userValidity = 0;
-
-        using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+        static int ValidateLoginCredentials(string username, string password)
         {
+            if (!initialized) Init_();
+
             // userValidity 1 if valid, 0 if invalid
-                string commandString = String.Format
-                (
-                    "EXECUTE LookUpUser '{0}', '{1}'",
-                    username, password
-                );
+            int userValidity = 0;
 
-            using (SqlCommand command = new SqlCommand(commandString, connection))
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             {
-                try
-                {
-                    SqlDataReader reader;
-                    command.Connection.Open();
 
-                    reader = command.ExecuteReader();
-                    reader.Read();
-                    userValidity = reader.GetInt32(1);
-
-                    command.Connection.Close();
-                }
-                catch (Exception e)
+                using (SqlCommand cmd = new SqlCommand("LookUpUsername", connection))
                 {
-                    Console.WriteLine(e.ToString());
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+                    cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+
+                    try
+                    {
+                        SqlDataReader reader;
+                        cmd.Connection.Open();
+
+                        reader = cmd.ExecuteReader();
+                        reader.Read();
+                        userValidity = reader.GetInt32(1);
+
+                        cmd.Connection.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
                 }
             }
-        }
 
-        return userValidity;
-    }
-}  
+            return userValidity;
+        }
+    }  
 }
