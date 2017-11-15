@@ -1,2 +1,0 @@
-# MobileTag
-JP project
