@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+    <LinearLayout
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1"
+        android:layout_marginTop="36.5dp">
+        <TextView
+            android:text="Create Account"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/createAccountHeader"
+            android:gravity="center" />
+    </LinearLayout>
+    <EditText
+        android:layout_width="278.5dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/usernameField"
+        android:hint="username"
+        android:singleLine="true"
+        android:layout_marginTop="23.0dp" />
+    <EditText
+        android:inputType="textPassword"
+        android:layout_width="278.5dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/passwordField"
+        android:hint="password" />
+    <Spinner
+        android:layout_width="278.5dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/selectTeamSpinner"
+        android:layout_marginTop="27.0dp" />
+    <Button
+        android:text="Done"
+        android:layout_width="138.0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/createAccountButton"
+        android:layout_marginTop="30.0dp"
+        android:enabled="false" />
+</LinearLayout>
