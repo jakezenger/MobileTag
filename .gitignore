@@ -4,7 +4,7 @@
 
 /.vs/MobileTag/v15/sqlite3/db.lock
 
-/.vs/MobileTag/Server/sqlite3/*
+/.vs/MobileTag/Server/sqlite3/
 
 /.vs/MobileTag/v14/.suo
 
