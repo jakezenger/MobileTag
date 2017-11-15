@@ -16,6 +16,10 @@
 
 /.vs/slnx.sqlite
 
+/.vs/slnx.sqlite-journal
+
+/.vs/slnx.sqlite*
+
 /MobileTag/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 
 # VS files that don't need to be included...
