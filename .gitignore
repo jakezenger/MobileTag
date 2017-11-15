@@ -28,6 +28,7 @@
 
 *.suo
 *.cache
+*.user
 
 obj/
 [Bb]in
