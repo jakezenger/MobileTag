@@ -1,8 +1,0 @@
-MobileTag.CreateAccountActivity, MobileTag;md5559d9bf606851573d72a7ba1eadaa35f.CreateAccountActivity
-MobileTag.CreateAccountActivity, MobileTag, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;md5559d9bf606851573d72a7ba1eadaa35f.CreateAccountActivity
-MobileTag.CreateAccountActivity;md5559d9bf606851573d72a7ba1eadaa35f.CreateAccountActivity
-mobiletag.CreateAccountActivity;md5559d9bf606851573d72a7ba1eadaa35f.CreateAccountActivity
-MobileTag.MainActivity, MobileTag;md5559d9bf606851573d72a7ba1eadaa35f.MainActivity
-MobileTag.MainActivity, MobileTag, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;md5559d9bf606851573d72a7ba1eadaa35f.MainActivity
-MobileTag.MainActivity;md5559d9bf606851573d72a7ba1eadaa35f.MainActivity
-mobiletag.MainActivity;md5559d9bf606851573d72a7ba1eadaa35f.MainActivity

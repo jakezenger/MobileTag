@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace MobileTag
 {
-    [Activity(Label = "Create Account")]
+    [Activity(Label = "Create Account", MainLauncher = true)]
     public class CreateAccountActivity : Activity
     {
         private bool validTeamSelected = false;

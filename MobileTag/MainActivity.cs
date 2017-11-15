@@ -4,7 +4,7 @@ using Android.OS;
 
 namespace MobileTag
 {
-    [Activity(Label = "MobileTag", MainLauncher = true)]
+    [Activity(Label = "MobileTag")]
     public class MainActivity : Activity
     {
         protected override void OnCreate(Bundle savedInstanceState)
