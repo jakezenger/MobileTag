@@ -18,7 +18,7 @@ namespace MobileTag
         private static string CONNECTION_STRING = "";
         private static bool initialized = false;
 
-        public static void Init_()
+        private static void Init_()
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = "mobiletag.database.windows.net";
@@ -30,23 +30,27 @@ namespace MobileTag
             initialized = true;
         }
 
-        public static void AddUser(string username, string password, int teamID)
+        public static int AddUser(string username, string password, int teamID)
         {
             if (!initialized) Init_();
+            int available = 0;
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             {
                 using (SqlCommand cmd = new SqlCommand("AddPlayer", connection))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-
                     cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
                     cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
                     cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
 
                     try
                     {
+                        SqlDataReader reader;
                         cmd.Connection.Open();
-                        cmd.ExecuteNonQuery();
+                        reader = cmd.ExecuteReader();
+                        reader.Read();
+                        available = (int)reader["Available"];
+                        reader.Close();
                         cmd.Connection.Close();
                     }
                     catch (SqlException e)
@@ -55,9 +59,10 @@ namespace MobileTag
                     }
                 }
             }
+            return available;
         }
 
-        static int ValidateLoginCredentials(string username, string password)
+        public static int ValidateLoginCredentials(string username, string password)
         {
             if (!initialized) Init_();
 
@@ -70,7 +75,6 @@ namespace MobileTag
                 using (SqlCommand cmd = new SqlCommand("LookUpUsername", connection))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-
                     cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
                     cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
 
@@ -81,8 +85,8 @@ namespace MobileTag
 
                         reader = cmd.ExecuteReader();
                         reader.Read();
-                        userValidity = reader.GetInt32(1);
-
+                        userValidity = (int)reader["Valid"];
+                        reader.Close();
                         cmd.Connection.Close();
                     }
                     catch (Exception e)
