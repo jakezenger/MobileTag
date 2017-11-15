@@ -1,0 +1,34 @@
+################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/MobileTag/v15/sqlite3/db.lock
+
+/.vs/MobileTag/v15/sqlite3/
+
+/.vs/MobileTag/v15/Server/sqlite3/*
+
+/.vs/MobileTag/v15/slnx.sqlite
+
+/.vs/MobileTag/Server/sqlite3/
+
+/.vs/VSWorkspaceState.json
+
+/.vs/MobileTag/v14/.suo
+
+/.vs/slnx.sqlite
+
+/.vs/slnx.sqlite-journal
+
+/.vs/slnx.sqlite*
+
+/MobileTag/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+
+# VS files that don't need to be included...
+
+*.suo
+*.cache
+
+obj/
+[Bb]in
+[Dd]ebug*/
