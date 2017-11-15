@@ -20,11 +20,7 @@ namespace MobileTag
     {
         using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
         {
-            string commandString = String.Format
-            (
-                "EXECUTE AddUser '{0}', '{1}', {2};",
-                    username, password, teamID
-                );
+            string commandString = String.Format("EXECUTE AddUser '{0}', '{1}', {2};", username, password, teamID);
 
             using (SqlCommand command = new SqlCommand(commandString, connection))
             {
