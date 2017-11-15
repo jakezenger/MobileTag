@@ -78,7 +78,7 @@ namespace MobileTag
             string username = usernameField.Text;
             string password = passwordField.Text;
 
-            //SQLtest.TestInsert(username, password, teamID);
+            Database.AddUser(username, password, teamID);
         }
 
         // Validates usernameField

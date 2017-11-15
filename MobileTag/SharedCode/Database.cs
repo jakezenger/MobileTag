@@ -14,7 +14,7 @@ namespace MobileTag
 {
     public static class Database
     {
-        const string CONNECTION_STRING = "Server = tcpmobiletag.database.windows.net,1433; Initial Catalog = MobileTagDB; Persist Security Info=False;User ID = { eallgood }; Password={orangeChicken17}; MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout = 30;";
+        const string CONNECTION_STRING = "Server = tcpmobiletag.database.windows.net,1433; Initial Catalog = MobileTagDB; Persist Security Info=False;User ID ={eallgood}; Password={orangeChicken17}; MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         
         public static void AddUser(string username, string password, int teamID)
     {
@@ -22,7 +22,7 @@ namespace MobileTag
         {
             string commandString = String.Format
             (
-                "EXECUTE AddUser '{0}', '{1}', { 2};",
+                "EXECUTE AddUser '{0}', '{1}', {2};",
                     username, password, teamID
                 );
 
