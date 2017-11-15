@@ -6,6 +6,8 @@
 
 /.vs/MobileTag/v15/sqlite3/
 
+/.vs/MobileTag/v15/Server/sqlite3/*
+
 /.vs/MobileTag/v15/slnx.sqlite
 
 /.vs/MobileTag/Server/sqlite3/
