@@ -8,9 +8,12 @@
 
 /.vs/MobileTag/Server/sqlite3/
 
+/.vs/VSWorkspaceState.json
+
 /.vs/MobileTag/v14/.suo
 
 /.vs/slnx.sqlite
+
 /MobileTag/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 
 # VS files that don't need to be included...
