@@ -78,7 +78,17 @@ namespace MobileTag
             string username = usernameField.Text;
             string password = passwordField.Text;
 
-            Database.AddUser(username, password, teamID);
+            int exitCode = Database.AddUser(username, password, teamID);
+
+            if (exitCode == 0)
+            {
+                usernameField.Error = "Username taken. Please enter a different username.";
+            }
+            else
+            {
+                // User succesfully added...
+                // TODO: take the user to the appropriate activity... either login or main?
+            }
         }
 
         // Validates usernameField
