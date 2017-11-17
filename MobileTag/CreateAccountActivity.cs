@@ -86,8 +86,8 @@ namespace MobileTag
             }
             else
             {
-                // User succesfully added...
-                // TODO: take the user to the appropriate activity... either login or main?
+                // User succesfully added... go to main activity
+                StartActivity(new Intent(this, typeof(MainActivity)));
             }
         }
 

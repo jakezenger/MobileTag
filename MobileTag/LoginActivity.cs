@@ -40,10 +40,10 @@ namespace MobileTag
             createAccountTextView.MovementMethod = new LinkMovementMethod();
 
             // Set event handlers
-            Button signInButton = FindViewById<Button>(Resource.Id.signInButton);
-            signInButton.Click += SignInButton_Click;
+            Button signInButton = FindViewById<Button>(Resource.Id.signInButton);            
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
             EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
+            signInButton.Click += SignInButton_Click;
             usernameField.FocusChange += UsernameField_FocusChange;
             usernameField.TextChanged += UsernameField_TextChanged;
             passwordField.FocusChange += PasswordField_FocusChange;
@@ -63,7 +63,6 @@ namespace MobileTag
             else
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
                 builder.SetCancelable(false);
                 builder.SetPositiveButton(GetString(Resource.String.ok), (s, ea) => { /* User has clicked ok */ });
                 builder.SetTitle(GetString(Resource.String.login_failed));
