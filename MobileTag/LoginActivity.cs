@@ -12,10 +12,9 @@ using Android.Widget;
 
 namespace MobileTag
 {
-    [Activity(Label = "Create Account")]
-    public class CreateAccountActivity : Activity
+    [Activity(Label = "LoginActivity", MainLauncher = true)]
+    public class LoginActivity : Activity
     {
-        private bool validTeamSelected = false;
         private bool validUsername = false;
         private bool usernameChanged = false;
         private bool passwordChanged = false;
@@ -25,27 +24,42 @@ namespace MobileTag
         {
             base.OnCreate(savedInstanceState);
 
-            SetContentView(Resource.Layout.CreateAccount);
+            SetContentView(Resource.Layout.Login);
 
-            string[] teams = { GetString(Resource.String.select_team_prompt), "Red", "Green", "Blue", "Purple", "Pink" };
-
-            // Populate selectTeamSpinner choices
-            Spinner selectTeam = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
-            ArrayAdapter adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleSpinnerDropDownItem, teams);
-            selectTeam.Adapter = adapter;
-
-            // Set event handlers on username, password, and team spinner for data validation
-            selectTeam.ItemSelected += SelectTeam_ItemSelected;
+            // Set event handlers
+            Button signInButton = FindViewById<Button>(Resource.Id.signInButton);
+            signInButton.Click += SignInButton_Click;
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
             EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
             usernameField.FocusChange += UsernameField_FocusChange;
             usernameField.TextChanged += UsernameField_TextChanged;
             passwordField.FocusChange += PasswordField_FocusChange;
             passwordField.TextChanged += PasswordField_TextChanged;
+        }
 
-            // Set event handler for "Done" button
-            Button doneButton = FindViewById<Button>(Resource.Id.createAccountButton);
-            doneButton.Click += DoneButton_Click;
+        private void SignInButton_Click(object sender, EventArgs e)
+        {
+            EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
+            EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
+
+            if (Database.ValidateLoginCredentials(usernameField.Text, passwordField.Text) == 1)
+            {
+                Intent intent = new Intent(this, typeof(MainActivity));
+                StartActivity(intent);
+            }
+            else
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.SetCancelable(false);
+                builder.SetPositiveButton(GetString(Resource.String.ok), (s, ea) => { /* User has clicked ok */ });
+                builder.SetTitle(GetString(Resource.String.login_failed));
+                builder.SetMessage(GetString(Resource.String.correct_credentials_prompt));
+
+                AlertDialog loginFailedAlert = builder.Create();
+
+                loginFailedAlert.Show();
+            }
         }
 
         private void PasswordField_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
@@ -66,29 +80,6 @@ namespace MobileTag
         private void PasswordField_FocusChange(object sender, View.FocusChangeEventArgs e)
         {
             Validate();
-        }
-
-        private void DoneButton_Click(object sender, EventArgs e)
-        {
-            EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
-            EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
-            Spinner teamSpinner = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
-
-            int teamID = (int)teamSpinner.SelectedItemId;
-            string username = usernameField.Text;
-            string password = passwordField.Text;
-
-            int exitCode = Database.AddUser(username, password, teamID);
-
-            if (exitCode == 0)
-            {
-                usernameField.Error = GetString(Resource.String.username_taken);
-            }
-            else
-            {
-                // User succesfully added...
-                // TODO: take the user to the appropriate activity... either login or main?
-            }
         }
 
         // Validates usernameField
@@ -112,26 +103,10 @@ namespace MobileTag
             Validate();
         }
 
-        // Validates selectTeamSpinner
-        private void SelectTeam_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            if (e.Id == 0)
-            {
-                // User has selected the spinner prompt, not a valid team selection
-                validTeamSelected = false;
-            }
-            else
-            {
-                validTeamSelected = true;
-            }
-
-            Validate();
-        }
-
-        // Check to see if user has entered valid account data... if they have, enable "DONE" button
+        // Check to see if user has entered valid account data... if they have, enable signInButton
         private void Validate()
         {
-            Button doneButton = FindViewById<Button>(Resource.Id.createAccountButton);
+            Button signInButton = FindViewById<Button>(Resource.Id.signInButton);
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
             EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
             Spinner selectTeam = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
@@ -154,13 +129,13 @@ namespace MobileTag
                 passwordField.Error = null;
             }
 
-            if (validTeamSelected && validUsername && validPassword)
+            if (validUsername && validPassword)
             {
-                doneButton.Enabled = true;
+                signInButton.Enabled = true;
             }
             else
             {
-                doneButton.Enabled = false;
+                signInButton.Enabled = false;
             }
         }
     }

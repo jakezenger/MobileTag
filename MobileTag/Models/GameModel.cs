@@ -12,9 +12,9 @@ using Android.Widget;
 
 namespace MobileTag.Models
 {
-    class GameModel
+    class GameModel : Application
     {
-        public List<Cell> CellsInView { get; set; }
+        //public List<Cell> CellsInView { get; set; } -- SHOULD MAYBE GO IN MAP ACTIVITY... DOES THIS NEED TO BE HERE?
         public Player Player { get; set; }
     }
 }

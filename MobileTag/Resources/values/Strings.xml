@@ -2,4 +2,10 @@
 <resources>
   <string name="app_name">MobileTag</string>
   <string name="select_team_prompt">Pick a team</string>
+  <string name="invalid_username_prompt">Please enter a valid username.</string>
+  <string name="invalid_password_prompt">Please enter a valid password.</string>
+  <string name="login_failed">Login Failed</string>
+  <string name="username_taken">Username taken. Please enter a different username.</string>
+  <string name="correct_credentials_prompt">Please make sure that you entered a valid username and password.</string>
+  <string name="ok">OK</string>
 </resources>
