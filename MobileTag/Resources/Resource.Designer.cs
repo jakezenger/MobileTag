@@ -50,14 +50,23 @@ namespace MobileTag
 			// aapt resource value: 0x7f040001
 			public const int createAccountHeader = 2130968577;
 			
+			// aapt resource value: 0x7f040008
+			public const int createAccountLink = 2130968584;
+			
 			// aapt resource value: 0x7f040000
 			public const int linearLayout1 = 2130968576;
+			
+			// aapt resource value: 0x7f040006
+			public const int loginHeader = 2130968582;
 			
 			// aapt resource value: 0x7f040003
 			public const int passwordField = 2130968579;
 			
 			// aapt resource value: 0x7f040004
 			public const int selectTeamSpinner = 2130968580;
+			
+			// aapt resource value: 0x7f040007
+			public const int signInButton = 2130968583;
 			
 			// aapt resource value: 0x7f040002
 			public const int usernameField = 2130968578;
@@ -79,7 +88,10 @@ namespace MobileTag
 			public const int CreateAccount = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int Main = 2130837505;
+			public const int Login = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public const int Main = 2130837506;
 			
 			static Layout()
 			{
@@ -97,8 +109,32 @@ namespace MobileTag
 			// aapt resource value: 0x7f030000
 			public const int app_name = 2130903040;
 			
+			// aapt resource value: 0x7f030006
+			public const int correct_credentials_prompt = 2130903046;
+			
+			// aapt resource value: 0x7f030008
+			public const int create_account_prompt = 2130903048;
+			
+			// aapt resource value: 0x7f030009
+			public const int here = 2130903049;
+			
+			// aapt resource value: 0x7f030003
+			public const int invalid_password_prompt = 2130903043;
+			
+			// aapt resource value: 0x7f030002
+			public const int invalid_username_prompt = 2130903042;
+			
+			// aapt resource value: 0x7f030004
+			public const int login_failed = 2130903044;
+			
+			// aapt resource value: 0x7f030007
+			public const int ok = 2130903047;
+			
 			// aapt resource value: 0x7f030001
 			public const int select_team_prompt = 2130903041;
+			
+			// aapt resource value: 0x7f030005
+			public const int username_taken = 2130903045;
 			
 			static String()
 			{
