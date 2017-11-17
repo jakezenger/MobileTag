@@ -40,4 +40,12 @@
         android:id="@+id/signInButton"
         android:layout_marginTop="30.0dp"
         android:enabled="false" />
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createAccountLink"
+        android:text="@string/create_account_prompt"
+        android:layout_marginTop="17.5dp"
+        android:gravity="center" />
 </LinearLayout>

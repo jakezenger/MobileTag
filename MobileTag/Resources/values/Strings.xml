@@ -8,4 +8,6 @@
   <string name="username_taken">Username taken. Please enter a different username.</string>
   <string name="correct_credentials_prompt">Please make sure that you entered a valid username and password.</string>
   <string name="ok">OK</string>
+  <string name="create_account_prompt">Don\'t have an account? Create one here.</string>
+  <string name="here">here.</string>
 </resources>

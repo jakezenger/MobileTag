@@ -9,6 +9,10 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Android.Graphics;
+using Android.Text;
+using Android.Text.Style;
+using Android.Text.Method;
 
 namespace MobileTag
 {
@@ -25,6 +29,15 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.Login);
+
+            // Set up createAccountLink textview
+            SpannableString createAccountPrompt = new SpannableString(GetString(Resource.String.create_account_prompt));
+            ClickableSpan clickable = new ActivityLink(this, typeof(CreateAccountActivity));
+            createAccountPrompt.SetSpan(clickable, createAccountPrompt.Length() - GetString(Resource.String.here).Length, createAccountPrompt.Length(), SpanTypes.ExclusiveExclusive);
+
+            TextView createAccountTextView = FindViewById<TextView>(Resource.Id.createAccountLink);
+            createAccountTextView.TextFormatted = createAccountPrompt;
+            createAccountTextView.MovementMethod = new LinkMovementMethod();
 
             // Set event handlers
             Button signInButton = FindViewById<Button>(Resource.Id.signInButton);

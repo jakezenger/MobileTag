@@ -50,6 +50,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f040001
 			public const int createAccountHeader = 2130968577;
 			
+			// aapt resource value: 0x7f040008
+			public const int createAccountLink = 2130968584;
+			
 			// aapt resource value: 0x7f040000
 			public const int linearLayout1 = 2130968576;
 			
@@ -108,6 +111,12 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f030006
 			public const int correct_credentials_prompt = 2130903046;
+			
+			// aapt resource value: 0x7f030008
+			public const int create_account_prompt = 2130903048;
+			
+			// aapt resource value: 0x7f030009
+			public const int here = 2130903049;
 			
 			// aapt resource value: 0x7f030003
 			public const int invalid_password_prompt = 2130903043;
