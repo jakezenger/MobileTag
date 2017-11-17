@@ -122,7 +122,6 @@ namespace MobileTag
             Button signInButton = FindViewById<Button>(Resource.Id.signInButton);
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
             EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
-            Spinner selectTeam = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
 
             if (!validUsername && usernameChanged)
             {
