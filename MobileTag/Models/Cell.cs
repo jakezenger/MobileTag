@@ -18,7 +18,7 @@ namespace MobileTag.Models
         decimal Latitude { get; }
         decimal Longitude { get; }
         //public Latlng { get; }
-    public int TeamID { get { return Database.GetCellTeam(ID); } }
+        public int TeamID { get { return Database.GetCellTeam(ID); } }
 
         //public Cell(Latlng location)
         //{
