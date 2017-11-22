@@ -57,7 +57,7 @@ namespace MobileTag
 
             if (Database.ValidateLoginCredentials(usernameField.Text, passwordField.Text) == 1)
             {
-                Intent intent = new Intent(this, typeof(MainActivity));
+                Intent intent = new Intent(this, typeof(MenuActivity));
                 StartActivity(intent);
             }
             else

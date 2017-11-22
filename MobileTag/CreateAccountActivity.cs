@@ -87,7 +87,7 @@ namespace MobileTag
             else
             {
                 // User succesfully added... go to main activity
-                StartActivity(new Intent(this, typeof(MainActivity)));
+                StartActivity(new Intent(this, typeof(MenuActivity)));
             }
         }
 
