@@ -19,6 +19,7 @@ namespace MobileTag
     {
         private static string CONNECTION_STRING = "";
         private static bool initialized = false;
+        private delegate void Del(SqlConnection connection);
 
         private static void Init_()
         {
@@ -32,143 +33,127 @@ namespace MobileTag
             initialized = true;
         }
 
-        public static int AddUser(string username, string password, int teamID)
+        private static void ExecuteQuery(Del del)
         {
             if (!initialized) Init_();
-            int available = 0;
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
-            {
-                using (SqlCommand cmd = new SqlCommand("AddPlayer", connection))
+            {                
+                try
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-                    cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
-                    cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
-
-                    try
-                    {
-                        SqlDataReader reader;
-                        cmd.Connection.Open();
-                        reader = cmd.ExecuteReader();
-                        reader.Read();
-                        available = (int)reader["Available"];
-                        reader.Close();
-                        cmd.Connection.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                        return 2;
-                    }
+                    connection.Open();
+                    del(connection);                                                               
+                    connection.Close();
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+                
             }
+        }
+
+        public static int AddUser(string username, string password, int teamID)
+        {
+            int available = 0;
+
+            Del readerProcedure = delegate(SqlConnection connection)
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("AddPlayer", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+                cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    available = (int)reader["Available"];
+                }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+
             return available;
         }
 
         public static int ValidateLoginCredentials(string username, string password)
         {
-            if (!initialized) Init_();
-
-            // userValidity 1 if valid, 0 if invalid
             int userValidity = 0;
 
-            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            Del readerProcedure = delegate (SqlConnection connection)
             {
-                using (SqlCommand cmd = new SqlCommand("LookUpUsername", connection))
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("LookUpUserName", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+                cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-                    cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
-
-                    try
-                    {
-                        SqlDataReader reader;
-                        cmd.Connection.Open();
-
-                        reader = cmd.ExecuteReader();
-                        reader.Read();
-                        userValidity = (int)reader["Valid"];
-                        reader.Close();
-                        cmd.Connection.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                    userValidity = (int)reader["Valid"];
                 }
-            }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
 
             return userValidity;
         }
 
         public static int GetCellTeam(int cellID)
         {
-            if (!initialized) Init_();
             int teamID = 0;
 
-            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            Del readerProcedure = delegate (SqlConnection connection)
             {
-                using (SqlCommand cmd = new SqlCommand("GetCellTeam", connection))
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetCellTeam", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;                    
-
-                    try
-                    {
-                        SqlDataReader reader;
-                        cmd.Connection.Open();
-
-                        reader = cmd.ExecuteReader();
-                        reader.Read();
-                        teamID = (int)reader["TeamID"];
-                        reader.Close();
-                        cmd.Connection.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                    teamID = (int)reader["TeamID"];
                 }
-            }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+
             return teamID;
         }
 
         public static Player GetPlayer(string username)
         {
-            if (!initialized) Init_();
-
             int playerID = 0;
             int teamID = 0;
             string teamName = "";
             int cellID = 0;
 
-            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            Del readerProcedure = delegate (SqlConnection connection)
             {
-                using (SqlCommand cmd = new SqlCommand("GetPlayer", connection))
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetPlayer", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-                    
-                    try
-                    {
-                        SqlDataReader reader;
-                        cmd.Connection.Open();
-                        
-                        reader = cmd.ExecuteReader();
-                        reader.Read();
-                        playerID = (int)reader["PlayerID"];                        
-                        teamID = (int)reader["TeamID"];
-                        teamName = (string)reader["TeamName"];
-                        cellID = (int)reader["CellID"];
-                        reader.Close();
-                        cmd.Connection.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                    playerID = (int)reader["PlayerID"];
+                    teamID = (int)reader["TeamID"];
+                    teamName = (string)reader["TeamName"];
+                    cellID = (int)reader["CellID"];
                 }
-            }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+
             Team team = new Team(teamID, teamName);
             Player player = new Player(playerID, team, cellID);
             return player;
@@ -176,39 +161,102 @@ namespace MobileTag
 
         public static Cell GetCell(int cellID)
         {
-            if (!initialized) Init_();
-
             decimal lat = 0.00m;
             decimal lng = 0.00m;
 
-            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            Del readerProcedure = delegate (SqlConnection connection)
             {
-                using (SqlCommand cmd = new SqlCommand("GetCell", connection))
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetCell", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
-
-                    try
-                    {
-                        SqlDataReader reader;
-                        cmd.Connection.Open();
-                        reader = cmd.ExecuteReader();
-                        reader.Read();
-
-                        lat = (decimal)reader["Latitude"];
-                        lng = (decimal)reader["Longitude"];
-                        
-                        reader.Close();
-                        cmd.Connection.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                    lat = (decimal)reader["Latitude"];
+                    lng = (decimal)reader["Longitude"];
                 }
-            }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+
             Cell cell = new Cell(lat, lng);
             return cell;
         }
+
+        ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        ////////////////////////////////////////// OLDE IMPLEMENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        //////////////////////////////////////////|||||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+        //public static int AddUser(string username, string password, int teamID)
+        //{
+        //    if (!initialized) Init_();
+        //    int available = 0;
+        //    using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand("AddPlayer", connection))
+        //        {
+        //            cmd.CommandType = CommandType.StoredProcedure;
+        //            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+        //            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+        //            cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+
+        //            try
+        //            {
+        //                SqlDataReader reader;
+        //                cmd.Connection.Open();
+        //                reader = cmd.ExecuteReader();
+        //                reader.Read();
+        //                available = (int)reader["Available"];
+        //                reader.Close();
+        //                cmd.Connection.Close();
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                Console.WriteLine(e.ToString());
+        //                return 2;
+        //            }
+        //        }
+        //    }
+        //    return available;
+        //}
+
+        //public static int ValidateLoginCredentials(string username, string password)
+        //{
+        //    if (!initialized) Init_();
+
+        //    // userValidity 1 if valid, 0 if invalid
+        //    int userValidity = 0;
+
+        //    using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand("LookUpUsername", connection))
+        //        {
+        //            cmd.CommandType = CommandType.StoredProcedure;
+        //            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+        //            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+
+        //            try
+        //            {
+        //                SqlDataReader reader;
+        //                cmd.Connection.Open();
+
+        //                reader = cmd.ExecuteReader();
+        //                reader.Read();
+        //                userValidity = (int)reader["Valid"];
+        //                reader.Close();
+        //                cmd.Connection.Close();
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                Console.WriteLine(e.ToString());
+        //            }
+        //        }
+        //    }
+
+        //    return userValidity;
+        //}
     }  
 }
