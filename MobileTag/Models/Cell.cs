@@ -15,10 +15,11 @@ namespace MobileTag.Models
     public class Cell
     {
         public int ID { get; }
-        decimal Latitude { get; }
-        decimal Longitude { get; }
+        public decimal Latitude { get; }
+        public decimal Longitude { get; }
         //public Latlng { get; }
         public int TeamID { get { return Database.GetCellTeam(ID); } }
+        //public int HoldStrength { get { return Database.GetCellHoldStrength(ID); } }
 
         //public Cell(Latlng location)
         //{

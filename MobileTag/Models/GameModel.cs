@@ -28,7 +28,6 @@ namespace MobileTag.Models
         //public List<Cell> CellsInView { get; set; } -- SHOULD MAYBE GO IN MAP ACTIVITY... DOES THIS NEED TO BE HERE?
         public static Player Player { get; set; }
 
-
         public static int GetCellID(decimal lat, decimal lng)
         {
             decimal nearestLatInterval, nearestLongInterval;
