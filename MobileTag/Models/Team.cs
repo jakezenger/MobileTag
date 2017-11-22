@@ -13,7 +13,7 @@ using Android.Graphics;
 
 namespace MobileTag.Models
 {
-    class Team
+    public class Team
     {
         public int ID { get; }
         public string TeamName { get; }
@@ -24,6 +24,13 @@ namespace MobileTag.Models
             ID = id;
             TeamName = teamName;
             TeamColor = teamColor;
+        }
+
+        //Constructor that does not initialize Color
+        public Team(int id, string teamName)
+        {
+            ID = id;
+            TeamName = teamName;
         }
     }
 }

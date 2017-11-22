@@ -10,6 +10,8 @@ using Android.Views;
 using Android.Widget;
 using System.Data.SqlClient;
 using System.Data;
+using MobileTag.Models;
+using Android.Graphics;
 
 namespace MobileTag
 {
@@ -53,9 +55,10 @@ namespace MobileTag
                         reader.Close();
                         cmd.Connection.Close();
                     }
-                    catch (SqlException e)
+                    catch (Exception e)
                     {
                         Console.WriteLine(e.ToString());
+                        return 2;
                     }
                 }
             }
@@ -71,7 +74,6 @@ namespace MobileTag
 
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             {
-
                 using (SqlCommand cmd = new SqlCommand("LookUpUsername", connection))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -98,5 +100,80 @@ namespace MobileTag
 
             return userValidity;
         }
+
+        public static int GetCellTeam(int cellID)
+        {
+            if (!initialized) Init_();
+            int teamID = 0;
+
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            {
+                using (SqlCommand cmd = new SqlCommand("GetCellTeam", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;                    
+
+                    try
+                    {
+                        SqlDataReader reader;
+                        cmd.Connection.Open();
+
+                        reader = cmd.ExecuteReader();
+                        reader.Read();
+                        teamID = (int)reader["TeamID"];
+                        reader.Close();
+                        cmd.Connection.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+            return teamID;
+        }
+
+        public static Player GetPlayer(string username)
+        {
+            if (!initialized) Init_();
+
+            int playerID = 0;
+            int teamID = 0;
+            string teamName = "";
+            int cellID = 0;
+
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            {
+                using (SqlCommand cmd = new SqlCommand("GetPlayer", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+                    
+                    try
+                    {
+                        SqlDataReader reader;
+                        cmd.Connection.Open();
+                        
+                        reader = cmd.ExecuteReader();
+                        reader.Read();
+                        playerID = (int)reader["PlayerID"];                        
+                        teamID = (int)reader["TeamID"];
+                        teamName = (string)reader["TeamName"];
+                        cellID = (int)reader["CellID"];
+                        reader.Close();
+                        cmd.Connection.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+            Team team = new Team(teamID, teamName);
+            Player player = new Player(playerID, team, cellID);
+            return player;
+        }       
+
+
     }  
 }

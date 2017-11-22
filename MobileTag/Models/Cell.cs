@@ -12,10 +12,11 @@ using Android.Widget;
 
 namespace MobileTag.Models
 {
-    class Cell
+    public class Cell
     {
         public int ID { get; }
         //public Latlng { get; }
+    public int TeamID { get {return Database.GetCellTeam(ID)} }
 
         //public Cell(Latlng location)
         //{
