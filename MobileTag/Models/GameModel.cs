@@ -13,7 +13,7 @@ using System.Drawing;
 
 namespace MobileTag.Models
 {
-    public class static GameModel : Application
+    public class GameModel : Application
     {
         // IMPORTANT: corresponds to Frontier's specifications.
         // Do not change this unless you first recreate the Frontier's cell database using your new specifications.
