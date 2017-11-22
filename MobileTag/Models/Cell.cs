@@ -34,5 +34,4 @@ namespace MobileTag.Models
             Longitude = lng;
         }
     }
-
 }

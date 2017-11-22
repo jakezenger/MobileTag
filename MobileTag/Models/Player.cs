@@ -24,5 +24,12 @@ namespace MobileTag.Models
             Team = team;
             CurrentCellID = currentCellID;
         }
+
+        public Player(int id, Team team, decimal lat, decimal lng)
+        {
+            ID = id;
+            Team = team;
+            CurrentCellID = GameModel.GetCellID(lat, lng);
+        }
     }
 }
