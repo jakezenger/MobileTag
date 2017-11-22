@@ -23,7 +23,7 @@ namespace MobileTag
         private static void Init_()
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "mobiletag.database.windows.net";
+            builder.DataSource = "mobiletag-jp.database.windows.net";
             builder.UserID = "eallgood";
             builder.Password = "orangeChicken17";
             builder.InitialCatalog = "MobileTagDB";

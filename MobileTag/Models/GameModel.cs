@@ -40,5 +40,22 @@ namespace MobileTag.Models
 
             return id;
         }
+        
+        //TODO: Make this work with Android/Google API's
+        public Color GetTeamColor(int teamID)
+        {
+            Color color;
+            switch(teamID)
+            {
+                case 1: color = new Color(); break; //RED
+                case 2: color = new Color(); break; //GREEN
+                case 3: color = new Color(); break; //BLUE
+                case 4: color = new Color(); break; //PURPLE
+                case 5: color = new Color(); break; //PINK
+
+                default: color = new Color(); break;    //TRANSPARENT         
+            }
+            return color;
+        }
     }
 }
