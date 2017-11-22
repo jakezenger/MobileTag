@@ -28,7 +28,7 @@ namespace MobileTag.Models
         //CTOR's
         public Cell(decimal lat, decimal lng)
         {
-            ID = GetCellID(lat, lng);
+            ID = GameModel.GetCellID(lat, lng);
             Latitude = lat;
             Longitude = lng;
         }

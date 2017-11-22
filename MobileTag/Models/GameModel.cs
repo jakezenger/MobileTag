@@ -13,7 +13,7 @@ using System.Drawing;
 
 namespace MobileTag.Models
 {
-    public class GameModel : Application
+    public class static GameModel : Application
     {
         // IMPORTANT: corresponds to Frontier's specifications.
         // Do not change this unless you first recreate the Frontier's cell database using your new specifications.
@@ -23,13 +23,13 @@ namespace MobileTag.Models
         private const decimal frontierLowerRightLat = 44.679184m;
         private const decimal frontierLowerRightLong = 57.234079m;
 
-        public decimal FrontierInterval => frontierInterval;
+        public static decimal FrontierInterval => frontierInterval;
 
         //public List<Cell> CellsInView { get; set; } -- SHOULD MAYBE GO IN MAP ACTIVITY... DOES THIS NEED TO BE HERE?
-        public Player Player { get; set; }
+        public static Player Player { get; set; }
 
 
-        public int GetCellID(decimal lat, decimal lng)
+        public static int GetCellID(decimal lat, decimal lng)
         {
             decimal nearestLatInterval, nearestLongInterval;
 
