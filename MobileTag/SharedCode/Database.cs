@@ -174,6 +174,41 @@ namespace MobileTag
             return player;
         }       
 
+        public static Cell GetCell(int cellID)
+        {
+            if (!initialized) Init_();
 
+            decimal lat = 0.00m;
+            decimal lng = 0.00m;
+
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            {
+                using (SqlCommand cmd = new SqlCommand("GetCell", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+
+                    try
+                    {
+                        SqlDataReader reader;
+                        cmd.Connection.Open();
+                        reader = cmd.ExecuteReader();
+                        reader.Read();
+
+                        lat = (decimal)reader["Latitude"];
+                        lng = (decimal)reader["Longitude"];
+                        
+                        reader.Close();
+                        cmd.Connection.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+            Cell cell = new Cell(lat, lng);
+            return cell;
+        }
     }  
 }

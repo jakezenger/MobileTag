@@ -15,12 +15,23 @@ namespace MobileTag.Models
     public class Cell
     {
         public int ID { get; }
+        decimal Latitude { get; }
+        decimal Longitude { get; }
         //public Latlng { get; }
-    public int TeamID { get {return Database.GetCellTeam(ID)} }
+    public int TeamID { get { return Database.GetCellTeam(ID); } }
 
         //public Cell(Latlng location)
         //{
         //    // GENERATE ID FOR GIVEN LOCATION
         //}
+
+        //CTOR's
+        public Cell(decimal lat, decimal lng)
+        {
+            ID = GetCellID(lat, lng);
+            Latitude = lat;
+            Longitude = lng;
+        }
     }
+
 }
