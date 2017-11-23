@@ -55,7 +55,7 @@ namespace MobileTag
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
             EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
 
-            if (Database.ValidateLoginCredentials(usernameField.Text, passwordField.Text) == 1)
+            if (Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
             {
                 Intent intent = new Intent(this, typeof(MainActivity));
                 StartActivity(intent);
@@ -102,7 +102,7 @@ namespace MobileTag
 
             EditText field = (EditText)sender;
 
-            if (field.Text == "")
+            if (field.Text.Trim() == "")
                 validUsername = false;
             else
                 validUsername = true;
