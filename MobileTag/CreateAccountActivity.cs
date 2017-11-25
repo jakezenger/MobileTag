@@ -75,7 +75,7 @@ namespace MobileTag
             Spinner teamSpinner = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
 
             int teamID = (int)teamSpinner.SelectedItemId;
-            string username = usernameField.Text;
+            string username = usernameField.Text.Trim();
             string password = passwordField.Text;
 
             int exitCode = Database.AddUser(username, password, teamID);
@@ -99,7 +99,7 @@ namespace MobileTag
 
             EditText field = (EditText)sender;
 
-            if (field.Text == "")
+            if (field.Text.Trim() == "")
                 validUsername = false;
             else
                 validUsername = true;

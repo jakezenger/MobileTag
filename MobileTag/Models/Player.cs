@@ -12,10 +12,24 @@ using Android.Widget;
 
 namespace MobileTag.Models
 {
-    class Player
+    public class Player
     {
         public int ID { get; }
         public Team Team { get; set; }
-        public Cell CurrentCell { get; set; }
+        public int CurrentCellID { get; set; }
+
+        public Player(int id, Team team, int currentCellID)
+        {
+            ID = id;
+            Team = team;
+            CurrentCellID = currentCellID;
+        }
+
+        public Player(int id, Team team, decimal lat, decimal lng)
+        {
+            ID = id;
+            Team = team;
+            CurrentCellID = GameModel.GetCellID(lat, lng);
+        }
     }
 }
