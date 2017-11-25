@@ -44,6 +44,18 @@ namespace MobileTag
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f04000b
+			public const int btnCommunity = 2130968587;
+			
+			// aapt resource value: 0x7f04000c
+			public const int btnSettings = 2130968588;
+			
+			// aapt resource value: 0x7f040009
+			public const int btnViewMap = 2130968585;
+			
+			// aapt resource value: 0x7f04000a
+			public const int btnViewProfile = 2130968586;
+			
 			// aapt resource value: 0x7f040005
 			public const int createAccountButton = 2130968581;
 			
@@ -85,13 +97,25 @@ namespace MobileTag
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int CreateAccount = 2130837504;
+			public const int Community = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int Login = 2130837505;
+			public const int CreateAccount = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int Main = 2130837506;
+			public const int Login = 2130837506;
+			
+			// aapt resource value: 0x7f020003
+			public const int Map = 2130837507;
+			
+			// aapt resource value: 0x7f020004
+			public const int Menu = 2130837508;
+			
+			// aapt resource value: 0x7f020005
+			public const int Profile = 2130837509;
+			
+			// aapt resource value: 0x7f020006
+			public const int Settings = 2130837510;
 			
 			static Layout()
 			{
