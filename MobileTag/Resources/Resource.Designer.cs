@@ -387,8 +387,6 @@ namespace MobileTag
 			// aapt resource value: 0x7f020002
 			public const int Login = 2130837506;
 			
-			// aapt resource value: 0x7f020003
-			public const int Map = 2130837507;
 			
 			// aapt resource value: 0x7f020004
 			public const int Menu = 2130837508;
@@ -398,6 +396,8 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f020006
 			public const int Settings = 2130837510;
+			// aapt resource value: 0x7f030003
+			public const int Map = 2130903043;
 			
 			static Layout()
 			{
