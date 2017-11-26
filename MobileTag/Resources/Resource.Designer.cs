@@ -131,24 +131,6 @@ namespace MobileTag
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f04000b
-			public const int btnCommunity = 2130968587;
-			
-			// aapt resource value: 0x7f04000c
-			public const int btnSettings = 2130968588;
-			
-			// aapt resource value: 0x7f040009
-			public const int btnViewMap = 2130968585;
-			
-			// aapt resource value: 0x7f04000a
-			public const int btnViewProfile = 2130968586;
-			
-			// aapt resource value: 0x7f040005
-			public const int createAccountButton = 2130968581;
-			
-			// aapt resource value: 0x7f040001
-			public const int createAccountHeader = 2130968577;
-			
 			// aapt resource value: 0x7f040008
 			public const int common_google_signin_btn_text_dark = 2130968584;
 			
@@ -277,14 +259,23 @@ namespace MobileTag
 			// aapt resource value: 0x7f07000a
 			public const int auto = 2131165194;
 			
-			// aapt resource value: 0x7f070016
-			public const int btnToMapTest = 2131165206;
+			// aapt resource value: 0x7f07001c
+			public const int btnCommunity = 2131165212;
 			
-			// aapt resource value: 0x7f070019
-			public const int claimButton = 2131165209;
+			// aapt resource value: 0x7f07001d
+			public const int btnSettings = 2131165213;
 			
 			// aapt resource value: 0x7f07001a
-			public const int clientCameraLocationbtn = 2131165210;
+			public const int btnViewMap = 2131165210;
+			
+			// aapt resource value: 0x7f07001b
+			public const int btnViewProfile = 2131165211;
+			
+			// aapt resource value: 0x7f070018
+			public const int claimButton = 2131165208;
+			
+			// aapt resource value: 0x7f070019
+			public const int clientCameraLocationbtn = 2131165209;
 			
 			// aapt resource value: 0x7f070012
 			public const int createAccountButton = 2131165202;
@@ -313,8 +304,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f070013
 			public const int loginHeader = 2131165203;
 			
-			// aapt resource value: 0x7f070017
-			public const int map = 2131165207;
+			// aapt resource value: 0x7f070016
+			public const int map = 2131165206;
 			
 			// aapt resource value: 0x7f070001
 			public const int none = 2131165185;
@@ -340,8 +331,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f070004
 			public const int terrain = 2131165188;
 			
-			// aapt resource value: 0x7f070018
-			public const int textBelowMap = 2131165208;
+			// aapt resource value: 0x7f070017
+			public const int textBelowMap = 2131165207;
 			
 			// aapt resource value: 0x7f07000f
 			public const int usernameField = 2131165199;
@@ -378,26 +369,26 @@ namespace MobileTag
 		public partial class Layout
 		{
 			
-			// aapt resource value: 0x7f020000
-			public const int Community = 2130837504;
+			// aapt resource value: 0x7f030000
+			public const int Community = 2130903040;
 			
-			// aapt resource value: 0x7f020001
-			public const int CreateAccount = 2130837505;
+			// aapt resource value: 0x7f030001
+			public const int CreateAccount = 2130903041;
 			
-			// aapt resource value: 0x7f020002
-			public const int Login = 2130837506;
+			// aapt resource value: 0x7f030002
+			public const int Login = 2130903042;
 			
-			
-			// aapt resource value: 0x7f020004
-			public const int Menu = 2130837508;
-			
-			// aapt resource value: 0x7f020005
-			public const int Profile = 2130837509;
-			
-			// aapt resource value: 0x7f020006
-			public const int Settings = 2130837510;
 			// aapt resource value: 0x7f030003
 			public const int Map = 2130903043;
+			
+			// aapt resource value: 0x7f030004
+			public const int Menu = 2130903044;
+			
+			// aapt resource value: 0x7f030005
+			public const int Profile = 2130903045;
+			
+			// aapt resource value: 0x7f030006
+			public const int Settings = 2130903046;
 			
 			static Layout()
 			{
@@ -466,32 +457,32 @@ namespace MobileTag
 			// aapt resource value: 0x7f05000f
 			public const int common_signin_button_text_long = 2131034127;
 			
-			// aapt resource value: 0x7f030006
-			public const int correct_credentials_prompt = 2130903046;
+			// aapt resource value: 0x7f050017
+			public const int correct_credentials_prompt = 2131034135;
 			
-			// aapt resource value: 0x7f030008
-			public const int create_account_prompt = 2130903048;
+			// aapt resource value: 0x7f050019
+			public const int create_account_prompt = 2131034137;
 			
-			// aapt resource value: 0x7f030009
-			public const int here = 2130903049;
+			// aapt resource value: 0x7f05001a
+			public const int here = 2131034138;
 			
-			// aapt resource value: 0x7f030003
-			public const int invalid_password_prompt = 2130903043;
+			// aapt resource value: 0x7f050014
+			public const int invalid_password_prompt = 2131034132;
 			
-			// aapt resource value: 0x7f030002
-			public const int invalid_username_prompt = 2130903042;
+			// aapt resource value: 0x7f050013
+			public const int invalid_username_prompt = 2131034131;
 			
-			// aapt resource value: 0x7f030004
-			public const int login_failed = 2130903044;
+			// aapt resource value: 0x7f050015
+			public const int login_failed = 2131034133;
 			
-			// aapt resource value: 0x7f030007
-			public const int ok = 2130903047;
+			// aapt resource value: 0x7f050018
+			public const int ok = 2131034136;
 			
-			// aapt resource value: 0x7f030001
-			public const int select_team_prompt = 2130903041;
+			// aapt resource value: 0x7f050012
+			public const int select_team_prompt = 2131034130;
 			
-			// aapt resource value: 0x7f030005
-			public const int username_taken = 2130903045;
+			// aapt resource value: 0x7f050016
+			public const int username_taken = 2131034134;
 			
 			static String()
 			{
