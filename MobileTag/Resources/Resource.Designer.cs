@@ -370,7 +370,7 @@ namespace MobileTag
 			public const int Main = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int MapLayout = 2130903043;
+			public const int Map = 2130903043;
 			
 			static Layout()
 			{

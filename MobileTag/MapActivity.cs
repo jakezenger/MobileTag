@@ -38,7 +38,7 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
 
             ////Connects MapLayout.axml to this Activity
-            SetContentView(Resource.Layout.MapLayout);
+            SetContentView(Resource.Layout.Map);
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
             locationButton = FindViewById<Button>(Resource.Id.clientCameraLocationbtn);
