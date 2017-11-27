@@ -16,6 +16,8 @@ using Android.Gms.Location;
 using Android.Gms.Common.Apis;
 using Android.Support.V4.App;
 using Android.Graphics;
+using Android.Content.PM;
+using Android.Gms.Tasks;
 
 namespace MobileTag
 {
@@ -31,13 +33,15 @@ namespace MobileTag
         private TextView lngLatText;
         private Button tagButton;
         private Button locationButton;
+        readonly string[] LocationPermissions = { Android.Manifest.Permission.AccessFineLocation, Android.Manifest.Permission.AccessCoarseLocation };
+        private const int RequestLocationID = 0;
 
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            ////Connects MapLayout.axml to this Activity
+            ////Connects Map.axml to this Activity
             SetContentView(Resource.Layout.Map);
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
@@ -47,6 +51,41 @@ namespace MobileTag
 
             SetUpMap();
 
+            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
+            {
+                // Location permissions have been granted
+                GetLocation();
+            }
+            else
+            {
+                RequestPermissions(LocationPermissions, RequestLocationID);
+            }
+        }
+
+        // Based on example code from https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            switch (requestCode)
+            {
+                case RequestLocationID:
+                    {
+                        if (grantResults[0] == Permission.Granted)
+                        {
+                            GetLocation();
+                        }
+                        else
+                        {
+                            // Permission was denied.. go back to the MenuActivity
+                            StartActivity(new Intent(this, typeof(MenuActivity)));
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        private void GetLocation()
+        {
             locMgr = GetSystemService(Context.LocationService) as LocationManager;
 
             Criteria locationCriteria = new Criteria();
@@ -54,6 +93,7 @@ namespace MobileTag
             locationCriteria.PowerRequirement = Power.Medium;
 
             provider = locMgr.GetBestProvider(locationCriteria, true);
+
             lastKnownLocation = locMgr.GetLastKnownLocation(provider);
             if (lastKnownLocation == null)
                 System.Diagnostics.Debug.WriteLine("No Location");
@@ -90,16 +130,24 @@ namespace MobileTag
         protected override void OnResume()
         {
             base.OnResume();
-            locMgr = GetSystemService(Context.LocationService) as LocationManager;
-            locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
-            locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
+
+            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
+            {
+                locMgr = GetSystemService(Context.LocationService) as LocationManager;
+                locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
+                locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
+            }
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            ////This will remove the listener from constantly grabbing locations
-            locMgr.RemoveUpdates(this);
+
+            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
+            {
+                ////This will remove the listener from constantly grabbing locations
+                locMgr.RemoveUpdates(this);
+            }
         }
 
 
@@ -130,23 +178,26 @@ namespace MobileTag
 
         public void OnLocationChanged(Location location)
         {
-            if (myPositionMarker != null)
+            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
-                myPositionMarker.Remove();
+                if (myPositionMarker != null)
+                {
+                    myPositionMarker.Remove();
+                }
+
+                Double lat, lng;
+                lat = location.Latitude;
+                lng = location.Longitude;
+
+                MarkerOptions markerOpt = new MarkerOptions();
+                markerOpt.SetPosition(new LatLng(lat, lng));
+                markerOpt.SetTitle("My Location");
+                markerOpt.SetSnippet(lat + " : " + lng);
+                myPositionMarker = mMap.AddMarker(markerOpt);
+                lngLatText.Text = lat + " : " + lng;
+
+                locMgr.RemoveUpdates(this);
             }
-
-            Double lat, lng;
-            lat = location.Latitude;
-            lng = location.Longitude;
-
-            MarkerOptions markerOpt = new MarkerOptions();
-            markerOpt.SetPosition(new LatLng(lat, lng));
-            markerOpt.SetTitle("My Location");
-            markerOpt.SetSnippet(lat + " : " + lng);
-            myPositionMarker = mMap.AddMarker(markerOpt);
-            lngLatText.Text = lat + " : " + lng;
-
-            locMgr.RemoveUpdates(this);
         }
 
         public void OnProviderDisabled(string provider)
