@@ -99,13 +99,18 @@ namespace MobileTag
                 System.Diagnostics.Debug.WriteLine("No Location");
         }
 
-        private void LocationButton_Click(object sender, EventArgs e)
+        private void CenterMapCameraOnLocation()
         {
             if (myPositionMarker != null)
             {
                 CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(myPositionMarker.Position, 10);
                 mMap.MoveCamera(mapCameraPos);
             }
+        }
+
+        private void LocationButton_Click(object sender, EventArgs e)
+        {
+            CenterMapCameraOnLocation();
         }
 
         private void TagButton_Click(object sender, EventArgs e)
