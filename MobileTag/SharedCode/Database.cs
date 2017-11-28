@@ -147,7 +147,7 @@ namespace MobileTag
                     playerID = (int)reader["PlayerID"];
                     teamID = (int)reader["TeamID"];
                     teamName = (string)reader["TeamName"];
-                    cellID = (int)reader["CellID"];
+                    cellID = 0; //(int)reader["CellID"];
                 }
                 reader.Close();
             };
@@ -184,6 +184,57 @@ namespace MobileTag
 
             Cell cell = new Cell(lat, lng);
             return cell;
+        }
+
+        public static List<Cell> GetAllCells()
+        {
+            var cellList = new List<Cell>(256);
+
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetAllCells", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    decimal lat = (decimal)reader["Latitude"];
+                    decimal lng = (decimal)reader["Longitude"];
+                    cellList.Add(new Cell(lat, lng));
+                }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+            
+            return cellList;
+        }
+
+        public static int UpdateCell(int cellID, int teamID)
+        {
+            int userValidity = 1;
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("UpdateCell", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                  
+                }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+
+            return userValidity;
         }
 
         ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

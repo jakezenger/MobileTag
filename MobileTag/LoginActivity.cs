@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MobileTag.Models;
 
 using Android.App;
 using Android.Content;
@@ -13,6 +14,7 @@ using Android.Graphics;
 using Android.Text;
 using Android.Text.Style;
 using Android.Text.Method;
+using MobileTag.SharedCode;
 
 namespace MobileTag
 {
@@ -58,6 +60,14 @@ namespace MobileTag
             if (Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
             {
                 Intent intent = new Intent(this, typeof(MenuActivity));
+                GameModel.Player = Database.GetPlayer(usernameField.Text.Trim());
+                GameModel.Frontier = Database.GetAllCells();
+                GameModel.Overlays = new List<MapOverlay>(256);
+                foreach(Cell cell in GameModel.Frontier)
+                {
+                    GameModel.Overlays.Add(new MapOverlay(cell));
+                }
+
                 StartActivity(intent);
             }
             else
