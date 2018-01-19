@@ -41,6 +41,9 @@ namespace MobileTag
         {
             base.OnCreate(savedInstanceState);
 
+            // Set the database context
+            Database.SetContext(this);
+
             ////Connects Map.axml to this Activity
             SetContentView(Resource.Layout.Map);
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);

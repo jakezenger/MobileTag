@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.SqlClient;
 
 using Android.App;
 using Android.Content;
@@ -9,6 +10,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using MobileTag.Models;
 
 namespace MobileTag
 {
@@ -28,6 +30,9 @@ namespace MobileTag
             SetContentView(Resource.Layout.CreateAccount);
 
             string[] teams = { GetString(Resource.String.select_team_prompt), "Red", "Green", "Blue", "Purple", "Pink" };
+
+            // Set the database context
+            Database.SetContext(this);
 
             // Populate selectTeamSpinner choices
             Spinner selectTeam = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
@@ -84,7 +89,7 @@ namespace MobileTag
             {
                 usernameField.Error = GetString(Resource.String.username_taken);
             }
-            else
+            else if (exitCode == 1)
             {
                 // User succesfully added... go to main activity
                 StartActivity(new Intent(this, typeof(MenuActivity)));

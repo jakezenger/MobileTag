@@ -466,6 +466,12 @@ namespace MobileTag
 			// aapt resource value: 0x7f050019
 			public const int create_account_prompt = 2131034137;
 			
+			// aapt resource value: 0x7f05001c
+			public const int db_connectivity_error = 2131034140;
+			
+			// aapt resource value: 0x7f05001b
+			public const int error = 2131034139;
+			
 			// aapt resource value: 0x7f05001a
 			public const int here = 2131034138;
 			

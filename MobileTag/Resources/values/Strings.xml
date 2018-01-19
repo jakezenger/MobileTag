@@ -10,4 +10,6 @@
   <string name="ok">OK</string>
   <string name="create_account_prompt">Don\'t have an account? Create one here.</string>
   <string name="here">here.</string>
+  <string name="error">Error</string>
+  <string name="db_connectivity_error">Could not connect to the server.</string>
 </resources>

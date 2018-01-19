@@ -57,5 +57,31 @@ namespace MobileTag.Models
             }
             return color;
         }
+
+        // Displays an AlertDialog with the given error parameters.
+        public static AlertDialog DisplayErrorDialog(Context context, string title, string message, int errorCode = 0)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.SetCancelable(false);
+            builder.SetPositiveButton(context.GetString(Resource.String.ok), (s, ea) => { /* User has clicked ok */ });
+            builder.SetTitle(title);
+
+            if (errorCode != 0)
+            {
+                // Error code was provided
+                builder.SetMessage(message + " (Error Code: " + errorCode + ")");
+            }
+            else
+            {
+                // Error code was not provided
+                builder.SetMessage(message);
+            }
+
+                AlertDialog errorDialog = builder.Create();
+
+            errorDialog.Show();
+
+            return errorDialog;
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace MobileTag
         private static string CONNECTION_STRING = "";
         private static bool initialized = false;
         private delegate void Del(SqlConnection connection);
+        private static Context context;
 
         private static void Init_()
         {
@@ -33,7 +34,12 @@ namespace MobileTag
             initialized = true;
         }
 
-        private static void ExecuteQuery(Del del)
+        public static void SetContext(Context context)
+        {
+            Database.context = context;
+        }
+
+        private static int ExecuteQuery(Del del)
         {
             if (!initialized) Init_();
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
@@ -43,18 +49,24 @@ namespace MobileTag
                     connection.Open();
                     del(connection);                                                               
                     connection.Close();
+                    return 0;
+                }
+                catch (SqlException sqlException)
+                {
+                    GameModel.DisplayErrorDialog(context, context.GetString(Resource.String.error), context.GetString(Resource.String.db_connectivity_error), sqlException.ErrorCode);
+                    return -1;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
+                    return -1;
                 }
-                
             }
         }
 
         public static int AddUser(string username, string password, int teamID)
         {
-            int available = 0;
+            int isAvailable = 0;
 
             Del readerProcedure = delegate(SqlConnection connection)
             {
@@ -68,14 +80,19 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    available = (int)reader["Available"];
+                    isAvailable = (int)reader["Available"];
                 }
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            int queryReturnStatus = ExecuteQuery(readerProcedure);
 
-            return available;
+            if (queryReturnStatus == -1)
+            {
+                return -1;
+            }
+            else
+                return isAvailable;
         }
 
         public static int ValidateLoginCredentials(string username, string password)
@@ -98,9 +115,14 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            int queryReturnStatus = ExecuteQuery(readerProcedure);
 
-            return userValidity;
+            if (queryReturnStatus == -1)
+            {
+                return -1;
+            }
+            else
+                return userValidity;
         }
 
         public static int GetCellTeam(int cellID)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.SqlClient;
 
 using Android.App;
 using Android.Content;
@@ -13,6 +14,7 @@ using Android.Graphics;
 using Android.Text;
 using Android.Text.Style;
 using Android.Text.Method;
+using MobileTag.Models;
 
 namespace MobileTag
 {
@@ -29,6 +31,9 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.Login);
+
+            // Set the database context
+            Database.SetContext(this);
 
             // Set up createAccountLink textview
             SpannableString createAccountPrompt = new SpannableString(GetString(Resource.String.create_account_prompt));
@@ -54,23 +59,16 @@ namespace MobileTag
         {
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
             EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
+            int signInReturned = Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text);
 
-            if (Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
+            if (signInReturned == 1)
             {
                 Intent intent = new Intent(this, typeof(MenuActivity));
                 StartActivity(intent);
             }
-            else
+            else if (signInReturned == 0)
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.SetCancelable(false);
-                builder.SetPositiveButton(GetString(Resource.String.ok), (s, ea) => { /* User has clicked ok */ });
-                builder.SetTitle(GetString(Resource.String.login_failed));
-                builder.SetMessage(GetString(Resource.String.correct_credentials_prompt));
-
-                AlertDialog loginFailedAlert = builder.Create();
-
-                loginFailedAlert.Show();
+                GameModel.DisplayErrorDialog(this, GetString(Resource.String.login_failed), GetString(Resource.String.correct_credentials_prompt));
             }
         }
 
