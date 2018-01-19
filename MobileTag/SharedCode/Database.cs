@@ -21,6 +21,7 @@ namespace MobileTag
         private static bool initialized = false;
         private delegate void Del(SqlConnection connection);
         private static Context context;
+        public enum ExitCodes { NoError = 0, NoConnection = -1, UnknownError = -127 };
 
         private static void Init_()
         {
@@ -39,7 +40,7 @@ namespace MobileTag
             Database.context = context;
         }
 
-        private static int ExecuteQuery(Del del)
+        private static ExitCodes ExecuteQuery(Del del)
         {
             if (!initialized) Init_();
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
@@ -49,17 +50,17 @@ namespace MobileTag
                     connection.Open();
                     del(connection);                                                               
                     connection.Close();
-                    return 0;
+                    return ExitCodes.NoError;
                 }
                 catch (SqlException sqlException)
                 {
-                    GameModel.DisplayErrorDialog(context, context.GetString(Resource.String.error), context.GetString(Resource.String.db_connectivity_error), sqlException.ErrorCode);
-                    return -1;
+                    GameModel.DisplayErrorDialog(context, context.GetString(Resource.String.error), context.GetString(Resource.String.db_connectivity_error));
+                    return ExitCodes.NoConnection;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
-                    return -1;
+                    return ExitCodes.UnknownError;
                 }
             }
         }
@@ -85,9 +86,9 @@ namespace MobileTag
                 reader.Close();
             };
 
-            int queryReturnStatus = ExecuteQuery(readerProcedure);
+            ExitCodes queryExitCode = ExecuteQuery(readerProcedure);
 
-            if (queryReturnStatus == -1)
+            if (queryExitCode == ExitCodes.NoConnection)
             {
                 return -1;
             }
@@ -115,9 +116,9 @@ namespace MobileTag
                 reader.Close();
             };
 
-            int queryReturnStatus = ExecuteQuery(readerProcedure);
+            ExitCodes queryReturnStatus = ExecuteQuery(readerProcedure);
 
-            if (queryReturnStatus == -1)
+            if (queryReturnStatus == ExitCodes.NoConnection)
             {
                 return -1;
             }
