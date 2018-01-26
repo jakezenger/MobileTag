@@ -16,6 +16,7 @@ using Android.Text.Method;
 
 namespace MobileTag
 {
+    // Random test comment... you should probably delete this now.
     [Activity(Label = "LoginActivity", MainLauncher = true)]
     public class LoginActivity : Activity
     {
