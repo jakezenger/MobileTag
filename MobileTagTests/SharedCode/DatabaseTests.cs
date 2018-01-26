@@ -16,5 +16,29 @@ namespace MobileTag.Tests
         {
             Assert.Fail();
         }
+
+        [TestMethod()]
+        public void AddUserTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void ValidateLoginCredentialsTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void GetCellTeamTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void GetPlayerTest()
+        {
+            Assert.Fail();
+        }
     }
 }
