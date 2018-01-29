@@ -5,16 +5,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MobileTag.Models;
 
 namespace MobileTag.Tests
 {
     [TestClass()]
     public class DatabaseTests
     {
+        public Cell TestCell;
+        [TestInitialize]
+        public void _init()
+        {
+            
+        }
+
         [TestMethod()]
         public void GetCellTest()
         {
-            Assert.Fail();
+            Cell comparisonCell = new Cell(1);
+            comparisonCell.Latitude = 44.677684000000000m;
+             comparisonCell.Longitude =  57.232672750000000m;
+            TestCell = Database.GetCell(1);
+          
+            Assert.AreEqual(comparisonCell.Latitude,TestCell.Latitude);
+            Assert.AreEqual(comparisonCell.Longitude, TestCell.Longitude);
         }
 
         [TestMethod()]
