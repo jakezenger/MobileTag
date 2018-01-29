@@ -274,6 +274,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f07001b
 			public const int btnViewProfile = 2131165211;
 			
+			// aapt resource value: 0x7f070024
+			public const int cellsClaimedLabelTextView = 2131165220;
+			
 			// aapt resource value: 0x7f070018
 			public const int claimButton = 2131165208;
 			
@@ -291,6 +294,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f07000b
 			public const int dark = 2131165195;
+			
+			// aapt resource value: 0x7f070022
+			public const int gridLayout1 = 2131165218;
 			
 			// aapt resource value: 0x7f070000
 			public const int hybrid = 2131165184;
@@ -336,6 +342,12 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f070008
 			public const int standard = 2131165192;
+			
+			// aapt resource value: 0x7f070023
+			public const int statisticsTextView = 2131165219;
+			
+			// aapt resource value: 0x7f070021
+			public const int teamNameTextView = 2131165217;
 			
 			// aapt resource value: 0x7f070004
 			public const int terrain = 2131165188;
@@ -418,6 +430,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f050011
 			public const int app_name = 2131034129;
 			
+			// aapt resource value: 0x7f05001c
+			public const int cells_claimed = 2131034140;
+			
 			// aapt resource value: 0x7f050001
 			public const int common_google_play_services_enable_button = 2131034113;
 			
@@ -492,6 +507,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f050012
 			public const int select_team_prompt = 2131034130;
+			
+			// aapt resource value: 0x7f05001b
+			public const int statistics = 2131034139;
 			
 			// aapt resource value: 0x7f050016
 			public const int username_taken = 2131034134;

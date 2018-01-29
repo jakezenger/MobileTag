@@ -25,7 +25,9 @@ namespace MobileTag
 
             TextView usernameTextView = FindViewById<TextView>(Resource.Id.usernameTextView);
             usernameTextView.Text = GameModel.Player.Username;
-            usernameTextView.TextSize = 20.0f;
+
+            TextView teamNameTextView = FindViewById<TextView>(Resource.Id.teamNameTextView);
+            teamNameTextView.Text = GameModel.Player.Team.TeamName;
         }
     }
 }
