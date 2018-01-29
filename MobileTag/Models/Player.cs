@@ -14,22 +14,25 @@ namespace MobileTag.Models
 {
     public class Player
     {
+        public string Username { get; set; }
         public int ID { get; }
         public Team Team { get; set; }
         public int CurrentCellID { get; set; }
 
-        public Player(int id, Team team, int currentCellID)
+        public Player(int id, string username, Team team, int currentCellID)
         {
             ID = id;
             Team = team;
             CurrentCellID = currentCellID;
+            Username = username;
         }
 
-        public Player(int id, Team team, decimal lat, decimal lng)
+        public Player(int id, string username, Team team, decimal lat, decimal lng)
         {
             ID = id;
             Team = team;
             CurrentCellID = GameModel.GetCellID(lat, lng);
+            Username = username;
         }
     }
 }

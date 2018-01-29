@@ -319,6 +319,12 @@ namespace MobileTag
 			// aapt resource value: 0x7f070010
 			public const int passwordField = 2131165200;
 			
+			// aapt resource value: 0x7f07001f
+			public const int profilePicImageView = 2131165215;
+			
+			// aapt resource value: 0x7f07001e
+			public const int relativeLayout1 = 2131165214;
+			
 			// aapt resource value: 0x7f070003
 			public const int satellite = 2131165187;
 			
@@ -339,6 +345,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f07000f
 			public const int usernameField = 2131165199;
+			
+			// aapt resource value: 0x7f070020
+			public const int usernameTextView = 2131165216;
 			
 			// aapt resource value: 0x7f070009
 			public const int wide = 2131165193;
