@@ -22,10 +22,10 @@ namespace MobileTag.Tests
         [TestMethod()]
         public void GetCellTest()
         {
-            Cell comparisonCell = new Cell(1);
+            Cell comparisonCell = new Cell(0);
             comparisonCell.Latitude = 44.677684000000000m;
-             comparisonCell.Longitude =  57.232672750000000m;
-            TestCell = Database.GetCell(1);
+             comparisonCell.Longitude =  57.23257900000000m;
+            TestCell = Database.GetCell(0);
           
             Assert.AreEqual(comparisonCell.Latitude,TestCell.Latitude);
             Assert.AreEqual(comparisonCell.Longitude, TestCell.Longitude);
