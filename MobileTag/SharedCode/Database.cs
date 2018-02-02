@@ -182,7 +182,7 @@ namespace MobileTag
 
             ExecuteQuery(readerProcedure);
 
-            Cell cell = new Cell(lat, lng);
+            Cell cell = new Cell(cellID, lat, lng);
             return cell;
         }
 
