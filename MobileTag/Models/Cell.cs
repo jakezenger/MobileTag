@@ -35,7 +35,8 @@ namespace MobileTag.Models
 
         public bool AreEqual(Cell obj1, Cell obj2)
         {
-            return (obj1 == obj2);
+            
+            return (obj1.Latitude == obj2.Latitude && obj1.Longitude == obj2.Longitude);
         }
      
         
