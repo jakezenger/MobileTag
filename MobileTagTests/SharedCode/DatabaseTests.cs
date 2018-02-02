@@ -52,7 +52,7 @@ namespace MobileTag.Tests
         [TestMethod()]
         public void GetPlayerTest()
         {
-            Assert.Fail();
+            Player testPlayer = new Player(1, new Team (id:2,teamName:"Red"), );
         }
     }
 }

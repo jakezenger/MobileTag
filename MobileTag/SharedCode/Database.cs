@@ -48,7 +48,6 @@ namespace MobileTag
                 {
                     Console.WriteLine(e.ToString());
                 }
-                
             }
         }
 
