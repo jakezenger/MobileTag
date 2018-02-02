@@ -185,6 +185,20 @@ namespace MobileTag
             return cell;
         }
 
+        public static void DeletePlayer(int playerID)
+        {
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("DeletePlayer", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                cmd.ExecuteNonQuery();             
+            };
+
+            ExecuteQuery(readerProcedure);
+        }
+
         ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         ////////////////////////////////////////// OLDE IMPLEMENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         //////////////////////////////////////////|||||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
