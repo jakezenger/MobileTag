@@ -3,6 +3,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Content;
 using System;
+using Android.Views;
 
 namespace MobileTag
 {
@@ -20,10 +21,27 @@ namespace MobileTag
             // Create your application here
             SetContentView(Resource.Layout.Menu);
 
-            //var userID = Intent.Extras.GetUserID("UserID", 0);
+            
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+            ActionBar.Title = "MobileTag";
 
             FindViews();
             HandleEvents();
+        }
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menus, menu);
+            return base.OnCreateOptionsMenu(menu);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            Toast.MakeText(this, "Action selected: " + item.TitleFormatted, 
+            ToastLength.Short).Show();
+            return base.OnOptionsItemSelected(item);
         }
 
         private void FindViews()
@@ -67,6 +85,7 @@ namespace MobileTag
             var intent = new Intent(this, typeof(SettingsActivity));
             StartActivity(intent);
         }
+        
     }
 }
 
