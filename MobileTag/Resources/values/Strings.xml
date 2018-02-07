@@ -10,4 +10,6 @@
   <string name="ok">OK</string>
   <string name="create_account_prompt">Don\'t have an account? Create one here.</string>
   <string name="here">here.</string>
+  <string name="statistics">Statistics</string>
+  <string name="cells_claimed">Cells claimed:</string>
 </resources>

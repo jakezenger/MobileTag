@@ -13,6 +13,7 @@ using Android.Graphics;
 using Android.Text;
 using Android.Text.Style;
 using Android.Text.Method;
+using MobileTag.Models;
 
 namespace MobileTag
 {
@@ -57,6 +58,7 @@ namespace MobileTag
 
             if (Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
             {
+                GameModel.Player = Database.GetPlayer(usernameField.Text.Trim());
                 Intent intent = new Intent(this, typeof(MenuActivity));
                 StartActivity(intent);
             }
