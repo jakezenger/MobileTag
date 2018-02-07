@@ -16,7 +16,7 @@ using Android.Text.Method;
 
 namespace MobileTag
 {
-    [Activity(Label = "LoginActivity", MainLauncher = true)]
+    [Activity(Label = "LoginActivity")]
     public class LoginActivity : Activity
     {
         private bool validUsername = false;
