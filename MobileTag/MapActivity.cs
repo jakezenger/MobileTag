@@ -18,6 +18,8 @@ using Android.Support.V4.App;
 using Android.Graphics;
 using Android.Content.PM;
 using Android.Gms.Tasks;
+using Android.Support.V4.Widget;
+using Android.Support.Design.Widget;
 
 namespace MobileTag
 {
@@ -34,7 +36,10 @@ namespace MobileTag
         private Button locationButton;
         readonly string[] LocationPermissions = { Android.Manifest.Permission.AccessFineLocation, Android.Manifest.Permission.AccessCoarseLocation };
         private const int RequestLocationID = 0;
-        
+
+        DrawerLayout drawerLayout;
+        NavigationView navigationView;
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -42,6 +47,18 @@ namespace MobileTag
             
             ////Connects Map.axml to this Activity
             SetContentView(Resource.Layout.Map);
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+
+            //Enable support action bar to display hamburger
+            ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_menu_black_24dp);
+            ActionBar.SetDisplayHomeAsUpEnabled(true);
+
+            drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+
+            //map activity stuff
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
             locationButton = FindViewById<Button>(Resource.Id.clientCameraLocationbtn);
