@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+
 using System.Data.SqlClient;
 using System.Data;
 using MobileTag.Models;
-using Android.Graphics;
+
+
+
 
 namespace MobileTag
 {
-    public static class Database
+    public static class Database 
     {
         private static string CONNECTION_STRING = "";
         private static bool initialized = false;
@@ -28,7 +22,6 @@ namespace MobileTag
             builder.UserID = "eallgood";
             builder.Password = "orangeChicken17";
             builder.InitialCatalog = "MobileTagDB";
-
             CONNECTION_STRING = builder.ConnectionString.ToString();
             initialized = true;
         }
