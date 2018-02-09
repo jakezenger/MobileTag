@@ -12,6 +12,7 @@ using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using Felipecsl.GifImageViewLibrary;
+using MobileTag.Models;
 
 namespace MobileTag
 {
@@ -20,9 +21,6 @@ namespace MobileTag
     {
         private GifImageView gifImageView;
         //private ProgressBar progressBar;
-
-
-
 
 
 
@@ -48,7 +46,6 @@ namespace MobileTag
                 gifImageView.SetBytes(bytes);
                 gifImageView.StartAnimation();
             }
-            
             
 
             //Wait for 6 seconds and start new Activity
