@@ -200,6 +200,35 @@ namespace MobileTag
             ExecuteQuery(readerProcedure);
         }
 
+        public static void DeletecCell(int cellID)
+        {
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("DeleteCell", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.ExecuteNonQuery();
+            };
+
+            ExecuteQuery(readerProcedure);
+        }
+
+        public static void UpdatePlayerInfo(Player player, string newUsername, string newPassword)
+        {
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("UpdatePlayer", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@newUsername", SqlDbType.NVarChar).Value = newUsername;
+                cmd.Parameters.Add("@newPassword", SqlDbType.NVarChar).Value = newPassword;
+                cmd.ExecuteNonQuery();
+            };
+
+            ExecuteQuery(readerProcedure);
+        }
+
         ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         ////////////////////////////////////////// OLDE IMPLEMENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         //////////////////////////////////////////|||||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
