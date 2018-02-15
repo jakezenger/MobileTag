@@ -2,6 +2,7 @@
 using MobileTag;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,26 @@ using Moq;
 
 namespace MobileTag.Tests
 {
+
+    //[TestClass]
+    //public void Save_CustomerIsNotNull_GetsAddedToRepository()
+    //{
+    ////Arrange
+    //Mock<IContainer> mockContainer = new Mock<IContainer>();
+    //Mock<ICustomerView> mockView = new Mock<ICustomerView>();
+
+    //CustomerViewModel viewModel = new CustomerViewModel(mockView.Object, mockContainer.Object);
+    //viewModel.CustomersRepository = new CustomersRepository();
+    //viewModel.Customer = new Mock<Customer>().Object;
+
+    ////Act
+    //viewModel.Save();
+
+    ////Assert
+    //Assert.IsTrue(viewModel.CustomersRepository.Count == 1);
+    //}
+
+
     [TestClass()]
     public class DatabaseTests
     {
@@ -19,17 +40,21 @@ namespace MobileTag.Tests
         [TestInitialize]
         public void _init()
         {
-            Mock<Cell> mockCell = new Mock<Cell>();
+            
         }
 
         [TestMethod()]
         public void GetCellTest()
         {
-            //setup the mocking
-            var mockCell = new Mock<Cell>();
-            mockCell.SetupGet(doc => doc.UserName).Returns("TestPerson");
-            mockCell.SetupGet(doc => doc.Latitude).Returns(44.677684000000000m);
-            mockCell.SetupGet(doc => doc.Latitude).Returns(57.23257900000000m);
+
+            Mock<Cell> mockCell = new Mock<Cell>();
+
+
+
+
+            //mockCell.SetupGet(doc => doc.UserName).Returns("TestPerson");
+            //mockCell.SetupGet(doc => doc.Latitude).Returns(44.677684000000000m);
+            //mockCell.SetupGet(doc => doc.Latitude).Returns(57.23257900000000m);
 
             //Cell comparisonCell = new Cell(0);
             //comparisonCell.Latitude = 44.677684000000000m;
@@ -39,19 +64,7 @@ namespace MobileTag.Tests
             //Assert.AreEqual(comparisonCell.Latitude, TestCell.Latitude);
             //Assert.AreEqual(comparisonCell.Longitude, TestCell.Longitude);
         }
-
-      
-        //************************\\
-        // Android framework doesn't work here
-       //**************************\\
-
-
-        //[TestMethod()]
-        //public void GetCellTeamTest()
-        //{
-        //    Assert.Fail();
-        //}
-
+        
         [TestMethod()]
         public void GetPlayerTest()
         {
