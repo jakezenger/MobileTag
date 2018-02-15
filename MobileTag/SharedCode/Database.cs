@@ -43,7 +43,8 @@ namespace MobileTag
                 }
             }
         }
-
+        
+        // can we use player instead of user?  
         public static int AddUser(string username, string password, int teamID)
         {
             int available = 0;
