@@ -54,8 +54,8 @@ namespace MobileTag
 
 
             string path = Application.Context.FilesDir.Path;
-            var filePath = System.IO.Path.Combine(path, "username.txt");
-            var filePath2 = System.IO.Path.Combine(path, "password.txt");
+            string filePath = System.IO.Path.Combine(path, "username.txt");
+            string filePath2 = System.IO.Path.Combine(path, "password.txt");
             if (System.IO.File.Exists(filePath))
             {
                 usernameField.Text = System.IO.File.ReadAllText(filePath);
@@ -80,6 +80,7 @@ namespace MobileTag
                 var filePath2 = System.IO.Path.Combine(path, "password.txt");
                 System.IO.File.WriteAllText(filePath, usernameField.Text);
                 System.IO.File.WriteAllText(filePath2, passwordField.Text);
+
                 Intent intent = new Intent(this, typeof(MenuActivity));
                 StartActivity(intent);
             }

@@ -35,7 +35,6 @@ namespace MobileTag.Tests
     [TestClass()]
     public class DatabaseTests
     {
-        public Cell TestCell;
         public MockRepository MockRepository { get; private set; }
         [TestInitialize]
         public void _init()
@@ -47,8 +46,7 @@ namespace MobileTag.Tests
         public void GetCellTest()
         {
 
-            Mock<Cell> mockCell = new Mock<Cell>();
-
+            
 
 
 
