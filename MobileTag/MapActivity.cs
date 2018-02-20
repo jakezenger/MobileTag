@@ -55,9 +55,12 @@ namespace MobileTag
             ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_menu_black_24dp);
             ActionBar.SetDisplayHomeAsUpEnabled(true);
 
+
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
 
+
+            //////////////////////////////////////////
             //map activity stuff
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
@@ -76,6 +79,26 @@ namespace MobileTag
             {
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
+
+            //menu item selected
+            navigationView.NavigationItemSelected += (sender, e) =>
+            {
+                e.MenuItem.SetChecked(true);
+                //react to click here and swap fragments or navigate               
+                drawerLayout.CloseDrawers();
+            };
+        }
+
+        //tells drawer to open when hamburger button is pressed        
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+                    return true;
+            }
+            return base.OnOptionsItemSelected(item);
         }
 
         // Based on example code from https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/

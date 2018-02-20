@@ -27,10 +27,7 @@ namespace MobileTag
         private bool validUsername = false;
         private bool usernameChanged = false;
         private bool passwordChanged = false;
-        private bool validPassword = false;
-
-        //vsts test
-        int x = 1;
+        private bool validPassword = false;        
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
