@@ -31,6 +31,16 @@ namespace MobileTag
 
             CONNECTION_STRING = builder.ConnectionString.ToString();
             initialized = true;
+
+            // We need to start an SQLDependency connection to use Query Notifications
+            try
+            {
+                SqlDependency.Start(CONNECTION_STRING);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         private static void ExecuteQuery(Del del)
@@ -171,12 +181,13 @@ namespace MobileTag
                 SqlCommand cmd = new SqlCommand("GetCell", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+
                 reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    lat = (decimal)reader["Latitude"];
-                    lng = (decimal)reader["Longitude"];
+                    lat = Convert.ToDecimal(reader["Latitude"]);
+                    lng = Convert.ToDecimal(reader["Longitude"]);
                 }
                 reader.Close();
             };

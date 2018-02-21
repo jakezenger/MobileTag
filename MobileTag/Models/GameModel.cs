@@ -25,7 +25,7 @@ namespace MobileTag.Models
 
         public static decimal FrontierInterval => frontierInterval;
 
-        public static List<Cell> CellsInView { get; set; }
+        public static List<Cell> CellsInView = new List<Cell>();
         public static Player Player { get; set; }
 
 
@@ -57,6 +57,16 @@ namespace MobileTag.Models
                 default: color = new Color(); break;    //TRANSPARENT         
             }
             return color;
+        }
+
+        public static void AddCellInView(Cell cell)
+        {
+            CellsInView.Add(cell);
+        }
+
+        public static void RemoveCellInView(Cell cell)
+        {
+            CellsInView.Remove(cell);
         }
     }
 }

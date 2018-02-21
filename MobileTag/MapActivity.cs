@@ -18,6 +18,8 @@ using Android.Support.V4.App;
 using Android.Graphics;
 using Android.Content.PM;
 using Android.Gms.Tasks;
+using MobileTag.Models;
+using Microsoft.AspNet.SignalR.Client;
 
 namespace MobileTag
 {
@@ -37,7 +39,7 @@ namespace MobileTag
         private const int RequestLocationID = 0;
 
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        async protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
@@ -59,6 +61,23 @@ namespace MobileTag
             else
             {
                 RequestPermissions(LocationPermissions, RequestLocationID);
+            }
+
+            try
+            {
+                var cellHubConnection = new HubConnection("https://mobiletag.azurewebsites.net/");
+                IHubProxy cellHubProxy = cellHubConnection.CreateHubProxy("cellHub");
+                cellHubProxy.On<int>("broadcastTaggedCell", cellID =>
+                    {
+                        // Handle SignalR notification
+                        Console.WriteLine("Cell {0} tagged!", cellID);
+                    });
+
+                cellHubConnection.Start().Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
 
