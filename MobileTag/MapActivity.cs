@@ -195,7 +195,8 @@ namespace MobileTag
                 myPositionMarker = mMap.AddMarker(markerOpt);
                 lngLatText.Text = lat + " : " + lng;
 
-                locMgr.RemoveUpdates(this);
+                //locMgr.RemoveUpdates(this);
+                
             }
         }
 
