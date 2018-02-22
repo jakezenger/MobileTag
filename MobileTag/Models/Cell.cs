@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Data.SqlClient;
+using Newtonsoft.Json;
 
 namespace MobileTag.Models
 {
@@ -23,19 +24,13 @@ namespace MobileTag.Models
         public int TeamID
         {
             get { return Database.GetCellTeam(ID); }
+            set { }
         }
 
         //public int HoldStrength { get { return Database.GetCellHoldStrength(ID); } }
 
-        //public Cell(Latlng location)
-        //{
-        //    // GENERATE ID FOR GIVEN LOCATION
-        //}
-   
-
         public bool AreEqual(Cell obj1, Cell obj2)
         {
-            
             return (obj1.Latitude == obj2.Latitude && obj1.Longitude == obj2.Longitude);
         }
 
@@ -54,6 +49,7 @@ namespace MobileTag.Models
             Longitude = lng;
         }
 
+        [JsonConstructor]
         public Cell(int id)
         {
             ID = id;

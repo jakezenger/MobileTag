@@ -38,6 +38,10 @@ namespace MobileTag
         readonly string[] LocationPermissions = { Android.Manifest.Permission.AccessFineLocation, Android.Manifest.Permission.AccessCoarseLocation };
         private const int RequestLocationID = 0;
 
+        // SignalR
+        private HubConnection cellHubConnection = new HubConnection("https://mobiletag.azurewebsites.net/");
+        private IHubProxy cellHubProxy;
+
 
         async protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -63,15 +67,20 @@ namespace MobileTag
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
 
+            ConnectToCellHub();
+        }
+
+        private void ConnectToCellHub()
+        {
             try
             {
-                var cellHubConnection = new HubConnection("https://mobiletag.azurewebsites.net/");
-                IHubProxy cellHubProxy = cellHubConnection.CreateHubProxy("cellHub");
-                cellHubProxy.On<int>("broadcastTaggedCell", cellID =>
-                    {
-                        // Handle SignalR notification
-                        Console.WriteLine("Cell {0} tagged!", cellID);
-                    });
+                cellHubProxy = cellHubConnection.CreateHubProxy("cellHub");
+
+                cellHubProxy.On<Cell>("broadcastCell", updatedCell =>
+                {
+                    // Handle SignalR cell update notification
+                    Console.WriteLine("Cell {0} updated!", updatedCell.ID);
+                });
 
                 cellHubConnection.Start().Wait();
             }
@@ -144,6 +153,22 @@ namespace MobileTag
             squareOverlay.InvokeStrokeWidth(0);
 
             Polygon polygonOit = mMap.AddPolygon(squareOverlay);
+
+            try
+            {
+                // Let others know you've tagged this cell
+                Cell cell = new Cell(12345, 5.5m, 2.2m);
+                BroadcastCellUpdate(cell);
+            }
+            catch(AggregateException exc)
+            {
+                foreach(Exception ie in exc.InnerExceptions)
+                    Console.WriteLine(ie.ToString());
+            }
+            catch(Exception o)
+            {
+                Console.WriteLine(o.ToString());
+            }
         }
 
         protected override void OnResume()
@@ -156,6 +181,13 @@ namespace MobileTag
                 locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
                 locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
             }
+        }
+
+        async private void BroadcastCellUpdate(Cell cell)
+        {
+            //cellHubConnection.Start().Wait(); <-- this is most likely unnecessary, but jake left it here on the off chance we need it
+
+            await cellHubProxy.Invoke("UpdateCell", cell);
         }
 
         protected override void OnPause()
