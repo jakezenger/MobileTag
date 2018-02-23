@@ -128,7 +128,6 @@
     <Compile Include="CreateAccountActivity.cs" />
     <Compile Include="LoginActivity.cs" />
     <Compile Include="MapActivity.cs" />
-    <Compile Include="MenuActivity.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\Player.cs" />
@@ -171,9 +170,6 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\Menu.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -203,11 +199,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Toolbar.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\menu\top_menus.xml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-hdpi\ic_menu_black_24dp.png" />
