@@ -56,10 +56,8 @@ namespace MobileTag
             ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_menu_black_24dp);
             ActionBar.SetDisplayHomeAsUpEnabled(true);
 
-
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-
 
             //////////////////////////////////////////
             //map activity stuff
@@ -86,7 +84,7 @@ namespace MobileTag
             {
                 e.MenuItem.SetChecked(true);
                 //react to click here and swap fragments or navigate               
-                drawerLayout.CloseDrawers();
+                drawerLayout.CloseDrawers();               
             };
         }
 
@@ -114,9 +112,9 @@ namespace MobileTag
                             GetLocation();
                         }
                         else
-                        {
-                            // Permission was denied.. go back to the MenuActivity
-                            StartActivity(new Intent(this, typeof(MenuActivity)));
+                        {                            
+                            //Permission denied, throw some kind of error here
+                            StartActivity(new Intent(this, typeof(MapActivity)));
                         }
                     }
 
