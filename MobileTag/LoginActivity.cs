@@ -13,11 +13,15 @@ using Android.Graphics;
 using Android.Text;
 using Android.Text.Style;
 using Android.Text.Method;
+
+using MobileTag.Models;
+
 using Java.IO;
+
 
 namespace MobileTag
 {
-    [Activity(Label = "LoginActivity", MainLauncher = true)]
+    [Activity(Label = "LoginActivity")]
     public class LoginActivity : Activity
     {
         private bool validUsername = false;
@@ -75,11 +79,15 @@ namespace MobileTag
             if (Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
             {
 
+                GameModel.Player = Database.GetPlayer(usernameField.Text.Trim());
+
+
                 string path = Application.Context.FilesDir.Path;
                 var filePath = System.IO.Path.Combine(path, "username.txt");
                 var filePath2 = System.IO.Path.Combine(path, "password.txt");
                 System.IO.File.WriteAllText(filePath, usernameField.Text);
                 System.IO.File.WriteAllText(filePath2, passwordField.Text);
+
 
                 Intent intent = new Intent(this, typeof(MenuActivity));
                 StartActivity(intent);

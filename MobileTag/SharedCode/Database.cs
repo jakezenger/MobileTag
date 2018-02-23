@@ -125,6 +125,7 @@ namespace MobileTag
             int playerID = 0;
             int teamID = 0;
             string teamName = "";
+
             int cellID = 0;
 
             Del readerProcedure = delegate (SqlConnection connection)
@@ -148,7 +149,7 @@ namespace MobileTag
             ExecuteQuery(readerProcedure);
 
             Team team = new Team(teamID, teamName);
-            Player player = new Player(playerID, team, cellID);
+            Player player = new Player(playerID, username, team, cellID);
             return player;
         }       
 

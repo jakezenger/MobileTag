@@ -3,5 +3,54 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1">
+        <ImageView
+            android:src="@android:drawable/ic_menu_gallery"
+            android:layout_width="130.0dp"
+            android:layout_height="130.0dp"
+            android:id="@+id/profilePicImageView"
+            android:layout_marginLeft="15.0dp" />
+        <TextView
+            android:text="[username]"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/profilePicImageView"
+            android:id="@+id/usernameTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_alignBaseline="@id/profilePicImageView"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="39.0dp" />
+        <TextView
+            android:text="[teamname]"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/profilePicImageView"
+            android:id="@+id/teamNameTextView"
+            android:layout_below="@id/usernameTextView"
+            android:layout_marginTop="13.5dp" />
+    </RelativeLayout>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridLayout1"
+        android:rowCount="5"
+        android:columnCount="2"
+        android:layout_marginLeft="15.0dp"
+        android:layout_marginRight="15.0dp"
+        android:layout_marginTop="15.0dp">
+        <TextView
+            android:text="@string/statistics"
+            android:id="@+id/statisticsTextView"
+            android:layout_columnSpan="2"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20.0dp" />
+        <TextView
+            android:text="@string/cells_claimed"
+            android:id="@+id/cellsClaimedLabelTextView"
+            android:layout_marginTop="10.0dp" />
+    </GridLayout>
 </LinearLayout>
