@@ -67,8 +67,6 @@ namespace MobileTag
             {
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
-
-            SubscribeToUpdates(12345);
         }
 
         private void SetUpCellHub()
