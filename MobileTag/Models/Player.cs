@@ -14,8 +14,12 @@ namespace MobileTag.Models
 {
     public class Player
     {
+
         public string Username { get; set; }
-        public int ID { get; }
+    
+
+        public int ID { get; set; }
+
         public Team Team { get; set; }
         public int CurrentCellID { get; set; }
 

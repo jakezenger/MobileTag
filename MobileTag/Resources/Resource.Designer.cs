@@ -31,6 +31,7 @@ namespace MobileTag
 		public partial class Animation
 		{
 			
+
 			// aapt resource value: 0x7f040000
 			public const int abc_fade_in = 2130968576;
 			
@@ -328,6 +329,71 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f01009a
 			public const int colorPrimary = 2130772122;
+
+			static Attribute()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Attribute()
+			{
+			}
+		}
+		
+		public partial class Id
+		{
+			
+			// aapt resource value: 0x7f05000f
+			public const int btnCommunity = 2131034127;
+			
+			// aapt resource value: 0x7f050010
+			public const int btnSettings = 2131034128;
+			
+			// aapt resource value: 0x7f05000d
+			public const int btnViewMap = 2131034125;
+			
+			// aapt resource value: 0x7f05000e
+			public const int btnViewProfile = 2131034126;
+			
+			// aapt resource value: 0x7f05000b
+			public const int claimButton = 2131034123;
+			
+			// aapt resource value: 0x7f05000c
+			public const int clientCameraLocationbtn = 2131034124;
+			
+			// aapt resource value: 0x7f050005
+			public const int createAccountButton = 2131034117;
+			
+			// aapt resource value: 0x7f050001
+			public const int createAccountHeader = 2131034113;
+			
+			// aapt resource value: 0x7f050008
+			public const int createAccountLink = 2131034120;
+			
+			// aapt resource value: 0x7f050000
+			public const int linearLayout1 = 2131034112;
+			
+			// aapt resource value: 0x7f050006
+			public const int loginHeader = 2131034118;
+			
+			// aapt resource value: 0x7f050009
+			public const int map = 2131034121;
+			
+			// aapt resource value: 0x7f050003
+			public const int passwordField = 2131034115;
+			
+			// aapt resource value: 0x7f050004
+			public const int selectTeamSpinner = 2131034116;
+			
+			// aapt resource value: 0x7f050007
+			public const int signInButton = 2131034119;
+			
+			// aapt resource value: 0x7f05000a
+			public const int textBelowMap = 2131034122;
+			
+			// aapt resource value: 0x7f050002
+			public const int usernameField = 2131034114;
+
 			
 			// aapt resource value: 0x7f01009b
 			public const int colorPrimaryDark = 2130772123;
@@ -335,8 +401,13 @@ namespace MobileTag
 			// aapt resource value: 0x7f01001b
 			public const int colorScheme = 2130771995;
 			
+
 			// aapt resource value: 0x7f0100a1
 			public const int colorSwitchThumbNormal = 2130772129;
+
+			// aapt resource value: 0x7f030000
+			public const int google_play_services_version = 2130903040;
+
 			
 			// aapt resource value: 0x7f0100dc
 			public const int commitIcon = 2130772188;
@@ -344,6 +415,7 @@ namespace MobileTag
 			// aapt resource value: 0x7f010034
 			public const int contentInsetEnd = 2130772020;
 			
+
 			// aapt resource value: 0x7f010038
 			public const int contentInsetEndWithActions = 2130772024;
 			
@@ -364,6 +436,28 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f01002c
 			public const int customNavigationLayout = 2130772012;
+
+			// aapt resource value: 0x7f020000
+			public const int Community = 2130837504;
+			
+			// aapt resource value: 0x7f020001
+			public const int CreateAccount = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public const int Login = 2130837506;
+			
+			// aapt resource value: 0x7f020003
+			public const int Map = 2130837507;
+			
+			// aapt resource value: 0x7f020004
+			public const int Menu = 2130837508;
+			
+			// aapt resource value: 0x7f020005
+			public const int Profile = 2130837509;
+			
+			// aapt resource value: 0x7f020006
+			public const int Settings = 2130837510;
+
 			
 			// aapt resource value: 0x7f0100d6
 			public const int defaultQueryHint = 2130772182;
@@ -371,6 +465,7 @@ namespace MobileTag
 			// aapt resource value: 0x7f010073
 			public const int dialogPreferredPadding = 2130772083;
 			
+
 			// aapt resource value: 0x7f010072
 			public const int dialogTheme = 2130772082;
 			
@@ -451,10 +546,44 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f01002f
 			public const int indeterminateProgressStyle = 2130772015;
+		// aapt resource value: 0x7f040001
+			public const int app_name = 2130968577;
+			
+			// aapt resource value: 0x7f040000
+			public const int common_google_play_services_unknown_issue = 2130968576;
+			
+			// aapt resource value: 0x7f040007
+			public const int correct_credentials_prompt = 2130968583;
+			
+			// aapt resource value: 0x7f040009
+			public const int create_account_prompt = 2130968585;
+			
+			// aapt resource value: 0x7f04000a
+			public const int here = 2130968586;
+			
+			// aapt resource value: 0x7f040004
+			public const int invalid_password_prompt = 2130968580;
+			
+			// aapt resource value: 0x7f040003
+			public const int invalid_username_prompt = 2130968579;
+			
+			// aapt resource value: 0x7f040005
+			public const int login_failed = 2130968581;
+			
+			// aapt resource value: 0x7f040008
+			public const int ok = 2130968584;
+			
+			// aapt resource value: 0x7f040002
+			public const int select_team_prompt = 2130968578;
+			
+			// aapt resource value: 0x7f040006
+			public const int username_taken = 2130968582;
+
 			
 			// aapt resource value: 0x7f01003c
 			public const int initialActivityCount = 2130772028;
 			
+
 			// aapt resource value: 0x7f01001f
 			public const int isLightTheme = 2130771999;
 			
@@ -2688,10 +2817,12 @@ namespace MobileTag
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 			}
 			
+
 			private String()
 			{
 			}
 		}
+
 		
 		public partial class Style
 		{
@@ -5279,6 +5410,7 @@ namespace MobileTag
 			{
 			}
 		}
+
 	}
 }
 #pragma warning restore 1591

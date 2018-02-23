@@ -47,6 +47,7 @@ namespace MobileTag
                 gifImageView.StartAnimation();
             }
 
+
             //Wait for 6 seconds and start new Activity
             Timer timer = new Timer();
             timer.Interval = 6000;
