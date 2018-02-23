@@ -56,6 +56,7 @@ namespace MobileTag
             locationButton.Click += LocationButton_Click;
 
             SetUpMap();
+            SetUpCellHub();
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
@@ -67,10 +68,10 @@ namespace MobileTag
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
 
-            ConnectToCellHub();
+            SubscribeToUpdates(12345);
         }
 
-        private void ConnectToCellHub()
+        private void SetUpCellHub()
         {
             try
             {
@@ -160,12 +161,12 @@ namespace MobileTag
                 Cell cell = new Cell(12345, 5.5m, 2.2m);
                 BroadcastCellUpdate(cell);
             }
-            catch(AggregateException exc)
+            catch (AggregateException exc)
             {
-                foreach(Exception ie in exc.InnerExceptions)
+                foreach (Exception ie in exc.InnerExceptions)
                     Console.WriteLine(ie.ToString());
             }
-            catch(Exception o)
+            catch (Exception o)
             {
                 Console.WriteLine(o.ToString());
             }
@@ -181,13 +182,46 @@ namespace MobileTag
                 locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
                 locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
             }
+
+            // Connect to cellHub if we aren't already connected
+            if (cellHubConnection.State != ConnectionState.Connected && cellHubConnection.State != ConnectionState.Connecting)
+                cellHubConnection.Start().Wait();
         }
 
         async private void BroadcastCellUpdate(Cell cell)
         {
-            //cellHubConnection.Start().Wait(); <-- this is most likely unnecessary, but jake left it here on the off chance we need it
+            try
+            {
+                await cellHubProxy.Invoke("UpdateCell", cell);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
 
-            await cellHubProxy.Invoke("UpdateCell", cell);
+        async private void SubscribeToUpdates(int cellID)
+        {
+            try
+            {
+                await cellHubProxy.Invoke("SubscribeToCellUpdates", cellID);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        async private void UnsubscribeFromUpdates(int cellID)
+        {
+            try
+            {
+                await cellHubProxy.Invoke("UnsubscribeFromCellUpdates", cellID);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         protected override void OnPause()
@@ -199,6 +233,9 @@ namespace MobileTag
                 ////This will remove the listener from constantly grabbing locations
                 locMgr.RemoveUpdates(this);
             }
+
+            // End the current connection to the SignalR server
+            cellHubConnection.Stop();
         }
 
 
@@ -265,7 +302,6 @@ namespace MobileTag
         {
             //throw new NotImplementedException();
         }
-
 
 
         /* [[Example Code]] 
