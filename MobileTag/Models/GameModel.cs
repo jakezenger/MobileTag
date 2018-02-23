@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Drawing;
+using Microsoft.AspNet.SignalR.Client;
 
 namespace MobileTag.Models
 {
@@ -28,6 +29,10 @@ namespace MobileTag.Models
         public static List<Cell> CellsInView = new List<Cell>();
         public static Player Player { get; set; }
 
+        // SignalR
+        public static HubConnection CellHubConnection = new HubConnection("https://mobiletag.azurewebsites.net/");
+        public static IHubProxy CellHubProxy;
+
 
         public static int GetCellID(decimal lat, decimal lng)
         {
@@ -41,7 +46,31 @@ namespace MobileTag.Models
 
             return id;
         }
-        
+
+        async static public void SubscribeToUpdates(int cellID)
+        {
+            try
+            {
+                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates", cellID);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        async static public void UnsubscribeFromUpdates(int cellID)
+        {
+            try
+            {
+                await GameModel.CellHubProxy.Invoke("UnsubscribeFromCellUpdates", cellID);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
         //TODO: Make this work with Android/Google API's
         public Color GetTeamColor(int teamID)
         {

@@ -38,10 +38,6 @@ namespace MobileTag
         readonly string[] LocationPermissions = { Android.Manifest.Permission.AccessFineLocation, Android.Manifest.Permission.AccessCoarseLocation };
         private const int RequestLocationID = 0;
 
-        // SignalR
-        private HubConnection cellHubConnection = new HubConnection("https://mobiletag.azurewebsites.net/");
-        private IHubProxy cellHubProxy;
-
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -67,21 +63,23 @@ namespace MobileTag
             {
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
+
+            GameModel.SubscribeToUpdates(12345);
         }
 
         private void SetUpCellHub()
         {
             try
             {
-                cellHubProxy = cellHubConnection.CreateHubProxy("cellHub");
+                GameModel.CellHubProxy = GameModel.CellHubConnection.CreateHubProxy("cellHub");
 
-                cellHubProxy.On<Cell>("broadcastCell", updatedCell =>
+                GameModel.CellHubProxy.On<Cell>("broadcastCell", updatedCell =>
                 {
                     // Handle SignalR cell update notification
                     Console.WriteLine("Cell {0} updated!", updatedCell.ID);
                 });
 
-                cellHubConnection.Start().Wait();
+                GameModel.CellHubConnection.Start().Wait();
             }
             catch (Exception e)
             {
@@ -182,39 +180,15 @@ namespace MobileTag
             }
 
             // Connect to cellHub if we aren't already connected
-            if (cellHubConnection.State != ConnectionState.Connected && cellHubConnection.State != ConnectionState.Connecting)
-                cellHubConnection.Start().Wait();
+            if (GameModel.CellHubConnection.State != ConnectionState.Connected && GameModel.CellHubConnection.State != ConnectionState.Connecting)
+                GameModel.CellHubConnection.Start().Wait();
         }
 
         async private void BroadcastCellUpdate(Cell cell)
         {
             try
             {
-                await cellHubProxy.Invoke("UpdateCell", cell);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        async private void SubscribeToUpdates(int cellID)
-        {
-            try
-            {
-                await cellHubProxy.Invoke("SubscribeToCellUpdates", cellID);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        async private void UnsubscribeFromUpdates(int cellID)
-        {
-            try
-            {
-                await cellHubProxy.Invoke("UnsubscribeFromCellUpdates", cellID);
+                await GameModel.CellHubProxy.Invoke("UpdateCell", cell);
             }
             catch (Exception e)
             {
@@ -233,7 +207,7 @@ namespace MobileTag
             }
 
             // End the current connection to the SignalR server
-            cellHubConnection.Stop();
+            GameModel.CellHubConnection.Stop();
         }
 
 
