@@ -72,13 +72,13 @@
     <Compile Include="SharedCode\DatabaseTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MobileTag\MobileTag.csproj">
       <Project>{D48FB3B2-DA23-4032-9F23-DB8F6516BC70}</Project>
       <Name>MobileTag</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
