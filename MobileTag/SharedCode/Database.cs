@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+
 using System.Data.SqlClient;
 using System.Data;
 using MobileTag.Models;
-using Android.Graphics;
+
+
+
 
 namespace MobileTag
 {
-    public static class Database
+    public static class Database 
     {
         private static string CONNECTION_STRING = "";
         private static bool initialized = false;
@@ -28,7 +22,6 @@ namespace MobileTag
             builder.UserID = "eallgood";
             builder.Password = "orangeChicken17";
             builder.InitialCatalog = "MobileTagDB";
-
             CONNECTION_STRING = builder.ConnectionString.ToString();
             initialized = true;
         }
@@ -48,10 +41,10 @@ namespace MobileTag
                 {
                     Console.WriteLine(e.ToString());
                 }
-                
             }
         }
-
+        
+        // can we use player instead of user?  
         public static int AddUser(string username, string password, int teamID)
         {
             int available = 0;
@@ -132,6 +125,7 @@ namespace MobileTag
             int playerID = 0;
             int teamID = 0;
             string teamName = "";
+
             int cellID = 0;
 
             Del readerProcedure = delegate (SqlConnection connection)
@@ -155,7 +149,7 @@ namespace MobileTag
             ExecuteQuery(readerProcedure);
 
             Team team = new Team(teamID, teamName);
-            Player player = new Player(playerID, team, cellID);
+            Player player = new Player(playerID, username, team, cellID);
             return player;
         }       
 
@@ -182,9 +176,10 @@ namespace MobileTag
 
             ExecuteQuery(readerProcedure);
 
-            Cell cell = new Cell(lat, lng);
+            Cell cell = new Cell(cellID, lat, lng);
             return cell;
         }
+
 
         public static List<Cell> GetAllCells()
         {
@@ -235,6 +230,49 @@ namespace MobileTag
             ExecuteQuery(readerProcedure);
 
             return userValidity;
+
+        public static void DeletePlayer(int playerID)
+        {
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("DeletePlayer", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                cmd.ExecuteNonQuery();             
+            };
+
+            ExecuteQuery(readerProcedure);
+        }
+
+        public static void DeletecCell(int cellID)
+        {
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("DeleteCell", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.ExecuteNonQuery();
+            };
+
+            ExecuteQuery(readerProcedure);
+        }
+
+        public static void UpdatePlayerInfo(Player player, string newUsername, string newPassword)
+        {
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("UpdatePlayer", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@newUsername", SqlDbType.NVarChar).Value = newUsername;
+                cmd.Parameters.Add("@newPassword", SqlDbType.NVarChar).Value = newPassword;
+                cmd.ExecuteNonQuery();
+            };
+
+            ExecuteQuery(readerProcedure);
+
         }
 
         ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

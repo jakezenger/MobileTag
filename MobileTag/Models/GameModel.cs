@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+
 using System.Drawing;
 using MobileTag.SharedCode;
 
@@ -25,12 +18,11 @@ namespace MobileTag.Models
         private const decimal frontierLowerRightLong = 57.234079m;
 
         public static decimal FrontierInterval => frontierInterval;
-
-        //public List<Cell> CellsInView { get; set; } -- SHOULD MAYBE GO IN MAP ACTIVITY... DOES THIS NEED TO BE HERE?
+        public static List<Cell> CellsInView { get; set; }
         public static Player Player { get; set; }
-
         public static List<Cell> Frontier {get; set;} 
         public static List<MapOverlay> Overlays { get; set; }
+
         public static int GetCellID(decimal lat, decimal lng)
         {
             decimal nearestLatInterval, nearestLongInterval;
