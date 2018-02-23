@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Android.App;
 
 using System.Drawing;
+using MobileTag.SharedCode;
 
 namespace MobileTag.Models
 {
@@ -17,10 +18,10 @@ namespace MobileTag.Models
         private const decimal frontierLowerRightLong = 57.234079m;
 
         public static decimal FrontierInterval => frontierInterval;
-
         public static List<Cell> CellsInView { get; set; }
         public static Player Player { get; set; }
-
+        public static List<Cell> Frontier {get; set;} 
+        public static List<MapOverlay> Overlays { get; set; }
 
         public static int GetCellID(decimal lat, decimal lng)
         {

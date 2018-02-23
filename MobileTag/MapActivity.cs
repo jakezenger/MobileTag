@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MobileTag.Models;
 
 using Android.App;
 using Android.Content;
@@ -18,6 +19,7 @@ using Android.Support.V4.App;
 using Android.Graphics;
 using Android.Content.PM;
 using Android.Gms.Tasks;
+using MobileTag.SharedCode;
 
 namespace MobileTag
 {
@@ -34,7 +36,6 @@ namespace MobileTag
         private Button locationButton;
         readonly string[] LocationPermissions = { Android.Manifest.Permission.AccessFineLocation, Android.Manifest.Permission.AccessCoarseLocation };
         private const int RequestLocationID = 0;
-        
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -49,6 +50,8 @@ namespace MobileTag
             locationButton.Click += LocationButton_Click;
 
             SetUpMap();
+
+
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
@@ -91,6 +94,12 @@ namespace MobileTag
             locationCriteria.Accuracy = Accuracy.Fine;
             locationCriteria.PowerRequirement = Power.Medium;
 
+            //foreach (Cell cell in GameModel.Frontier)
+            //{
+            //    Color color = ColorCode.SetTeamColor(3);
+            //    UpdateOverlay(cell, color);
+            //}
+
             provider = locMgr.GetBestProvider(locationCriteria, true);
 
             lastKnownLocation = locMgr.GetLastKnownLocation(provider);
@@ -114,16 +123,32 @@ namespace MobileTag
 
         private void TagButton_Click(object sender, EventArgs e)
         {
-            PolygonOptions squareOverlay = new PolygonOptions();
-            squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude - .005, myPositionMarker.Position.Longitude + .005)); //first rectangle point
-            squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude + .005, myPositionMarker.Position.Longitude + .005));
-            squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude + .005, myPositionMarker.Position.Longitude - .005));
-            squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude - .005, myPositionMarker.Position.Longitude - .005)); //automatically connects last two points
+            //PolygonOptions squareOverlay = new PolygonOptions();
+            //squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude - .005, myPositionMarker.Position.Longitude + .005)); //first rectangle point
+            //squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude + .005, myPositionMarker.Position.Longitude + .005));
+            //squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude + .005, myPositionMarker.Position.Longitude - .005));
+            //squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude - .005, myPositionMarker.Position.Longitude - .005)); //automatically connects last two points
 
-            squareOverlay.InvokeFillColor(Color.Argb(120, 255, 50, 180)); //Transparent (alpha) int [0-255] 255 being opaque
-            squareOverlay.InvokeStrokeWidth(0);
+            //squareOverlay.InvokeFillColor(GameModel.Player.teamColor); //Transparent (alpha) int [0-255] 255 being opaque
+            //squareOverlay.InvokeStrokeWidth(0);
 
-            Polygon polygonOit = mMap.AddPolygon(squareOverlay);
+            //Polygon polygonOit = mMap.AddPolygon(squareOverlay);
+
+            decimal decLat = 90.0m - (decimal)myPositionMarker.Position.Latitude;
+            decimal decLng = 180.0m + (decimal)myPositionMarker.Position.Longitude;
+            int playerCellID = GameModel.GetCellID(decLat, decLng);
+
+            if(playerCellID >= 0 && playerCellID < GameModel.Frontier.Capacity)
+            {
+                GetLocation();
+                Database.UpdateCell(playerCellID, GameModel.Player.Team.ID);
+                GameModel.Overlays[playerCellID].UpdateColor();
+            }
+
+            foreach (MapOverlay overlay in GameModel.Overlays)
+            {
+                mMap.AddPolygon(overlay.overlay);
+            }
         }
 
         protected override void OnResume()
@@ -215,7 +240,19 @@ namespace MobileTag
             //throw new NotImplementedException();
         }
 
+        public void UpdateOverlay(Cell cell, Color color)
+        {
+            PolygonOptions squareOverlay = new PolygonOptions();
+            squareOverlay.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
+            squareOverlay.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            squareOverlay.Add(new LatLng((double)cell.Latitude - (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            squareOverlay.Add(new LatLng((double)cell.Latitude - (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
 
+            squareOverlay.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
+            squareOverlay.InvokeStrokeWidth(0);
+
+            mMap.AddPolygon(squareOverlay);
+        }
 
         /* [[Example Code]] 
          * 
