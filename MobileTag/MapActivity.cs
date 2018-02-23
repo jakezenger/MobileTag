@@ -63,8 +63,6 @@ namespace MobileTag
             {
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
-
-            GameModel.SubscribeToUpdates(12345);
         }
 
         private void SetUpCellHub()
