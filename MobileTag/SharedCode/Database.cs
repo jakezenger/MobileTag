@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
 using MobileTag.Models;
@@ -7,12 +7,13 @@ using MobileTag.Models;
 
 
 
-namespace MobileTag
+namespace MobileTag.SharedCode
 {
-    public static class Database 
+    public static class Database
     {
         private static string CONNECTION_STRING = "";
         private static bool initialized = false;
+
         private delegate void Del(SqlConnection connection);
 
         private static void Init_()
@@ -30,11 +31,11 @@ namespace MobileTag
         {
             if (!initialized) Init_();
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
-            {                
+            {
                 try
                 {
                     connection.Open();
-                    del(connection);                                                               
+                    del(connection);
                     connection.Close();
                 }
                 catch (Exception e)
@@ -43,7 +44,7 @@ namespace MobileTag
                 }
             }
         }
-        
+
         // can we use player instead of user?  
         public static int AddUser(string username, string password, int teamID)
         {
@@ -61,7 +62,7 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    available = (int)reader["Available"];
+                    available = (int) reader["Available"];
                 }
                 reader.Close();
             };
@@ -75,7 +76,7 @@ namespace MobileTag
         {
             int userValidity = 0;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Del readerProcedure = delegate(SqlConnection connection)
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("LookUpUserName", connection);
@@ -86,7 +87,7 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    userValidity = (int)reader["Valid"];
+                    userValidity = (int) reader["Valid"];
                 }
                 reader.Close();
             };
@@ -100,7 +101,7 @@ namespace MobileTag
         {
             int teamID = 0;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Del readerProcedure = delegate(SqlConnection connection)
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetCellTeam", connection);
@@ -110,7 +111,7 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    teamID = (int)reader["TeamID"];
+                    teamID = (int) reader["TeamID"];
                 }
                 reader.Close();
             };
@@ -128,7 +129,7 @@ namespace MobileTag
 
             int cellID = 0;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Del readerProcedure = delegate(SqlConnection connection)
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetPlayer", connection);
@@ -138,9 +139,9 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    playerID = (int)reader["PlayerID"];
-                    teamID = (int)reader["TeamID"];
-                    teamName = (string)reader["TeamName"];
+                    playerID = (int) reader["PlayerID"];
+                    teamID = (int) reader["TeamID"];
+                    teamName = (string) reader["TeamName"];
                     cellID = 0; //(int)reader["CellID"];
                 }
                 reader.Close();
@@ -151,14 +152,14 @@ namespace MobileTag
             Team team = new Team(teamID, teamName);
             Player player = new Player(playerID, username, team, cellID);
             return player;
-        }       
+        }
 
         public static Cell GetCell(int cellID)
         {
             decimal lat = 0.00m;
             decimal lng = 0.00m;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Del readerProcedure = delegate(SqlConnection connection)
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetCell", connection);
@@ -168,8 +169,8 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    lat = (decimal)reader["Latitude"];
-                    lng = (decimal)reader["Longitude"];
+                    lat = (decimal) reader["Latitude"];
+                    lng = (decimal) reader["Longitude"];
                 }
                 reader.Close();
             };
@@ -186,7 +187,7 @@ namespace MobileTag
             var cellList = new List<Cell>(256);
 
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Del readerProcedure = delegate(SqlConnection connection)
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetAllCells", connection);
@@ -195,15 +196,15 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    decimal lat = (decimal)reader["Latitude"];
-                    decimal lng = (decimal)reader["Longitude"];
+                    decimal lat = (decimal) reader["Latitude"];
+                    decimal lng = (decimal) reader["Longitude"];
                     cellList.Add(new Cell(lat, lng));
                 }
                 reader.Close();
             };
 
             ExecuteQuery(readerProcedure);
-            
+
             return cellList;
         }
 
@@ -211,7 +212,7 @@ namespace MobileTag
         {
             int userValidity = 1;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Del readerProcedure = delegate(SqlConnection connection)
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("UpdateCell", connection);
@@ -222,7 +223,7 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                  
+
                 }
                 reader.Close();
             };
@@ -230,122 +231,124 @@ namespace MobileTag
             ExecuteQuery(readerProcedure);
 
             return userValidity;
+        }
 
         public static void DeletePlayer(int playerID)
-        {
-
-            Del readerProcedure = delegate (SqlConnection connection)
             {
-                SqlCommand cmd = new SqlCommand("DeletePlayer", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
-                cmd.ExecuteNonQuery();             
-            };
 
-            ExecuteQuery(readerProcedure);
-        }
+                Del readerProcedure = delegate(SqlConnection connection)
+                {
+                    SqlCommand cmd = new SqlCommand("DeletePlayer", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                    cmd.ExecuteNonQuery();
+                };
 
-        public static void DeletecCell(int cellID)
-        {
+                ExecuteQuery(readerProcedure);
+            }
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            public static void DeletecCell(int cellID)
             {
-                SqlCommand cmd = new SqlCommand("DeleteCell", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
-                cmd.ExecuteNonQuery();
-            };
 
-            ExecuteQuery(readerProcedure);
-        }
+                Del readerProcedure = delegate(SqlConnection connection)
+                {
+                    SqlCommand cmd = new SqlCommand("DeleteCell", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                    cmd.ExecuteNonQuery();
+                };
 
-        public static void UpdatePlayerInfo(Player player, string newUsername, string newPassword)
-        {
-            Del readerProcedure = delegate (SqlConnection connection)
+                ExecuteQuery(readerProcedure);
+            }
+
+            public static void UpdatePlayerInfo(Player player, string newUsername, string newPassword)
             {
-                SqlCommand cmd = new SqlCommand("UpdatePlayer", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
-                cmd.Parameters.Add("@newUsername", SqlDbType.NVarChar).Value = newUsername;
-                cmd.Parameters.Add("@newPassword", SqlDbType.NVarChar).Value = newPassword;
-                cmd.ExecuteNonQuery();
-            };
+                Del readerProcedure = delegate(SqlConnection connection)
+                {
+                    SqlCommand cmd = new SqlCommand("UpdatePlayer", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                    cmd.Parameters.Add("@newUsername", SqlDbType.NVarChar).Value = newUsername;
+                    cmd.Parameters.Add("@newPassword", SqlDbType.NVarChar).Value = newPassword;
+                    cmd.ExecuteNonQuery();
+                };
 
-            ExecuteQuery(readerProcedure);
+                ExecuteQuery(readerProcedure);
 
+            }
+
+            ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+            ////////////////////////////////////////// OLDE IMPLEMENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+            //////////////////////////////////////////|||||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+            //public static int AddUser(string username, string password, int teamID)
+            //{
+            //    if (!initialized) Init_();
+            //    int available = 0;
+            //    using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            //    {
+            //        using (SqlCommand cmd = new SqlCommand("AddPlayer", connection))
+            //        {
+            //            cmd.CommandType = CommandType.StoredProcedure;
+            //            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+            //            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+            //            cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+
+            //            try
+            //            {
+            //                SqlDataReader reader;
+            //                cmd.Connection.Open();
+            //                reader = cmd.ExecuteReader();
+            //                reader.Read();
+            //                available = (int)reader["Available"];
+            //                reader.Close();
+            //                cmd.Connection.Close();
+            //            }
+            //            catch (Exception e)
+            //            {
+            //                Console.WriteLine(e.ToString());
+            //                return 2;
+            //            }
+            //        }
+            //    }
+            //    return available;
+            //}
+
+            //public static int ValidateLoginCredentials(string username, string password)
+            //{
+            //    if (!initialized) Init_();
+
+            //    // userValidity 1 if valid, 0 if invalid
+            //    int userValidity = 0;
+
+            //    using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
+            //    {
+            //        using (SqlCommand cmd = new SqlCommand("LookUpUsername", connection))
+            //        {
+            //            cmd.CommandType = CommandType.StoredProcedure;
+            //            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+            //            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
+
+            //            try
+            //            {
+            //                SqlDataReader reader;
+            //                cmd.Connection.Open();
+
+            //                reader = cmd.ExecuteReader();
+            //                reader.Read();
+            //                userValidity = (int)reader["Valid"];
+            //                reader.Close();
+            //                cmd.Connection.Close();
+            //            }
+            //            catch (Exception e)
+            //            {
+            //                Console.WriteLine(e.ToString());
+            //            }
+            //        }
+            //    }
+
+            //    return userValidity;
+            //}
         }
+    }
 
-        ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        ////////////////////////////////////////// OLDE IMPLEMENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        //////////////////////////////////////////|||||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-        //public static int AddUser(string username, string password, int teamID)
-        //{
-        //    if (!initialized) Init_();
-        //    int available = 0;
-        //    using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand("AddPlayer", connection))
-        //        {
-        //            cmd.CommandType = CommandType.StoredProcedure;
-        //            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-        //            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
-        //            cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
-
-        //            try
-        //            {
-        //                SqlDataReader reader;
-        //                cmd.Connection.Open();
-        //                reader = cmd.ExecuteReader();
-        //                reader.Read();
-        //                available = (int)reader["Available"];
-        //                reader.Close();
-        //                cmd.Connection.Close();
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Console.WriteLine(e.ToString());
-        //                return 2;
-        //            }
-        //        }
-        //    }
-        //    return available;
-        //}
-
-        //public static int ValidateLoginCredentials(string username, string password)
-        //{
-        //    if (!initialized) Init_();
-
-        //    // userValidity 1 if valid, 0 if invalid
-        //    int userValidity = 0;
-
-        //    using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand("LookUpUsername", connection))
-        //        {
-        //            cmd.CommandType = CommandType.StoredProcedure;
-        //            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-        //            cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
-
-        //            try
-        //            {
-        //                SqlDataReader reader;
-        //                cmd.Connection.Open();
-
-        //                reader = cmd.ExecuteReader();
-        //                reader.Read();
-        //                userValidity = (int)reader["Valid"];
-        //                reader.Close();
-        //                cmd.Connection.Close();
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Console.WriteLine(e.ToString());
-        //            }
-        //        }
-        //    }
-
-        //    return userValidity;
-        //}
-    }  
-}

@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using MobileTag.Models;
+using MobileTag.SharedCode;
 
 namespace MobileTag.Repository
 {

@@ -1,5 +1,7 @@
 ﻿
 
+using MobileTag.SharedCode;
+
 namespace MobileTag.Models
 {
     public class Cell

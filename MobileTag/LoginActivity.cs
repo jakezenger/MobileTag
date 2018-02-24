@@ -29,8 +29,7 @@ namespace MobileTag
         private bool passwordChanged = false;
         private bool validPassword = false;
 
-        //vsts test
-        int x = 1;
+        
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
