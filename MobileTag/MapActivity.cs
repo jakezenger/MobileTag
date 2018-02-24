@@ -18,6 +18,8 @@ using Android.Support.V4.App;
 using Android.Graphics;
 using Android.Content.PM;
 using Android.Gms.Tasks;
+using MobileTag.Models;
+using Microsoft.AspNet.SignalR.Client;
 
 namespace MobileTag
 {
@@ -50,6 +52,7 @@ namespace MobileTag
             locationButton.Click += LocationButton_Click;
 
             SetUpMap();
+            SetUpCellHub();
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
@@ -59,6 +62,26 @@ namespace MobileTag
             else
             {
                 RequestPermissions(LocationPermissions, RequestLocationID);
+            }
+        }
+
+        private void SetUpCellHub()
+        {
+            try
+            {
+                GameModel.CellHubProxy = GameModel.CellHubConnection.CreateHubProxy("cellHub");
+
+                GameModel.CellHubProxy.On<Cell>("broadcastCell", updatedCell =>
+                {
+                    // Handle SignalR cell update notification
+                    Console.WriteLine("Cell {0} updated!", updatedCell.ID);
+                });
+
+                GameModel.CellHubConnection.Start().Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
 
@@ -125,6 +148,22 @@ namespace MobileTag
             squareOverlay.InvokeStrokeWidth(0);
 
             Polygon polygonOit = mMap.AddPolygon(squareOverlay);
+
+            try
+            {
+                // Let others know you've tagged this cell
+                Cell cell = new Cell(12345, 5.5m, 2.2m);
+                BroadcastCellUpdate(cell);
+            }
+            catch (AggregateException exc)
+            {
+                foreach (Exception ie in exc.InnerExceptions)
+                    Console.WriteLine(ie.ToString());
+            }
+            catch (Exception o)
+            {
+                Console.WriteLine(o.ToString());
+            }
         }
 
         protected override void OnResume()
@@ -137,6 +176,22 @@ namespace MobileTag
                 locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
                 locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
             }
+
+            // Connect to cellHub if we aren't already connected
+            if (GameModel.CellHubConnection.State != ConnectionState.Connected && GameModel.CellHubConnection.State != ConnectionState.Connecting)
+                GameModel.CellHubConnection.Start().Wait();
+        }
+
+        async private void BroadcastCellUpdate(Cell cell)
+        {
+            try
+            {
+                await GameModel.CellHubProxy.Invoke("UpdateCell", cell);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         protected override void OnPause()
@@ -148,6 +203,9 @@ namespace MobileTag
                 ////This will remove the listener from constantly grabbing locations
                 locMgr.RemoveUpdates(this);
             }
+
+            // End the current connection to the SignalR server
+            GameModel.CellHubConnection.Stop();
         }
 
 
@@ -214,7 +272,6 @@ namespace MobileTag
         {
             //throw new NotImplementedException();
         }
-
 
 
         /* [[Example Code]] 

@@ -10,6 +10,8 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.Data.SqlClient;
+using Newtonsoft.Json;
 
 namespace MobileTag.Models
 {
@@ -17,29 +19,20 @@ namespace MobileTag.Models
     {
         public int ID { get; set; }
         public decimal Latitude { get; set; }
-
         public decimal Longitude { get; set; }
 
-        //public Latlng { get; }
         public int TeamID
         {
             get { return Database.GetCellTeam(ID); }
+            set { }
         }
-        //public int HoldStrength { get { return Database.GetCellHoldStrength(ID); } }
 
-        //public Cell(Latlng location)
-        //{
-        //    // GENERATE ID FOR GIVEN LOCATION
-        //}
-   
+        //public int HoldStrength { get { return Database.GetCellHoldStrength(ID); } }
 
         public bool AreEqual(Cell obj1, Cell obj2)
         {
-            
             return (obj1.Latitude == obj2.Latitude && obj1.Longitude == obj2.Longitude);
         }
-     
-        
 
         //CTOR's
         public Cell(decimal lat, decimal lng)
@@ -55,6 +48,8 @@ namespace MobileTag.Models
             Latitude = lat;
             Longitude = lng;
         }
+
+        [JsonConstructor]
         public Cell(int id)
         {
             ID = id;

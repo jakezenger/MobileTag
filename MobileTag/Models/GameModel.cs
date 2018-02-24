@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 
@@ -10,6 +11,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Drawing;
+using Microsoft.AspNet.SignalR.Client;
 
 namespace MobileTag.Models
 {
@@ -25,8 +27,12 @@ namespace MobileTag.Models
 
         public static decimal FrontierInterval => frontierInterval;
 
-        public static List<Cell> CellsInView { get; set; }
+        public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
         public static Player Player { get; set; }
+
+        // SignalR
+        public static HubConnection CellHubConnection = new HubConnection("https://mobiletag.azurewebsites.net/");
+        public static IHubProxy CellHubProxy;
 
 
         public static int GetCellID(decimal lat, decimal lng)
@@ -41,7 +47,69 @@ namespace MobileTag.Models
 
             return id;
         }
-        
+
+        async static public void SubscribeToUpdates(HashSet<int> cellIDs)
+        {
+            try
+            {
+                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates", cellIDs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        async static public void SubscribeToUpdates(ConcurrentDictionary<int, Cell> cellsInView)
+        {
+            HashSet<int> cellIDs = new HashSet<int>();
+
+            foreach(Cell cell in cellsInView.Values)
+            {
+                cellIDs.Add(cell.ID);
+            }
+
+            try
+            {
+                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates",cellIDs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        async static public void SubscribeToUpdates()
+        {
+            HashSet<int> cellIDs = new HashSet<int>();
+
+            foreach (Cell cell in CellsInView.Values)
+            {
+                cellIDs.Add(cell.ID);
+            }
+
+            try
+            {
+                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates", cellIDs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        //async static public void UnsubscribeFromUpdates(int cellID)
+        //{
+        //    try
+        //    {
+        //        await GameModel.CellHubProxy.Invoke("UnsubscribeFromCellUpdates", cellID);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.ToString());
+        //    }
+        //}
+
         //TODO: Make this work with Android/Google API's
         public Color GetTeamColor(int teamID)
         {
