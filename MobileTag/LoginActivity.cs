@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
+
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -13,11 +13,7 @@ using Android.Graphics;
 using Android.Text;
 using Android.Text.Style;
 using Android.Text.Method;
-
 using MobileTag.Models;
-
-using Java.IO;
-
 
 namespace MobileTag
 {
@@ -44,8 +40,6 @@ namespace MobileTag
             createAccountTextView.TextFormatted = createAccountPrompt;
             createAccountTextView.MovementMethod = new LinkMovementMethod();
 
-            
-
             // Set event handlers
             Button signInButton = FindViewById<Button>(Resource.Id.signInButton);            
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
@@ -55,20 +49,6 @@ namespace MobileTag
             usernameField.TextChanged += UsernameField_TextChanged;
             passwordField.FocusChange += PasswordField_FocusChange;
             passwordField.TextChanged += PasswordField_TextChanged;
-
-
-            string path = Application.Context.FilesDir.Path;
-            string filePath = System.IO.Path.Combine(path, "username.txt");
-            string filePath2 = System.IO.Path.Combine(path, "password.txt");
-            if (System.IO.File.Exists(filePath))
-            {
-                usernameField.Text = System.IO.File.ReadAllText(filePath);
-                if (System.IO.File.Exists(filePath2))
-                passwordField.Text = System.IO.File.ReadAllText(filePath2);
-            }
-            
-            
-            
         }
 
         private void SignInButton_Click(object sender, EventArgs e)
@@ -78,17 +58,7 @@ namespace MobileTag
 
             if (Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
             {
-
                 GameModel.Player = Database.GetPlayer(usernameField.Text.Trim());
-
-
-                string path = Application.Context.FilesDir.Path;
-                var filePath = System.IO.Path.Combine(path, "username.txt");
-                var filePath2 = System.IO.Path.Combine(path, "password.txt");
-                System.IO.File.WriteAllText(filePath, usernameField.Text);
-                System.IO.File.WriteAllText(filePath2, passwordField.Text);
-
-
                 Intent intent = new Intent(this, typeof(MenuActivity));
                 StartActivity(intent);
             }
