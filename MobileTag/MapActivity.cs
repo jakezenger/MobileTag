@@ -29,6 +29,7 @@ namespace MobileTag
         private GoogleMap mMap;
         private LocationManager locMgr;
         private String provider;
+
         private Location lastKnownLocation;
         private Marker myPositionMarker;
         private TextView lngLatText;
@@ -36,11 +37,15 @@ namespace MobileTag
         private Button locationButton;
         readonly string[] LocationPermissions = { Android.Manifest.Permission.AccessFineLocation, Android.Manifest.Permission.AccessCoarseLocation };
         private const int RequestLocationID = 0;
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            
+
             ////Connects Map.axml to this Activity
             SetContentView(Resource.Layout.Map);
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
@@ -220,8 +225,7 @@ namespace MobileTag
                 myPositionMarker = mMap.AddMarker(markerOpt);
                 lngLatText.Text = lat + " : " + lng;
 
-                //locMgr.RemoveUpdates(this);
-                
+                locMgr.RemoveUpdates(this);
             }
         }
 
