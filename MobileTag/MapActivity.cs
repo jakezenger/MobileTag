@@ -20,6 +20,8 @@ using Android.Content.PM;
 using Android.Gms.Tasks;
 using MobileTag.Models;
 using Microsoft.AspNet.SignalR.Client;
+using Android.Support.V4.Widget;
+using Android.Support.Design.Widget;
 
 namespace MobileTag
 {
@@ -38,6 +40,8 @@ namespace MobileTag
         readonly string[] LocationPermissions = { Android.Manifest.Permission.AccessFineLocation, Android.Manifest.Permission.AccessCoarseLocation };
         private const int RequestLocationID = 0;
 
+        private DrawerLayout drawerLayout;
+        private NavigationView navigationView;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -45,9 +49,21 @@ namespace MobileTag
 
             ////Connects Map.axml to this Activity
             SetContentView(Resource.Layout.Map);
+         
+            //Bind C# objects to xml elements
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+            drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
             locationButton = FindViewById<Button>(Resource.Id.clientCameraLocationbtn);
+
+            //Enable toolbar to display hamburger
+            ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_menu_black_24dp);
+            ActionBar.SetDisplayHomeAsUpEnabled(true);
+            
+            //click events           
             tagButton.Click += TagButton_Click;
             locationButton.Click += LocationButton_Click;
 
@@ -85,6 +101,27 @@ namespace MobileTag
             }
         }
 
+            //menu item selected
+            navigationView.NavigationItemSelected += (sender, e) =>
+            {
+                e.MenuItem.SetChecked(true);
+                //react to click here and swap fragments or navigate               
+                drawerLayout.CloseDrawers();               
+            };
+        }
+
+        //tells drawer to open when hamburger button is pressed        
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+                    return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
+
         // Based on example code from https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
@@ -97,9 +134,9 @@ namespace MobileTag
                             GetLocation();
                         }
                         else
-                        {
-                            // Permission was denied.. go back to the MenuActivity
-                            StartActivity(new Intent(this, typeof(MenuActivity)));
+                        {                            
+                            //Permission denied, throw some kind of error here
+                            StartActivity(new Intent(this, typeof(MapActivity)));
                         }
                     }
 
