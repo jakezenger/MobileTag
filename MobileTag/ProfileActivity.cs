@@ -9,7 +9,6 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using MobileTag.Models;
 
 namespace MobileTag
 {
@@ -22,12 +21,6 @@ namespace MobileTag
 
             // Create your application here
             SetContentView(Resource.Layout.Profile);
-
-            TextView usernameTextView = FindViewById<TextView>(Resource.Id.usernameTextView);
-            usernameTextView.Text = GameModel.Player.Username;
-
-            TextView teamNameTextView = FindViewById<TextView>(Resource.Id.teamNameTextView);
-            teamNameTextView.Text = GameModel.Player.Team.TeamName;
         }
     }
 }
