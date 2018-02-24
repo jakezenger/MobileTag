@@ -16,7 +16,6 @@ using Android.Text.Method;
 
 namespace MobileTag
 {
-    // Random test comment... you should probably delete this now.
     [Activity(Label = "LoginActivity", MainLauncher = true)]
     public class LoginActivity : Activity
     {
@@ -24,9 +23,6 @@ namespace MobileTag
         private bool usernameChanged = false;
         private bool passwordChanged = false;
         private bool validPassword = false;
-
-        //vsts test
-        int x = 1;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
