@@ -2438,6 +2438,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f0b009e
 			public const int cancel_action = 2131427486;
 			
+			// aapt resource value: 0x7f0b00b7
+			public const int cellsClaimedLabelTextView = 2131427511;
+			
 			// aapt resource value: 0x7f0b003a
 			public const int center = 2131427386;
 			
@@ -2555,6 +2558,12 @@ namespace MobileTag
 			// aapt resource value: 0x7f0b0049
 			public const int @fixed = 2131427401;
 			
+			// aapt resource value: 0x7f0b00b8
+			public const int gifImageView = 2131427512;
+			
+			// aapt resource value: 0x7f0b00b5
+			public const int gridLayout1 = 2131427509;
+			
 			// aapt resource value: 0x7f0b0005
 			public const int home = 2131427333;
 			
@@ -2615,8 +2624,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0b0095
 			public const int map = 2131427477;
 			
-			// aapt resource value: 0x7f0b00b2
-			public const int masked = 2131427506;
+			// aapt resource value: 0x7f0b00ba
+			public const int masked = 2131427514;
 			
 			// aapt resource value: 0x7f0b00a0
 			public const int media_actions = 2131427488;
@@ -2630,14 +2639,14 @@ namespace MobileTag
 			// aapt resource value: 0x7f0b0025
 			public const int multiply = 2131427365;
 			
-			// aapt resource value: 0x7f0b00b4
-			public const int nav_community = 2131427508;
+			// aapt resource value: 0x7f0b00bc
+			public const int nav_community = 2131427516;
 			
-			// aapt resource value: 0x7f0b00b3
-			public const int nav_profile = 2131427507;
+			// aapt resource value: 0x7f0b00bb
+			public const int nav_profile = 2131427515;
 			
-			// aapt resource value: 0x7f0b00b5
-			public const int nav_settings = 2131427509;
+			// aapt resource value: 0x7f0b00bd
+			public const int nav_settings = 2131427517;
 			
 			// aapt resource value: 0x7f0b0099
 			public const int nav_view = 2131427481;
@@ -2675,6 +2684,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f0b0042
 			public const int pin = 2131427394;
 			
+			// aapt resource value: 0x7f0b00b2
+			public const int profilePicImageView = 2131427506;
+			
 			// aapt resource value: 0x7f0b0006
 			public const int progress_circular = 2131427334;
 			
@@ -2683,6 +2695,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f0b0067
 			public const int radio = 2131427431;
+			
+			// aapt resource value: 0x7f0b00b1
+			public const int relativeLayout1 = 2131427505;
 			
 			// aapt resource value: 0x7f0b003f
 			public const int right = 2131427391;
@@ -2798,6 +2813,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f0b0040
 			public const int start = 2131427392;
 			
+			// aapt resource value: 0x7f0b00b6
+			public const int statisticsTextView = 2131427510;
+			
 			// aapt resource value: 0x7f0b009f
 			public const int status_bar_latest_event_content = 2131427487;
 			
@@ -2809,6 +2827,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f0b001d
 			public const int tabMode = 2131427357;
+			
+			// aapt resource value: 0x7f0b00b4
+			public const int teamNameTextView = 2131427508;
 			
 			// aapt resource value: 0x7f0b0013
 			public const int terrain = 2131427347;
@@ -2876,11 +2897,14 @@ namespace MobileTag
 			// aapt resource value: 0x7f0b007f
 			public const int usernameField = 2131427455;
 			
+			// aapt resource value: 0x7f0b00b3
+			public const int usernameTextView = 2131427507;
+			
 			// aapt resource value: 0x7f0b000e
 			public const int view_offset_helper = 2131427342;
 			
-			// aapt resource value: 0x7f0b00b1
-			public const int visible = 2131427505;
+			// aapt resource value: 0x7f0b00b9
+			public const int visible = 2131427513;
 			
 			// aapt resource value: 0x7f0b0018
 			public const int wide = 2131427352;
@@ -3146,10 +3170,13 @@ namespace MobileTag
 			public const int Settings = 2130968641;
 			
 			// aapt resource value: 0x7f040042
-			public const int support_simple_spinner_dropdown_item = 2130968642;
+			public const int SplashScreen = 2130968642;
 			
 			// aapt resource value: 0x7f040043
-			public const int Toolbar = 2130968643;
+			public const int support_simple_spinner_dropdown_item = 2130968643;
+			
+			// aapt resource value: 0x7f040044
+			public const int Toolbar = 2130968644;
 			
 			static Layout()
 			{
@@ -3298,6 +3325,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f080033
 			public const int bottom_sheet_behavior = 2131230771;
 			
+			// aapt resource value: 0x7f080045
+			public const int cells_claimed = 2131230789;
+			
 			// aapt resource value: 0x7f080034
 			public const int character_counter_pattern = 2131230772;
 			
@@ -3393,6 +3423,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f08003b
 			public const int select_team_prompt = 2131230779;
+			
+			// aapt resource value: 0x7f080044
+			public const int statistics = 2131230788;
 			
 			// aapt resource value: 0x7f080025
 			public const int status_bar_notification_info_overflow = 2131230757;

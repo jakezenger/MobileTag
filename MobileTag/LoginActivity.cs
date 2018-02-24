@@ -59,7 +59,7 @@ namespace MobileTag
             if (Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
             {
                 GameModel.Player = Database.GetPlayer(usernameField.Text.Trim());
-                Intent intent = new Intent(this, typeof(MenuActivity));
+                Intent intent = new Intent(this, typeof(MapActivity));
                 StartActivity(intent);
             }
             else

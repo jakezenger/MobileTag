@@ -79,6 +79,14 @@ namespace MobileTag
             {
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
+
+            //menu item selected
+            navigationView.NavigationItemSelected += (sender, e) =>
+            {
+                e.MenuItem.SetChecked(true);
+                //react to click here and swap fragments or navigate               
+                drawerLayout.CloseDrawers();
+            };
         }
 
         private void SetUpCellHub()
@@ -99,15 +107,6 @@ namespace MobileTag
             {
                 Console.WriteLine(e.ToString());
             }
-        }
-
-            //menu item selected
-            navigationView.NavigationItemSelected += (sender, e) =>
-            {
-                e.MenuItem.SetChecked(true);
-                //react to click here and swap fragments or navigate               
-                drawerLayout.CloseDrawers();               
-            };
         }
 
         //tells drawer to open when hamburger button is pressed        
