@@ -137,6 +137,8 @@ namespace MobileTag.Models
                 Overlays.TryAdd(cell.ID, new MapOverlay(cell));
             }
 
+            SubscribeToUpdates();
+
             return Overlays;
         }
 

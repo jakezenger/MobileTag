@@ -24,15 +24,19 @@ using Android.Support.V4.Widget;
 using Android.Support.Design.Widget;
 using MobileTag.SharedCode;
 using System.Collections.Concurrent;
+using Android.Support.V7.App;
 
 namespace MobileTag
 {
-    [Activity(Label = "MapActivity")]
-    public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener
+    [Activity(Label = "MapActivity", Theme = "@style/Theme.AppCompat.Light.NoActionBar")]
+    public class MapActivity : AppCompatActivity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener, GoogleMap.IOnCameraMoveStartedListener, GoogleMap.IOnCameraMoveListener
     {
         private GoogleMap mMap;
+        private float currentZoomLevel = 0.0F;
         private LocationManager locMgr;
         private String provider;
+        private bool CameraSet = false;
+        private LatLng initialCameraLatLng = null;
 
         private Location lastKnownLocation;
         private Marker myPositionMarker;
@@ -103,6 +107,7 @@ namespace MobileTag
                 {
                     // Handle SignalR cell update notification
                     Console.WriteLine("Cell {0} updated!", updatedCell.ID);
+                    UpdateOverlay(updatedCell, ColorCode.SetTeamColor(updatedCell.TeamID));
                 });
 
                 GameModel.CellHubConnection.Start().Wait();
@@ -111,6 +116,60 @@ namespace MobileTag
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        public void OnProviderDisabled(string provider)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnProviderEnabled(string provider)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnCameraIdle()  //part of OnCameraIdleListener Interface
+        {
+            //work in progress
+            currentZoomLevel = mMap.CameraPosition.Zoom;
+            LatLng currentCameraLatLng = mMap.CameraPosition.Target;
+
+            if (currentZoomLevel > 18)
+            {
+                if (CameraSet == false)
+                {
+                    initialCameraLatLng = mMap.CameraPosition.Target;
+                    CameraSet = true;
+                    Toast.MakeText(this, "Loading new cells: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
+
+                    DrawOverlays();
+                }
+
+                bool LongitudeAbs = (Math.Abs(Math.Abs(currentCameraLatLng.Longitude) - Math.Abs(initialCameraLatLng.Longitude))) > .0013;
+                bool LatitudeAbs = (Math.Abs(Math.Abs(currentCameraLatLng.Latitude) - Math.Abs(initialCameraLatLng.Latitude))) > .0013;
+
+                if (CameraSet == true && (LongitudeAbs || LatitudeAbs))
+                {
+                    Toast.MakeText(this, "Zoom Level 2: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
+                    CameraSet = false;
+                }
+
+            }
+        }
+
+        public void OnCameraMoveStarted(int reason)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnCameraMove()
+        {
+            //throw new NotImplementedException();
         }
 
         //tells drawer to open when hamburger button is pressed        
@@ -263,6 +322,8 @@ namespace MobileTag
         {
             ////Map Creation
             mMap = googleMap;
+            mMap.UiSettings.ZoomControlsEnabled = true;
+            mMap.SetOnCameraIdleListener(this);
 
             ////Event after marker finishes being dragged
             mMap.MarkerDragEnd += MMap_MarkerDragEnd;
@@ -296,23 +357,8 @@ namespace MobileTag
                 lngLatText.Text = lat + " : " + lng;
 
                 locMgr.RemoveUpdates(this);
-                ShowInitialOverlays();
+                DrawOverlays();
             }
-        }
-
-        public void OnProviderDisabled(string provider)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnProviderEnabled(string provider)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
-        {
-            //throw new NotImplementedException();
         }
 
         public void UpdateOverlay(Cell cell, Color color)
@@ -329,9 +375,8 @@ namespace MobileTag
             mMap.AddPolygon(squareOverlay);
         }
 
-        private void ShowInitialOverlays()
+        private void DrawOverlays()
         {
-            //while(lastKnownLocation == null) { }
             double decLat = myPositionMarker.Position.Latitude;
             double decLng = myPositionMarker.Position.Longitude;
             int playerCellID = GameModel.GetCellID(decLat, decLng);

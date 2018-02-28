@@ -29,23 +29,11 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.SplashScreen);
             gifImageView = FindViewById<GifImageView>(Resource.Id.gifImageView);
-            //progressBar = FindViewById<ProgressBar>(Resource.Id.progressBar);
 
-            Random randomNumber = new Random();
-            if(randomNumber.Next() % 2 == 0)
-            {
-                Stream input = Assets.Open("slidin_squares.gif");
-                byte[] bytes = ConvertFileToByteArray(input);
-                gifImageView.SetBytes(bytes);
-                gifImageView.StartAnimation();
-            }
-            else
-            {
-                Stream input = Assets.Open("boil.gif");
-                byte[] bytes = ConvertFileToByteArray(input);
-                gifImageView.SetBytes(bytes);
-                gifImageView.StartAnimation();
-            }
+            Stream input = Assets.Open("slidin_squares.gif");
+            byte[] bytes = ConvertFileToByteArray(input);
+            gifImageView.SetBytes(bytes);
+            gifImageView.StartAnimation();
 
             //Wait for 6 seconds and start new Activity
             Timer timer = new Timer();
