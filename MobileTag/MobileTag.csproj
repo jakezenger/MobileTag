@@ -133,7 +133,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsActivity.cs" />
     <Compile Include="SharedCode\ActivityLink.cs" />
+    <Compile Include="SharedCode\ColorCodes.cs" />
     <Compile Include="SharedCode\Database.cs" />
+    <Compile Include="SharedCode\MapOverlay.cs" />
     <Compile Include="SplashScreen.cs" />
   </ItemGroup>
   <ItemGroup>

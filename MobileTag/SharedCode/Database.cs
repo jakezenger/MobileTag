@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+
 using System.Data.SqlClient;
 using System.Data;
 using MobileTag.Models;
-using Android.Graphics;
+using System.Collections.Generic;
 
 namespace MobileTag
 {
@@ -28,45 +20,34 @@ namespace MobileTag
             builder.UserID = "eallgood";
             builder.Password = "orangeChicken17";
             builder.InitialCatalog = "MobileTagDB";
-
             CONNECTION_STRING = builder.ConnectionString.ToString();
             initialized = true;
-
-            // We need to start an SQLDependency connection to use Query Notifications
-            try
-            {
-                SqlDependency.Start(CONNECTION_STRING);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
         }
 
         private static void ExecuteQuery(Del del)
         {
             if (!initialized) Init_();
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
-            {                
+            {
                 try
                 {
                     connection.Open();
-                    del(connection);                                                               
+                    del(connection);
                     connection.Close();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
                 }
-                
             }
         }
 
+        // can we use player instead of user?  
         public static int AddUser(string username, string password, int teamID)
         {
             int available = 0;
 
-            Del readerProcedure = delegate(SqlConnection connection)
+            Del readerProcedure = delegate (SqlConnection connection)
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("AddPlayer", connection);
@@ -158,7 +139,7 @@ namespace MobileTag
                     playerID = (int)reader["PlayerID"];
                     teamID = (int)reader["TeamID"];
                     teamName = (string)reader["TeamName"];
-                    cellID = (int)reader["CellID"];
+                    cellID = 0; //(int)reader["CellID"];
                 }
                 reader.Close();
             };
@@ -168,12 +149,12 @@ namespace MobileTag
             Team team = new Team(teamID, teamName);
             Player player = new Player(playerID, username, team, cellID);
             return player;
-        }       
+        }
 
         public static Cell GetCell(int cellID)
         {
-            decimal lat = 0.00m;
-            decimal lng = 0.00m;
+            double lat = 0.00;
+            double lng = 0.00;
 
             Del readerProcedure = delegate (SqlConnection connection)
             {
@@ -181,13 +162,12 @@ namespace MobileTag
                 SqlCommand cmd = new SqlCommand("GetCell", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
-
                 reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    lat = Convert.ToDecimal(reader["Latitude"]);
-                    lng = Convert.ToDecimal(reader["Longitude"]);
+                    lat = (double)reader["Latitude"];
+                    lng = (double)reader["Longitude"];
                 }
                 reader.Close();
             };
@@ -198,6 +178,123 @@ namespace MobileTag
             return cell;
         }
 
+
+        public static List<Cell> GetAllCells()
+        {
+            var cellList = new List<Cell>(256);
+
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetAllCells", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    double lat = (double)reader["Latitude"];
+                    double lng = (double)reader["Longitude"];
+                    cellList.Add(new Cell(lat, lng));
+                }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+
+            return cellList;
+        }
+
+        public static int UpdateCell(int cellID, int teamID)
+        {
+            int userValidity = 1;
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("UpdateCell", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+
+            return userValidity;
+        }
+
+        public static void DeletePlayer(int playerID)
+        {
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("DeletePlayer", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                cmd.ExecuteNonQuery();
+            };
+
+            ExecuteQuery(readerProcedure);
+        }
+
+        public static void DeletecCell(int cellID)
+        {
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("DeleteCell", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.ExecuteNonQuery();
+            };
+
+            ExecuteQuery(readerProcedure);
+        }
+
+        public static void UpdatePlayerInfo(Player player, string newUsername, string newPassword)
+        {
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlCommand cmd = new SqlCommand("UpdatePlayer", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@newUsername", SqlDbType.NVarChar).Value = newUsername;
+                cmd.Parameters.Add("@newPassword", SqlDbType.NVarChar).Value = newPassword;
+                cmd.ExecuteNonQuery();
+            };
+
+            ExecuteQuery(readerProcedure);
+
+        }
+
+        public static void AddCell(int cellID, double lat, double lng)
+        {
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("AddCell", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.Parameters.Add("@lat", SqlDbType.Float).Value = lat;
+                cmd.Parameters.Add("@long", SqlDbType.Float).Value = lng;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+        }
         ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         ////////////////////////////////////////// OLDE IMPLEMENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         //////////////////////////////////////////|||||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -270,5 +367,5 @@ namespace MobileTag
 
         //    return userValidity;
         //}
-    }  
+    }
 }

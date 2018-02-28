@@ -22,6 +22,8 @@ using MobileTag.Models;
 using Microsoft.AspNet.SignalR.Client;
 using Android.Support.V4.Widget;
 using Android.Support.Design.Widget;
+using MobileTag.SharedCode;
+using System.Collections.Concurrent;
 
 namespace MobileTag
 {
@@ -42,6 +44,8 @@ namespace MobileTag
 
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
+
+        ConcurrentDictionary<int, MapOverlay> Overlays;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -156,6 +160,10 @@ namespace MobileTag
             lastKnownLocation = locMgr.GetLastKnownLocation(provider);
             if (lastKnownLocation == null)
                 System.Diagnostics.Debug.WriteLine("No Location");
+            else
+            {
+                GameModel.LoadProximalCells(new LatLng(lastKnownLocation.Latitude, lastKnownLocation.Longitude));
+            }
         }
 
         private void CenterMapCameraOnLocation()
@@ -174,21 +182,18 @@ namespace MobileTag
 
         private void TagButton_Click(object sender, EventArgs e)
         {
-            PolygonOptions squareOverlay = new PolygonOptions();
-            squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude - .005, myPositionMarker.Position.Longitude + .005)); //first rectangle point
-            squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude + .005, myPositionMarker.Position.Longitude + .005));
-            squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude + .005, myPositionMarker.Position.Longitude - .005));
-            squareOverlay.Add(new LatLng(myPositionMarker.Position.Latitude - .005, myPositionMarker.Position.Longitude - .005)); //automatically connects last two points
+            double decLat = myPositionMarker.Position.Latitude;
+            double decLng = myPositionMarker.Position.Longitude;
+            int playerCellID = GameModel.GetCellID(decLat, decLng);
 
-            squareOverlay.InvokeFillColor(Color.Argb(120, 255, 50, 180)); //Transparent (alpha) int [0-255] 255 being opaque
-            squareOverlay.InvokeStrokeWidth(0);
-
-            Polygon polygonOit = mMap.AddPolygon(squareOverlay);
+            Database.UpdateCell(playerCellID, GameModel.Player.Team.ID);
+            Overlays[playerCellID].UpdateColor();
+            mMap.AddPolygon(Overlays[playerCellID].overlay);
 
             try
             {
                 // Let others know you've tagged this cell
-                Cell cell = new Cell(12345, 5.5m, 2.2m);
+                Cell cell = Database.GetCell(playerCellID);
                 BroadcastCellUpdate(cell);
             }
             catch (AggregateException exc)
@@ -291,6 +296,7 @@ namespace MobileTag
                 lngLatText.Text = lat + " : " + lng;
 
                 locMgr.RemoveUpdates(this);
+                ShowInitialOverlays();
             }
         }
 
@@ -307,6 +313,41 @@ namespace MobileTag
         public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
         {
             //throw new NotImplementedException();
+        }
+
+        public void UpdateOverlay(Cell cell, Color color)
+        {
+            PolygonOptions squareOverlay = new PolygonOptions();
+            squareOverlay.Add(new LatLng(cell.Latitude, cell.Longitude)); //first rectangle point
+            squareOverlay.Add(new LatLng(cell.Latitude, cell.Longitude + GameModel.FrontierInterval));
+            squareOverlay.Add(new LatLng(cell.Latitude - GameModel.FrontierInterval, cell.Longitude + GameModel.FrontierInterval));
+            squareOverlay.Add(new LatLng(cell.Latitude - GameModel.FrontierInterval, cell.Longitude)); //automatically connects last two points
+
+            squareOverlay.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
+            squareOverlay.InvokeStrokeWidth(0);
+
+            mMap.AddPolygon(squareOverlay);
+        }
+
+        private void ShowInitialOverlays()
+        {
+            //while(lastKnownLocation == null) { }
+            double decLat = myPositionMarker.Position.Latitude;
+            double decLng = myPositionMarker.Position.Longitude;
+            int playerCellID = GameModel.GetCellID(decLat, decLng);
+            LatLng latlng = GameModel.GetLatLng(playerCellID);
+            Overlays = GameModel.LoadProximalCells(latlng);
+
+            if (!Overlays.ContainsKey(playerCellID))
+            {
+                Cell cell = new Cell(latlng.Latitude, latlng.Longitude);
+                Overlays.TryAdd(playerCellID, new MapOverlay(cell));
+            }
+
+            foreach (MapOverlay overlay in Overlays.Values)
+            {
+                mMap.AddPolygon(overlay.overlay);
+            }
         }
 
 

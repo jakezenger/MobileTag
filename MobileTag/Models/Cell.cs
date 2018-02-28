@@ -18,8 +18,8 @@ namespace MobileTag.Models
     public class Cell
     {
         public int ID { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         public int TeamID
         {
@@ -35,14 +35,14 @@ namespace MobileTag.Models
         }
 
         //CTOR's
-        public Cell(decimal lat, decimal lng)
+        public Cell(double lat, double lng)
         {
             ID = GameModel.GetCellID(lat, lng);
             Latitude = lat;
             Longitude = lng;
         }
       
-        public Cell(int id, decimal lat, decimal lng)
+        public Cell(int id, double lat, double lng)
         {
             ID = id;
             Latitude = lat;
@@ -53,8 +53,8 @@ namespace MobileTag.Models
         public Cell(int id)
         {
             ID = id;
-            Latitude = 0m;
-            Longitude = 0m;
+            Latitude = 0;
+            Longitude = 0;
         }
     }
 }
