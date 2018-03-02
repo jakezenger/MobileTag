@@ -211,9 +211,6 @@ namespace MobileTag
 
         public static void UpdateCell(Cell cell, int teamID)
         {
-            decimal lat = GameModel.frontierLowerLeftLat + (cellID / GameModel.GridWidth * GameModel.frontierInterval);
-            decimal lng = GameModel.frontierLowerLeftLong + (cellID % GameModel.GridWidth * GameModel.frontierInterval);
-
             Del readerProcedure = delegate (SqlConnection connection)
             {
                 SqlDataReader reader;
