@@ -170,6 +170,7 @@ namespace MobileTag
                     lat = Convert.ToDecimal(reader["Latitude"]);
                     lng = Convert.ToDecimal(reader["Longitude"]);
                     teamID = Convert.ToInt32(reader["TeamID"]);
+                    cellID = Convert.ToInt32(reader["CellID"]);
                 }
                 reader.Close();
             };
@@ -199,6 +200,7 @@ namespace MobileTag
                     decimal lng = (decimal)reader["Longitude"];
                     cellList.Add(new Cell(lat, lng));
                 }
+
                 reader.Close();
             };
 
@@ -207,9 +209,10 @@ namespace MobileTag
             return cellList;
         }
 
-        public static int UpdateCell(int cellID, int teamID)
+        public static void UpdateCell(int cellID, int teamID)
         {
-            int userValidity = 1;
+            decimal lat = GameModel.frontierLowerLeftLat + (cellID / GameModel.GridWidth * GameModel.frontierInterval);
+            decimal lng = GameModel.frontierLowerLeftLong + (cellID % GameModel.GridWidth * GameModel.frontierInterval);
 
             Del readerProcedure = delegate (SqlConnection connection)
             {
@@ -218,6 +221,9 @@ namespace MobileTag
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
                 cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+                cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = lat;
+                cmd.Parameters.Add("@lng", SqlDbType.Decimal).Value = lng;
+
                 reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -228,8 +234,6 @@ namespace MobileTag
             };
 
             ExecuteQuery(readerProcedure);
-
-            return userValidity;
         }
 
         public static void DeletePlayer(int playerID)

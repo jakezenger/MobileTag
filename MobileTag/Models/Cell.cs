@@ -36,6 +36,7 @@ namespace MobileTag.Models
             ID = GameModel.GetCellID(lat, lng);
             Latitude = lat;
             Longitude = lng;
+            TeamID = 0;
         }
       
         public Cell(int id, decimal lat, decimal lng, int teamID)
@@ -52,6 +53,7 @@ namespace MobileTag.Models
             ID = id;
             Latitude = 0;
             Longitude = 0;
+            TeamID = 0;
         }
 
         public void Tag()
