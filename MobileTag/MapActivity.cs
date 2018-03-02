@@ -28,8 +28,8 @@ using Android.Support.V7.App;
 
 namespace MobileTag
 {
-    [Activity(Label = "MapActivity", Theme = "@style/Theme.AppCompat.Light.NoActionBar")]
-    public class MapActivity : AppCompatActivity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener, GoogleMap.IOnCameraMoveStartedListener, GoogleMap.IOnCameraMoveListener
+    [Activity(Label = "MapActivity")]
+    public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener, GoogleMap.IOnCameraMoveStartedListener, GoogleMap.IOnCameraMoveListener
     {
         private const double CELL_LOAD_RADIUS = .002;
         private GoogleMap mMap;
