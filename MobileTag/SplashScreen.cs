@@ -42,13 +42,37 @@ namespace MobileTag
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
             Toast.MakeText(this, "Logging in...", ToastLength.Long).Show();
-
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            
-            StartActivity(new Intent(this, typeof(LoginActivity)));
+            CheckLocalLoginInformation();
+        }
+
+        private void CheckLocalLoginInformation()
+        {
+            // Check for local login information
+            string path = Application.Context.FilesDir.Path;
+            string filePath = System.IO.Path.Combine(path, "username.txt");
+            string filePath2 = System.IO.Path.Combine(path, "password.txt");
+            string username, password;
+
+            if (System.IO.File.Exists(filePath))
+            {
+                username = System.IO.File.ReadAllText(filePath);
+
+                if (System.IO.File.Exists(filePath2))
+                {
+                    password = System.IO.File.ReadAllText(filePath2);
+
+                    if (Database.ValidateLoginCredentials(username, password) == 1)
+                    {
+                        GameModel.Player = Database.GetPlayer(username.Trim());
+                        Intent intent = new Intent(this, typeof(MapActivity));
+                        StartActivity(intent);
+                    }
+                }
+            }
         }
 
         private byte[] ConvertFileToByteArray(Stream input)
@@ -57,7 +81,7 @@ namespace MobileTag
             using (MemoryStream ms = new MemoryStream())
             {
                 int read;
-                while((read = input.Read(buffer,0,buffer.Length)) > 0)
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     ms.Write(buffer, 0, read);
                 }
