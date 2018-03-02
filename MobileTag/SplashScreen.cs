@@ -57,22 +57,22 @@ namespace MobileTag
             string filePath2 = System.IO.Path.Combine(path, "password.txt");
             string username, password;
 
-            if (System.IO.File.Exists(filePath))
+            if (System.IO.File.Exists(filePath) && System.IO.File.Exists(filePath2))
             {
                 username = System.IO.File.ReadAllText(filePath);
+                password = System.IO.File.ReadAllText(filePath2);
 
-                if (System.IO.File.Exists(filePath2))
+                if (Database.ValidateLoginCredentials(username, password) == 1)
                 {
-                    password = System.IO.File.ReadAllText(filePath2);
-
-                    if (Database.ValidateLoginCredentials(username, password) == 1)
-                    {
-                        GameModel.Player = Database.GetPlayer(username.Trim());
-                        Intent intent = new Intent(this, typeof(MapActivity));
-                        StartActivity(intent);
-                    }
+                    GameModel.Player = Database.GetPlayer(username.Trim());
+                    Intent intent = new Intent(this, typeof(MapActivity));
+                    StartActivity(intent);
                 }
+                else
+                    StartActivity(new Intent(this, typeof(LoginActivity)));
             }
+            else
+                StartActivity(new Intent(this, typeof(LoginActivity)));
         }
 
         private byte[] ConvertFileToByteArray(Stream input)
