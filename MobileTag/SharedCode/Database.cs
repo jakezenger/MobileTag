@@ -209,20 +209,19 @@ namespace MobileTag
             return cellList;
         }
 
-        public static void UpdateCell(int cellID, int teamID)
+        public static void UpdateCell(Cell cell, int teamID)
         {
-            decimal lat = GameModel.frontierLowerLeftLat + (cellID / GameModel.GridWidth * GameModel.frontierInterval);
-            decimal lng = GameModel.frontierLowerLeftLong + (cellID % GameModel.GridWidth * GameModel.frontierInterval);
+            
 
             Del readerProcedure = delegate (SqlConnection connection)
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("UpdateCell", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cell.ID;
                 cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
-                cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = lat;
-                cmd.Parameters.Add("@lng", SqlDbType.Decimal).Value = lng;
+                cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = cell.Latitude;
+                cmd.Parameters.Add("@lng", SqlDbType.Decimal).Value = cell.Longitude;
 
                 reader = cmd.ExecuteReader();
 

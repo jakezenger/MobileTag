@@ -61,7 +61,7 @@ namespace MobileTag.Models
             TeamID = GameModel.Player.Team.ID;
             
             BroadcastCellUpdate();
-            Database.UpdateCell(ID, TeamID);
+            Database.UpdateCell(this, TeamID);
         }
 
         // Broadcast the updated cell to all of the clients that are currently looking at this cell
