@@ -25,11 +25,12 @@ using Android.Support.Design.Widget;
 using MobileTag.SharedCode;
 using System.Collections.Concurrent;
 using Android.Support.V7.App;
+using System.Threading;
 
 namespace MobileTag
 {
     [Activity(Label = "MapActivity")]
-    public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener, GoogleMap.IOnCameraMoveStartedListener, GoogleMap.IOnCameraMoveListener
+    public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener
     {
         private const double CELL_LOAD_RADIUS = .002;
         private GoogleMap mMap;
@@ -175,12 +176,7 @@ namespace MobileTag
             }
         }
 
-        private void MMap_MarkerDragEnd(object sender, GoogleMap.MarkerDragEndEventArgs e)
-        {
-            LatLng pos = e.Marker.Position;
-            mMap.AnimateCamera(CameraUpdateFactory.NewLatLngZoom(pos, 10));
-            Console.WriteLine(pos.ToString());
-        }
+        
 
         /*This function is called from SetUpMap()*/
         public void OnMapReady(GoogleMap googleMap)
@@ -192,9 +188,7 @@ namespace MobileTag
             mMap = googleMap;
             mMap.UiSettings.ZoomControlsEnabled = true;
             mMap.SetOnCameraIdleListener(this);
-
-            ////Event after marker finishes being dragged
-            mMap.MarkerDragEnd += MMap_MarkerDragEnd;
+            mMap.MyLocationEnabled = true;
 
         }
 
@@ -210,8 +204,12 @@ namespace MobileTag
                 {
                     // We don't have an initial camera location. Set that now.
                     initialCameraLatLng = mMap.CameraPosition.Target;
-                    Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
-                    DrawOverlays();
+                    ThreadPool.QueueUserWorkItem(delegate (object state)
+                    {
+                        Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                        DrawOverlays();
+                    }
+                    , null);
                     InitialCameraLocSet = true;
                 }
                 else
@@ -227,8 +225,12 @@ namespace MobileTag
                         Toast.MakeText(this, "Loading new cells: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
 
                         // We most likely should add code to load the cells in view here... LoadProximalCells could work?
-                        Overlays = GameModel.LoadProximalCells(currentCameraLatLng);
-                        DrawOverlays();
+                        ThreadPool.QueueUserWorkItem(delegate (object state)
+                        {
+                            Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                            DrawOverlays();
+                        }
+                        , null);
                     }
                 }
             }
@@ -294,10 +296,6 @@ namespace MobileTag
 
             if (lastKnownLocation == null)
                 System.Diagnostics.Debug.WriteLine("No Location");
-            else
-            {
-                //Overlays = GameModel.LoadProximalCells(new LatLng(lastKnownLocation.Latitude, lastKnownLocation.Longitude)); // This loads cells based on player location, NOT camera location.. is that what we want?
-            }
         }
 
         private void CenterMapCameraOnLocation()
@@ -392,18 +390,9 @@ namespace MobileTag
 
         public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void OnCameraMoveStarted(int reason)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnCameraMove()
-        {
-            //throw new NotImplementedException();
-        }
 
 
         /* [[Example Code]] 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Timers;
 using Android.App;
 using Android.Content;
@@ -36,7 +37,7 @@ namespace MobileTag
             gifImageView.StartAnimation();
 
             //Wait for 6 seconds and start new Activity
-            Timer timer = new Timer();
+            System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 6000;
             timer.AutoReset = false;
             timer.Elapsed += Timer_Elapsed;
@@ -62,14 +63,23 @@ namespace MobileTag
                 username = System.IO.File.ReadAllText(filePath);
                 password = System.IO.File.ReadAllText(filePath2);
 
-                if (Database.ValidateLoginCredentials(username, password) == 1)
+                ThreadPool.QueueUserWorkItem(delegate (object state)
                 {
-                    GameModel.Player = Database.GetPlayer(username.Trim());
-                    Intent intent = new Intent(this, typeof(MapActivity));
-                    StartActivity(intent);
-                }
-                else
-                    StartActivity(new Intent(this, typeof(LoginActivity)));
+                    if (Database.ValidateLoginCredentials(username, password) == 1)
+                    {
+                        GameModel.Player = Database.GetPlayer(username.Trim());
+                        Intent intent = new Intent(this, typeof(MapActivity));
+                        RunOnUiThread(() =>
+                        {
+                            StartActivity(intent);
+                        });
+                    }
+                    else
+                        RunOnUiThread(() =>
+                        {
+                            StartActivity(new Intent(this, typeof(LoginActivity)));
+                        });
+                }, null);
             }
             else
                 StartActivity(new Intent(this, typeof(LoginActivity)));
