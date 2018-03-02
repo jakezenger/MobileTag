@@ -244,6 +244,7 @@ namespace MobileTag
                 {
                     myPositionMarker.Remove();
                 }
+                //mMap.MyLocationEnabled = true;
 
                 Double lat, lng;
                 lat = location.Latitude;
@@ -256,7 +257,7 @@ namespace MobileTag
                 myPositionMarker = mMap.AddMarker(markerOpt);
                 lngLatText.Text = lat + " : " + lng;
 
-                locMgr.RemoveUpdates(this);
+                //locMgr.RemoveUpdates(this);
             }
         }
 
