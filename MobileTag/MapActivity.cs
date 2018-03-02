@@ -322,7 +322,9 @@ namespace MobileTag
             Cell cell = GameModel.CellsInView[playerCellID];
 
             // Draw the tagged cell on the map
+            cell.TeamID = GameModel.Player.Team.ID;
             UpdateOverlay(cell);
+            DrawOverlays();
 
             try
             {
