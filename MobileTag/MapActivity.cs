@@ -185,6 +185,9 @@ namespace MobileTag
         /*This function is called from SetUpMap()*/
         public void OnMapReady(GoogleMap googleMap)
         {
+            // Example code for map style: https://developers.google.com/maps/documentation/android-api/styling
+            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, Resource.Raw.style_json)); // We may want to wrap this in a try-catch block
+
             ////Map Creation
             mMap = googleMap;
             mMap.UiSettings.ZoomControlsEnabled = true;
