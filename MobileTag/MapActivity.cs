@@ -111,7 +111,10 @@ namespace MobileTag
 
             // Connect to cellHub if we aren't already connected
             if (GameModel.CellHubConnection.State != ConnectionState.Connected && GameModel.CellHubConnection.State != ConnectionState.Connecting)
+            {
                 GameModel.CellHubConnection.Start().Wait();
+                GameModel.SubscribeToUpdates();
+            }
         }
 
         protected override void OnPause()
@@ -154,6 +157,7 @@ namespace MobileTag
                 {
                     // Handle SignalR cell update notification
                     Console.WriteLine("Cell {0} updated!", updatedCell.ID);
+                    GameModel.CellsInView[updatedCell.ID] = updatedCell;
                     UpdateOverlay(updatedCell);
                 });
 

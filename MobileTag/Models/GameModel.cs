@@ -145,7 +145,7 @@ namespace MobileTag.Models
         private static ConcurrentDictionary<int, Cell> RetrieveProximalCells(LatLng playerLatLng)
         {
             int playerCellID = GetCellID((decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
-            ConcurrentDictionary<int, Cell> frontierDict = new ConcurrentDictionary<int, Cell>();
+            ConcurrentDictionary<int, Cell> frontierDict = CellsInView;
 
             for (int row = -viewRadius; row <= viewRadius; row++)
             {
@@ -163,7 +163,10 @@ namespace MobileTag.Models
                         cell = new Cell(cellLat, cellLng);
                     }
 
-                    frontierDict.TryAdd(cell.ID, cell);
+                    if (!CellsInView.Keys.Contains(cell.ID))
+                    {
+                        frontierDict.TryAdd(cell.ID, cell);
+                    }
                 }
             }
 
