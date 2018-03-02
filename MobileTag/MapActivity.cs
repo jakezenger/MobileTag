@@ -31,11 +31,12 @@ namespace MobileTag
     [Activity(Label = "MapActivity", Theme = "@style/Theme.AppCompat.Light.NoActionBar")]
     public class MapActivity : AppCompatActivity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener, GoogleMap.IOnCameraMoveStartedListener, GoogleMap.IOnCameraMoveListener
     {
+        private const double CELL_LOAD_RADIUS = .002;
         private GoogleMap mMap;
         private float currentZoomLevel = 0.0F;
         private LocationManager locMgr;
         private String provider;
-        private bool CameraSet = false;
+        private bool InitialCameraLocSet = false;
         private LatLng initialCameraLatLng = null;
 
         private Location lastKnownLocation;
@@ -97,175 +98,6 @@ namespace MobileTag
             };
         }
 
-        private void SetUpCellHub()
-        {
-            try
-            {
-                GameModel.CellHubProxy = GameModel.CellHubConnection.CreateHubProxy("cellHub");
-
-                GameModel.CellHubProxy.On<Cell>("broadcastCell", updatedCell =>
-                {
-                    // Handle SignalR cell update notification
-                    Console.WriteLine("Cell {0} updated!", updatedCell.ID);
-                    UpdateOverlay(updatedCell, ColorCode.SetTeamColor(updatedCell.TeamID));
-                });
-
-                GameModel.CellHubConnection.Start().Wait();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        public void OnProviderDisabled(string provider)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnProviderEnabled(string provider)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnCameraIdle()  //part of OnCameraIdleListener Interface
-        {
-            //work in progress
-            currentZoomLevel = mMap.CameraPosition.Zoom;
-            LatLng currentCameraLatLng = mMap.CameraPosition.Target;
-
-            if (currentZoomLevel > 18)
-            {
-                if (CameraSet == false)
-                {
-                    initialCameraLatLng = mMap.CameraPosition.Target;
-                    CameraSet = true;
-                    Toast.MakeText(this, "Loading new cells: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
-
-                    DrawOverlays();
-                }
-
-                bool LongitudeAbs = (Math.Abs(Math.Abs(currentCameraLatLng.Longitude) - Math.Abs(initialCameraLatLng.Longitude))) > .0013;
-                bool LatitudeAbs = (Math.Abs(Math.Abs(currentCameraLatLng.Latitude) - Math.Abs(initialCameraLatLng.Latitude))) > .0013;
-
-                if (CameraSet == true && (LongitudeAbs || LatitudeAbs))
-                {
-                    Toast.MakeText(this, "Zoom Level 2: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
-                    CameraSet = false;
-                }
-
-            }
-        }
-
-        public void OnCameraMoveStarted(int reason)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnCameraMove()
-        {
-            //throw new NotImplementedException();
-        }
-
-        //tells drawer to open when hamburger button is pressed        
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            switch (item.ItemId)
-            {
-                case Android.Resource.Id.Home:
-                    drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
-                    return true;
-            }
-            return base.OnOptionsItemSelected(item);
-        }
-
-        // Based on example code from https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
-        {
-            switch (requestCode)
-            {
-                case RequestLocationID:
-                    {
-                        if (grantResults[0] == Permission.Granted)
-                        {
-                            GetLocation();
-                        }
-                        else
-                        {                            
-                            //Permission denied, throw some kind of error here
-                            StartActivity(new Intent(this, typeof(MapActivity)));
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-        private void GetLocation()
-        {
-            locMgr = GetSystemService(Context.LocationService) as LocationManager;
-
-            Criteria locationCriteria = new Criteria();
-            locationCriteria.Accuracy = Accuracy.Fine;
-            locationCriteria.PowerRequirement = Power.Medium;
-
-            provider = locMgr.GetBestProvider(locationCriteria, true);
-
-            lastKnownLocation = locMgr.GetLastKnownLocation(provider);
-            if (lastKnownLocation == null)
-                System.Diagnostics.Debug.WriteLine("No Location");
-            else
-            {
-                GameModel.LoadProximalCells(new LatLng(lastKnownLocation.Latitude, lastKnownLocation.Longitude));
-            }
-        }
-
-        private void CenterMapCameraOnLocation()
-        {
-            if (myPositionMarker != null)
-            {
-                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(myPositionMarker.Position, 10);
-                mMap.MoveCamera(mapCameraPos);
-            }
-        }
-
-        private void LocationButton_Click(object sender, EventArgs e)
-        {
-            CenterMapCameraOnLocation();
-        }
-
-        private void TagButton_Click(object sender, EventArgs e)
-        {
-            double decLat = myPositionMarker.Position.Latitude;
-            double decLng = myPositionMarker.Position.Longitude;
-            int playerCellID = GameModel.GetCellID(decLat, decLng);
-
-            Database.UpdateCell(playerCellID, GameModel.Player.Team.ID);
-            Overlays[playerCellID].UpdateColor();
-            mMap.AddPolygon(Overlays[playerCellID].overlay);
-
-            try
-            {
-                // Let others know you've tagged this cell
-                Cell cell = Database.GetCell(playerCellID);
-                BroadcastCellUpdate(cell);
-            }
-            catch (AggregateException exc)
-            {
-                foreach (Exception ie in exc.InnerExceptions)
-                    Console.WriteLine(ie.ToString());
-            }
-            catch (Exception o)
-            {
-                Console.WriteLine(o.ToString());
-            }
-        }
-
         protected override void OnResume()
         {
             base.OnResume();
@@ -282,18 +114,6 @@ namespace MobileTag
                 GameModel.CellHubConnection.Start().Wait();
         }
 
-        async private void BroadcastCellUpdate(Cell cell)
-        {
-            try
-            {
-                await GameModel.CellHubProxy.Invoke("UpdateCell", cell);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
         protected override void OnPause()
         {
             base.OnPause();
@@ -308,6 +128,44 @@ namespace MobileTag
             GameModel.CellHubConnection.Stop();
         }
 
+        //tells drawer to open when hamburger button is pressed        
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+                    return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
+
+
+        // SignalR------------------------------------------------------------------------------------------
+
+        // Set up the cellHub proxy and start the connection. 
+        private void SetUpCellHub()
+        {
+            try
+            {
+                GameModel.CellHubProxy = GameModel.CellHubConnection.CreateHubProxy("cellHub");
+
+                GameModel.CellHubProxy.On<Cell>("broadcastCell", updatedCell =>
+                {
+                    // Handle SignalR cell update notification
+                    Console.WriteLine("Cell {0} updated!", updatedCell.ID);
+                    UpdateOverlay(updatedCell);
+                });
+
+                GameModel.CellHubConnection.Start().Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        // -------------------------------------------------------------------------------------------------
 
         private void SetUpMap()
         {
@@ -315,6 +173,13 @@ namespace MobileTag
             {
                 FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
             }
+        }
+
+        private void MMap_MarkerDragEnd(object sender, GoogleMap.MarkerDragEndEventArgs e)
+        {
+            LatLng pos = e.Marker.Position;
+            mMap.AnimateCamera(CameraUpdateFactory.NewLatLngZoom(pos, 10));
+            Console.WriteLine(pos.ToString());
         }
 
         /*This function is called from SetUpMap()*/
@@ -329,11 +194,41 @@ namespace MobileTag
             mMap.MarkerDragEnd += MMap_MarkerDragEnd;
 
         }
-        private void MMap_MarkerDragEnd(object sender, GoogleMap.MarkerDragEndEventArgs e)
+
+        public void OnCameraIdle()  //part of OnCameraIdleListener Interface
         {
-            LatLng pos = e.Marker.Position;
-            mMap.AnimateCamera(CameraUpdateFactory.NewLatLngZoom(pos, 10));
-            Console.WriteLine(pos.ToString());
+            //work in progress
+            currentZoomLevel = mMap.CameraPosition.Zoom;
+            LatLng currentCameraLatLng = mMap.CameraPosition.Target;
+
+            if (currentZoomLevel > 15)
+            {
+                if (InitialCameraLocSet == false)
+                {
+                    // We don't have an initial camera location. Set that now.
+                    initialCameraLatLng = mMap.CameraPosition.Target;
+                    Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                    DrawOverlays();
+                    InitialCameraLocSet = true;
+                }
+                else
+                {
+                    // Measure the distance between the initial camera position and the current camera position
+                    double distanceFromInitialCameraPosition = Math.Sqrt(Math.Pow(currentCameraLatLng.Latitude - initialCameraLatLng.Latitude, 2) + Math.Pow(currentCameraLatLng.Longitude - initialCameraLatLng.Longitude, 2));
+
+                    if (distanceFromInitialCameraPosition > CELL_LOAD_RADIUS)
+                    {
+                        initialCameraLatLng = mMap.CameraPosition.Target;
+
+                        // Load new cells
+                        Toast.MakeText(this, "Loading new cells: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
+
+                        // We most likely should add code to load the cells in view here... LoadProximalCells could work?
+                        Overlays = GameModel.LoadProximalCells(currentCameraLatLng);
+                        DrawOverlays();
+                    }
+                }
+            }
         }
 
         public void OnLocationChanged(Location location)
@@ -357,42 +252,152 @@ namespace MobileTag
                 lngLatText.Text = lat + " : " + lng;
 
                 locMgr.RemoveUpdates(this);
-                DrawOverlays();
             }
         }
 
-        public void UpdateOverlay(Cell cell, Color color)
+        // Based on example code from https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
-            PolygonOptions squareOverlay = new PolygonOptions();
-            squareOverlay.Add(new LatLng(cell.Latitude, cell.Longitude)); //first rectangle point
-            squareOverlay.Add(new LatLng(cell.Latitude, cell.Longitude + GameModel.FrontierInterval));
-            squareOverlay.Add(new LatLng(cell.Latitude - GameModel.FrontierInterval, cell.Longitude + GameModel.FrontierInterval));
-            squareOverlay.Add(new LatLng(cell.Latitude - GameModel.FrontierInterval, cell.Longitude)); //automatically connects last two points
+            switch (requestCode)
+            {
+                case RequestLocationID:
+                    {
+                        if (grantResults[0] == Permission.Granted)
+                        {
+                            GetLocation();
+                        }
+                        else
+                        {                            
+                            //Permission denied, throw some kind of error here
+                            StartActivity(new Intent(this, typeof(LoginActivity)));
+                        }
+                    }
 
-            squareOverlay.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
-            squareOverlay.InvokeStrokeWidth(0);
+                    break;
+            }
+        }
 
-            mMap.AddPolygon(squareOverlay);
+        private void GetLocation()
+        {
+            locMgr = GetSystemService(Context.LocationService) as LocationManager;
+
+            Criteria locationCriteria = new Criteria();
+            locationCriteria.Accuracy = Accuracy.Fine;
+            locationCriteria.PowerRequirement = Power.Medium;
+
+            provider = locMgr.GetBestProvider(locationCriteria, true);
+
+            lastKnownLocation = locMgr.GetLastKnownLocation(provider);
+
+            if (lastKnownLocation == null)
+                System.Diagnostics.Debug.WriteLine("No Location");
+            else
+            {
+                //Overlays = GameModel.LoadProximalCells(new LatLng(lastKnownLocation.Latitude, lastKnownLocation.Longitude)); // This loads cells based on player location, NOT camera location.. is that what we want?
+            }
+        }
+
+        private void CenterMapCameraOnLocation()
+        {
+            if (myPositionMarker != null)
+            {
+                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(myPositionMarker.Position, 10);
+                mMap.MoveCamera(mapCameraPos);
+            }
+        }
+
+        private void LocationButton_Click(object sender, EventArgs e)
+        {
+            CenterMapCameraOnLocation();
+        }
+
+        private void TagButton_Click(object sender, EventArgs e)
+        {
+            decimal decLat = (decimal)(myPositionMarker.Position.Latitude);
+            decimal decLng = (decimal)(myPositionMarker.Position.Longitude);
+            int playerCellID = GameModel.GetCellID(decLat, decLng);
+            Cell cell = GameModel.CellsInView[playerCellID];
+
+            // Draw the tagged cell on the map
+            UpdateOverlay(cell);
+
+            try
+            {
+                // Let others know you've tagged this cell
+                cell.Tag();
+            }
+            catch (AggregateException exc)
+            {
+                foreach (Exception ie in exc.InnerExceptions)
+                    Console.WriteLine(ie.ToString());
+            }
+            catch (Exception o)
+            {
+                Console.WriteLine(o.ToString());
+            }
+        }
+
+        public void UpdateOverlay(Cell updatedCell)
+        {
+            MapOverlay overlay = new MapOverlay(updatedCell);
+            Overlays[updatedCell.ID].SetColor(ColorCode.TeamColor(updatedCell.TeamID));
+
+            DrawOverlays();
         }
 
         private void DrawOverlays()
         {
-            double decLat = myPositionMarker.Position.Latitude;
-            double decLng = myPositionMarker.Position.Longitude;
-            int playerCellID = GameModel.GetCellID(decLat, decLng);
-            LatLng latlng = GameModel.GetLatLng(playerCellID);
-            Overlays = GameModel.LoadProximalCells(latlng);
-
-            if (!Overlays.ContainsKey(playerCellID))
+            RunOnUiThread(() =>
             {
-                Cell cell = new Cell(latlng.Latitude, latlng.Longitude);
-                Overlays.TryAdd(playerCellID, new MapOverlay(cell));
-            }
+                if (myPositionMarker.Position != null)
+                {
+                    double lat = myPositionMarker.Position.Latitude;
+                    double lng = myPositionMarker.Position.Longitude;
+                    int playerCellID = GameModel.GetCellID((decimal)lat, (decimal)lng);
+                    LatLng latlng = GameModel.GetLatLng(playerCellID);
 
-            foreach (MapOverlay overlay in Overlays.Values)
-            {
-                mMap.AddPolygon(overlay.overlay);
-            }
+                    mMap.Clear();
+
+                    // Add marker
+                    MarkerOptions markerOpt = new MarkerOptions();
+                    markerOpt.SetPosition(new LatLng(lat, lng));
+                    markerOpt.SetTitle("My Location");
+                    markerOpt.SetSnippet(lat + " : " + lng);
+                    myPositionMarker = mMap.AddMarker(markerOpt);
+                    lngLatText.Text = lat + " : " + lng;
+                }
+
+                // Add overlays                    
+                foreach (MapOverlay overlay in Overlays.Values)
+                {
+                    mMap.AddPolygon(overlay.overlay);
+                }
+            });
+        }
+
+        public void OnProviderDisabled(string provider)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnProviderEnabled(string provider)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnCameraMoveStarted(int reason)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnCameraMove()
+        {
+            //throw new NotImplementedException();
         }
 
 

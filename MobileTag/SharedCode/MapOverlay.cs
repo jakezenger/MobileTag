@@ -24,12 +24,12 @@ namespace MobileTag.SharedCode
         public MapOverlay(Cell cell)
         {
             PolygonOptions squareOverlay = new PolygonOptions();
-            squareOverlay.Add(new LatLng(cell.Latitude, cell.Longitude)); //first rectangle point
-            squareOverlay.Add(new LatLng(cell.Latitude, cell.Longitude + GameModel.FrontierInterval));
-            squareOverlay.Add(new LatLng(cell.Latitude - GameModel.FrontierInterval, cell.Longitude + GameModel.FrontierInterval));
-            squareOverlay.Add(new LatLng(cell.Latitude - GameModel.FrontierInterval, cell.Longitude)); //automatically connects last two points
+            squareOverlay.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
+            squareOverlay.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            squareOverlay.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            squareOverlay.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
 
-            Color color = ColorCode.SetTeamColor(cell.TeamID);
+            Color color = ColorCode.TeamColor(cell.TeamID);
             squareOverlay.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
             squareOverlay.InvokeStrokeWidth(0);
 
@@ -38,7 +38,12 @@ namespace MobileTag.SharedCode
 
         public void UpdateColor()
         {
-            Color color = ColorCode.SetTeamColor(GameModel.Player.Team.ID);
+            Color color = ColorCode.TeamColor(GameModel.Player.Team.ID);
+            overlay.InvokeFillColor(color);
+        }
+
+        public void SetColor(Color color)
+        {
             overlay.InvokeFillColor(color);
         }
     }

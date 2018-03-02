@@ -21,21 +21,21 @@ namespace MobileTag.Models
     {
         // IMPORTANT: corresponds to Frontier's specifications.
         // Do not change this unless you first recreate the Frontier's cell database using your new specifications.
-        private const double frontierInterval = .0005;
-        private const double frontierLowerLeftLat = 45.0;
-        private const double frontierLowerLeftLong = -123.4;
-        private const double frontierUpperRightLat = 45.5;
-        private const double frontierUpperRightLong = -122.4;
+        private const decimal frontierInterval = .0005m;
+        private const decimal frontierLowerLeftLat = 45.0m;
+        private const decimal frontierLowerLeftLong = -123.4m;
+        private const decimal frontierUpperRightLat = 45.5m;
+        private const decimal frontierUpperRightLong = -122.4m;
         private const int viewRadius = 2;
 
-        public static double FrontierInterval => frontierInterval;
+        public static decimal FrontierInterval => frontierInterval;
 
         public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
         public static Player Player { get; set; }
 
         // Calculated constants
-        private const double GridHeight = ((frontierUpperRightLat - frontierLowerLeftLat) / frontierInterval);
-        private const double GridWidth = ((frontierUpperRightLong - frontierLowerLeftLong) / frontierInterval);
+        private const decimal GridHeight = ((frontierUpperRightLat - frontierLowerLeftLat) / frontierInterval);
+        private const decimal GridWidth = ((frontierUpperRightLong - frontierLowerLeftLong) / frontierInterval);
 
         // SignalR
         public static HubConnection CellHubConnection = new HubConnection("https://mobiletag.azurewebsites.net/");
@@ -103,9 +103,9 @@ namespace MobileTag.Models
         //    }
         //}
 
-        public static int GetCellID(double lat, double lng)
+        public static int GetCellID(decimal lat, decimal lng)
         {
-            double nearestLatInterval, nearestLongInterval;
+            decimal nearestLatInterval, nearestLongInterval;
 
             nearestLatInterval = (Math.Floor((lat - frontierLowerLeftLat) / frontierInterval) * frontierInterval);
             nearestLongInterval = (Math.Floor((lng - frontierLowerLeftLong) / frontierInterval) * frontierInterval);
@@ -118,10 +118,10 @@ namespace MobileTag.Models
 
         public static LatLng GetLatLng(int cellID)
         {
-            double lat = frontierLowerLeftLat + (cellID / GridWidth * frontierInterval);
-            double lng = frontierLowerLeftLong + (cellID % GridWidth * frontierInterval);
+            decimal lat = frontierLowerLeftLat + (cellID / GridWidth * frontierInterval);
+            decimal lng = frontierLowerLeftLong + (cellID % GridWidth * frontierInterval);
 
-            LatLng latLng = new LatLng(lat, lng);
+            LatLng latLng = new LatLng((double)lat, (double)lng);
 
             return latLng;
         }
@@ -144,11 +144,12 @@ namespace MobileTag.Models
 
         private static ConcurrentDictionary<int, Cell> RetrieveProximalCells(LatLng playerLatLng)
         {
-            int playerCellID = GetCellID(playerLatLng.Latitude, playerLatLng.Longitude);
+            int playerCellID = GetCellID((decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
             List<Cell> cellList = new List<Cell>(100);
 
-            Cell playerCell = Database.GetCell(playerCellID);
-            cellList.Add(playerCell);
+            //// Adds the cell that includes playerLatLng to the list of proximal cells
+            //Cell playerCell = Database.GetCell(playerCellID);
+            //cellList.Add(playerCell);
 
             for (int row = -viewRadius; row <= viewRadius; row++)
             {
@@ -159,12 +160,14 @@ namespace MobileTag.Models
 
                     // Case 1: Cell exists in DB
                     if (cell.Latitude != 0 && cell.Longitude != 0)
+                    {
                         cellList.Add(cell);
+                    }
                     // Case 2: Cell does not exist in DB
                     else
                     {
-                        double cellLat = playerLatLng.Latitude + (row * frontierInterval);
-                        double cellLng = playerLatLng.Longitude + (col * frontierInterval);
+                        decimal cellLat = Math.Floor((decimal)playerLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
+                        decimal cellLng = Math.Floor((decimal)playerLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);
                         cell = new Cell(cellLat, cellLng);
 
                         Database.AddCell(cellID, cellLat, cellLng);
@@ -180,23 +183,6 @@ namespace MobileTag.Models
             }
 
             return frontierDict;
-        }
-
-        //TODO: Make this work with Android/Google API's
-        public Color GetTeamColor(int teamID)
-        {
-            Color color;
-            switch(teamID)
-            {
-                case 1: color = new Color(); break; //RED
-                case 2: color = new Color(); break; //GREEN
-                case 3: color = new Color(); break; //BLUE
-                case 4: color = new Color(); break; //PURPLE
-                case 5: color = new Color(); break; //PINK
-
-                default: color = new Color(); break;    //TRANSPARENT         
-            }
-            return color;
         }
     }
 }

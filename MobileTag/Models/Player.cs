@@ -27,7 +27,7 @@ namespace MobileTag.Models
             Username = username;
         }
 
-        public Player(int id, string username, Team team, double lat, double lng)
+        public Player(int id, string username, Team team, decimal lat, decimal lng)
         {
             ID = id;
             Team = team;

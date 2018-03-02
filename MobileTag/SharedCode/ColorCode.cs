@@ -2,30 +2,26 @@
 
 public static class ColorCode
 {
-    public static uint RED = 0xFF0000B4;
-    public static uint GREEN = 0x00FF00B4;
-    public static uint BLUE = 0x0000FFB4;
-    public static uint PURPLE = 0x9932CCB4;
-    public static uint PINK = 0x78FF32B4;
+    public static Color RED = Color.Argb(120, 255, 0, 0);
+    public static Color GREEN = Color.Argb(120, 0, 255, 128);
+    public static Color BLUE = Color.Argb(120, 0, 0, 255);
+    public static Color PURPLE = Color.Argb(120, 128, 0, 255);
+    public static Color PINK = Color.Argb(120, 255, 0, 255);
 
-    public static Color SetTeamColor(int teamID)
+    public static Color TeamColor(int teamID)
     {
-        uint rgb;
-        const uint mask = 0x000000FF;
+        Color rgb;
+
         switch (teamID)
         {
-            case 1: rgb = ColorCode.RED; break;
-            case 2: rgb = ColorCode.GREEN; break;
-            case 3: rgb = ColorCode.BLUE; break;
-            case 4: rgb = ColorCode.PURPLE; break;
-            case 5: rgb = ColorCode.PINK; break;
-            default: rgb = 0xFFFF00B4; break;
+            case 1: rgb = RED; break;
+            case 2: rgb = GREEN; break;
+            case 3: rgb = BLUE; break;
+            case 4: rgb = PURPLE; break;
+            case 5: rgb = PINK; break;
+            default: rgb = Color.Argb(100, 255, 255, 255); break;
         }
-        byte r = (byte)((rgb >> 24) & mask);
-        byte g = (byte)((rgb >> 16) & mask);
-        byte b = (byte)((rgb >> 8) & mask);
-        byte o = (byte)(rgb & mask);
-        Android.Graphics.Color color = Android.Graphics.Color.Argb(o, r, g, b);
-        return color;
+
+        return rgb;
     }
 }

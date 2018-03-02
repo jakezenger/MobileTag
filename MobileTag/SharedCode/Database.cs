@@ -153,8 +153,9 @@ namespace MobileTag
 
         public static Cell GetCell(int cellID)
         {
-            double lat = 0.00;
-            double lng = 0.00;
+            decimal lat = 0.00m;
+            decimal lng = 0.00m;
+            int teamID = 0;
 
             Del readerProcedure = delegate (SqlConnection connection)
             {
@@ -166,15 +167,16 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    lat = (double)reader["Latitude"];
-                    lng = (double)reader["Longitude"];
+                    lat = Convert.ToDecimal(reader["Latitude"]);
+                    lng = Convert.ToDecimal(reader["Longitude"]);
+                    teamID = Convert.ToInt32(reader["TeamID"]);
                 }
                 reader.Close();
             };
 
             ExecuteQuery(readerProcedure);
 
-            Cell cell = new Cell(cellID, lat, lng);
+            Cell cell = new Cell(cellID, lat, lng, teamID);
             return cell;
         }
 
@@ -193,8 +195,8 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    double lat = (double)reader["Latitude"];
-                    double lng = (double)reader["Longitude"];
+                    decimal lat = (decimal)reader["Latitude"];
+                    decimal lng = (decimal)reader["Longitude"];
                     cellList.Add(new Cell(lat, lng));
                 }
                 reader.Close();
@@ -244,7 +246,7 @@ namespace MobileTag
             ExecuteQuery(readerProcedure);
         }
 
-        public static void DeletecCell(int cellID)
+        public static void DeleteCell(int cellID)
         {
 
             Del readerProcedure = delegate (SqlConnection connection)
@@ -274,7 +276,7 @@ namespace MobileTag
 
         }
 
-        public static void AddCell(int cellID, double lat, double lng)
+        public static void AddCell(int cellID, decimal lat, decimal lng)
         {
             Del readerProcedure = delegate (SqlConnection connection)
             {
@@ -282,8 +284,8 @@ namespace MobileTag
                 SqlCommand cmd = new SqlCommand("AddCell", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
-                cmd.Parameters.Add("@lat", SqlDbType.Float).Value = lat;
-                cmd.Parameters.Add("@long", SqlDbType.Float).Value = lng;
+                cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = lat;
+                cmd.Parameters.Add("@long", SqlDbType.Decimal).Value = lng;
                 reader = cmd.ExecuteReader();
 
                 while (reader.Read())
