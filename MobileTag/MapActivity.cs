@@ -188,7 +188,7 @@ namespace MobileTag
             mMap = googleMap;
             mMap.UiSettings.ZoomControlsEnabled = true;
             mMap.SetOnCameraIdleListener(this);
-            mMap.MyLocationEnabled = true;
+            //mMap.MyLocationEnabled = true;
 
         }
 
@@ -244,8 +244,10 @@ namespace MobileTag
                 {
                     myPositionMarker.Remove();
                 }
-                //mMap.MyLocationEnabled = true;
-
+                if (mMap.MyLocationEnabled != true)
+                {
+                    mMap.MyLocationEnabled = true;
+                }
                 Double lat, lng;
                 lat = location.Latitude;
                 lng = location.Longitude;
@@ -318,26 +320,28 @@ namespace MobileTag
             decimal decLat = (decimal)(myPositionMarker.Position.Latitude);
             decimal decLng = (decimal)(myPositionMarker.Position.Longitude);
             int playerCellID = GameModel.GetCellID(decLat, decLng);
-            Cell cell = GameModel.CellsInView[playerCellID];
+            if (GameModel.CellsInView.ContainsKey(playerCellID))
+            {           
+                Cell cell = GameModel.CellsInView[playerCellID];
+                // Draw the tagged cell on the map
+                cell.TeamID = GameModel.Player.Team.ID;
+                UpdateOverlay(cell);
+                DrawOverlays();
 
-            // Draw the tagged cell on the map
-            cell.TeamID = GameModel.Player.Team.ID;
-            UpdateOverlay(cell);
-            DrawOverlays();
-
-            try
-            {
-                // Let others know you've tagged this cell
-                cell.Tag();
-            }
-            catch (AggregateException exc)
-            {
-                foreach (Exception ie in exc.InnerExceptions)
-                    Console.WriteLine(ie.ToString());
-            }
-            catch (Exception o)
-            {
-                Console.WriteLine(o.ToString());
+                try
+                {
+                    // Let others know you've tagged this cell
+                    cell.Tag();
+                }
+                catch (AggregateException exc)
+                {
+                    foreach (Exception ie in exc.InnerExceptions)
+                        Console.WriteLine(ie.ToString());
+                }
+                catch (Exception o)
+                {
+                    Console.WriteLine(o.ToString());
+                }
             }
         }
 
@@ -391,7 +395,7 @@ namespace MobileTag
 
         public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
 
