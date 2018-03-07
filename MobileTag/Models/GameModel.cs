@@ -21,7 +21,7 @@ namespace MobileTag.Models
     {
         // IMPORTANT: corresponds to Frontier's specifications.
         // Do not change this unless you first recreate the Frontier's cell database using your new specifications.
-        public const decimal frontierInterval = .0005m;
+        public const decimal frontierInterval = .0001m;
         public const decimal frontierLowerLeftLat = 45.0m;
         public const decimal frontierLowerLeftLong = -123.4m;
         public const decimal frontierUpperRightLat = 45.5m;
