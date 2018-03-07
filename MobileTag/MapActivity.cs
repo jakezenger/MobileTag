@@ -302,7 +302,10 @@ namespace MobileTag
 
         public void UpdateOverlay(Cell updatedCell)
         {
-            PolyOverlays[updatedCell.ID].FillColor = ColorCode.TeamColor(updatedCell.TeamID);
+            RunOnUiThread(() =>
+            {
+                PolyOverlays[updatedCell.ID].FillColor = ColorCode.TeamColor(updatedCell.TeamID);
+            });
         }
 
         private void DrawOverlays()
