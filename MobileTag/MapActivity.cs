@@ -318,7 +318,6 @@ namespace MobileTag
                     double lng = mMap.MyLocation.Longitude;
                     int playerCellID = GameModel.GetCellID((decimal)lat, (decimal)lng);
                     LatLng latlng = GameModel.GetLatLng(playerCellID);
-                    mMap.Clear();
 
                     lngLatText.Text = "Lat " + lat + " : " + "Long " + lng;
                 }
