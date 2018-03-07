@@ -44,6 +44,7 @@ namespace MobileTag
         private NavigationView navigationView;
 
         ConcurrentDictionary<int, MapOverlay> Overlays;
+        ConcurrentDictionary<int, Polygon> PolyOverlays = new ConcurrentDictionary<int, Polygon>();
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -276,12 +277,12 @@ namespace MobileTag
             decimal decLat = (decimal)(mMap.MyLocation.Latitude);
             decimal decLng = (decimal)(mMap.MyLocation.Longitude);
             int playerCellID = GameModel.GetCellID(decLat, decLng);
+
             if (GameModel.CellsInView.ContainsKey(playerCellID))
             {           
                 Cell cell = GameModel.CellsInView[playerCellID];
                 cell.TeamID = GameModel.Player.Team.ID;
                 UpdateOverlay(cell);
-                DrawOverlays();
 
                 try
                 {
@@ -301,10 +302,7 @@ namespace MobileTag
 
         public void UpdateOverlay(Cell updatedCell)
         {
-            MapOverlay overlay = new MapOverlay(updatedCell);
-            Overlays[updatedCell.ID].SetColor(ColorCode.TeamColor(updatedCell.TeamID));
-
-            DrawOverlays();
+            PolyOverlays[updatedCell.ID].FillColor = ColorCode.TeamColor(updatedCell.TeamID);
         }
 
         private void DrawOverlays()
@@ -324,7 +322,8 @@ namespace MobileTag
                   
                 foreach (MapOverlay overlay in Overlays.Values)
                 {
-                    mMap.AddPolygon(overlay.overlay);
+                    Polygon poly = mMap.AddPolygon(overlay.overlay);
+                    PolyOverlays.TryAdd(overlay.CellID, poly);
                 }
             });
         }

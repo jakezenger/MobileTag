@@ -20,9 +20,12 @@ namespace MobileTag.SharedCode
     public class MapOverlay
     {
         public PolygonOptions overlay { get; }
+        public int CellID;
 
         public MapOverlay(Cell cell)
         {
+            CellID = cell.ID;
+
             PolygonOptions squareOverlay = new PolygonOptions();
             squareOverlay.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
             squareOverlay.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
