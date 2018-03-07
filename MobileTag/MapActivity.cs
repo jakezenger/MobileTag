@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -12,12 +8,8 @@ using Android.Widget;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Locations;
-using Android.Gms.Location;
-using Android.Gms.Common.Apis;
 using Android.Support.V4.App;
-using Android.Graphics;
 using Android.Content.PM;
-using Android.Gms.Tasks;
 using MobileTag.Models;
 using Microsoft.AspNet.SignalR.Client;
 using Android.Support.V4.Widget;
@@ -25,13 +17,15 @@ using Android.Support.Design.Widget;
 using MobileTag.SharedCode;
 using System.Collections.Concurrent;
 using Android.Support.V7.App;
+using System.Threading;
 
 namespace MobileTag
 {
     [Activity(Label = "MapActivity")]
-    public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener, GoogleMap.IOnCameraMoveStartedListener, GoogleMap.IOnCameraMoveListener
+    public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener
     {
         private const double CELL_LOAD_RADIUS = .002;
+        private const int ZOOM_LEVEL_LOAD = 15;
         private GoogleMap mMap;
         private float currentZoomLevel = 0.0F;
         private LocationManager locMgr;
@@ -55,11 +49,8 @@ namespace MobileTag
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            ////Connects Map.axml to this Activity
             SetContentView(Resource.Layout.Map);
          
-            //Bind C# objects to xml elements
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetActionBar(toolbar);
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
@@ -68,11 +59,9 @@ namespace MobileTag
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
             locationButton = FindViewById<Button>(Resource.Id.clientCameraLocationbtn);
 
-            //Enable toolbar to display hamburger
             ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_menu_black_24dp);
             ActionBar.SetDisplayHomeAsUpEnabled(true);
-            
-            //click events           
+                     
             tagButton.Click += TagButton_Click;
             locationButton.Click += LocationButton_Click;
 
@@ -81,7 +70,6 @@ namespace MobileTag
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
-                // Location permissions have been granted
                 GetLocation();
             }
             else
@@ -89,11 +77,9 @@ namespace MobileTag
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
 
-            //menu item selected
             navigationView.NavigationItemSelected += (sender, e) =>
             {
-                e.MenuItem.SetChecked(true);
-                //react to click here and swap fragments or navigate               
+                e.MenuItem.SetChecked(true);              
                 drawerLayout.CloseDrawers();
             };
         }
@@ -108,8 +94,6 @@ namespace MobileTag
                 locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
                 locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
             }
-
-            // Connect to cellHub if we aren't already connected
             if (GameModel.CellHubConnection.State != ConnectionState.Connected && GameModel.CellHubConnection.State != ConnectionState.Connecting)
             {
                 GameModel.CellHubConnection.Start().Wait();
@@ -123,15 +107,11 @@ namespace MobileTag
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
-                ////This will remove the listener from constantly grabbing locations
                 locMgr.RemoveUpdates(this);
             }
-
-            // End the current connection to the SignalR server
             GameModel.CellHubConnection.Stop();
         }
-
-        //tells drawer to open when hamburger button is pressed        
+        
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             switch (item.ItemId)
@@ -179,60 +159,48 @@ namespace MobileTag
             }
         }
 
-        private void MMap_MarkerDragEnd(object sender, GoogleMap.MarkerDragEndEventArgs e)
-        {
-            LatLng pos = e.Marker.Position;
-            mMap.AnimateCamera(CameraUpdateFactory.NewLatLngZoom(pos, 10));
-            Console.WriteLine(pos.ToString());
-        }
-
-        /*This function is called from SetUpMap()*/
         public void OnMapReady(GoogleMap googleMap)
         {
             // Example code for map style: https://developers.google.com/maps/documentation/android-api/styling
-            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, Resource.Raw.style_json)); // We may want to wrap this in a try-catch block
-
-            ////Map Creation
+            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, Resource.Raw.style_json));
             mMap = googleMap;
             mMap.UiSettings.ZoomControlsEnabled = true;
             mMap.SetOnCameraIdleListener(this);
-
-            ////Event after marker finishes being dragged
-            mMap.MarkerDragEnd += MMap_MarkerDragEnd;
-
         }
 
-        public void OnCameraIdle()  //part of OnCameraIdleListener Interface
+        public void OnCameraIdle()
         {
-            //work in progress
             currentZoomLevel = mMap.CameraPosition.Zoom;
             LatLng currentCameraLatLng = mMap.CameraPosition.Target;
 
-            if (currentZoomLevel > 15)
+            if (currentZoomLevel > ZOOM_LEVEL_LOAD)
             {
                 if (InitialCameraLocSet == false)
                 {
-                    // We don't have an initial camera location. Set that now.
                     initialCameraLatLng = mMap.CameraPosition.Target;
-                    Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
-                    DrawOverlays();
+                    ThreadPool.QueueUserWorkItem(delegate (object state)
+                    {
+                        Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                        DrawOverlays();
+                    }
+                    , null);
                     InitialCameraLocSet = true;
                 }
                 else
                 {
-                    // Measure the distance between the initial camera position and the current camera position
                     double distanceFromInitialCameraPosition = Math.Sqrt(Math.Pow(currentCameraLatLng.Latitude - initialCameraLatLng.Latitude, 2) + Math.Pow(currentCameraLatLng.Longitude - initialCameraLatLng.Longitude, 2));
 
                     if (distanceFromInitialCameraPosition > CELL_LOAD_RADIUS)
                     {
                         initialCameraLatLng = mMap.CameraPosition.Target;
-
-                        // Load new cells
                         Toast.MakeText(this, "Loading new cells: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
 
-                        // We most likely should add code to load the cells in view here... LoadProximalCells could work?
-                        Overlays = GameModel.LoadProximalCells(currentCameraLatLng);
-                        DrawOverlays();
+                        ThreadPool.QueueUserWorkItem(delegate (object state)
+                        {
+                            Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                            DrawOverlays();
+                        }
+                        , null);
                     }
                 }
             }
@@ -246,7 +214,10 @@ namespace MobileTag
                 {
                     myPositionMarker.Remove();
                 }
-
+                if (mMap.MyLocationEnabled != true)
+                {
+                    mMap.MyLocationEnabled = true;
+                }
                 Double lat, lng;
                 lat = location.Latitude;
                 lng = location.Longitude;
@@ -256,9 +227,8 @@ namespace MobileTag
                 markerOpt.SetTitle("My Location");
                 markerOpt.SetSnippet(lat + " : " + lng);
                 myPositionMarker = mMap.AddMarker(markerOpt);
-                lngLatText.Text = lat + " : " + lng;
 
-                //locMgr.RemoveUpdates(this);
+                lngLatText.Text = "Lat" + lat + " : " + "Long" + lng;
             }
         }
 
@@ -275,7 +245,6 @@ namespace MobileTag
                         }
                         else
                         {                            
-                            //Permission denied, throw some kind of error here
                             StartActivity(new Intent(this, typeof(LoginActivity)));
                         }
                     }
@@ -291,17 +260,11 @@ namespace MobileTag
             Criteria locationCriteria = new Criteria();
             locationCriteria.Accuracy = Accuracy.Fine;
             locationCriteria.PowerRequirement = Power.Medium;
-
             provider = locMgr.GetBestProvider(locationCriteria, true);
-
             lastKnownLocation = locMgr.GetLastKnownLocation(provider);
 
             if (lastKnownLocation == null)
                 System.Diagnostics.Debug.WriteLine("No Location");
-            else
-            {
-                //Overlays = GameModel.LoadProximalCells(new LatLng(lastKnownLocation.Latitude, lastKnownLocation.Longitude)); // This loads cells based on player location, NOT camera location.. is that what we want?
-            }
         }
 
         private void CenterMapCameraOnLocation()
@@ -323,26 +286,26 @@ namespace MobileTag
             decimal decLat = (decimal)(myPositionMarker.Position.Latitude);
             decimal decLng = (decimal)(myPositionMarker.Position.Longitude);
             int playerCellID = GameModel.GetCellID(decLat, decLng);
-            Cell cell = GameModel.CellsInView[playerCellID];
+            if (GameModel.CellsInView.ContainsKey(playerCellID))
+            {           
+                Cell cell = GameModel.CellsInView[playerCellID];
+                cell.TeamID = GameModel.Player.Team.ID;
+                UpdateOverlay(cell);
+                DrawOverlays();
 
-            // Draw the tagged cell on the map
-            cell.TeamID = GameModel.Player.Team.ID;
-            UpdateOverlay(cell);
-            DrawOverlays();
-
-            try
-            {
-                // Let others know you've tagged this cell
-                cell.Tag();
-            }
-            catch (AggregateException exc)
-            {
-                foreach (Exception ie in exc.InnerExceptions)
-                    Console.WriteLine(ie.ToString());
-            }
-            catch (Exception o)
-            {
-                Console.WriteLine(o.ToString());
+                try
+                {
+                    cell.Tag();
+                }
+                catch (AggregateException exc)
+                {
+                    foreach (Exception ie in exc.InnerExceptions)
+                        Console.WriteLine(ie.ToString());
+                }
+                catch (Exception o)
+                {
+                    Console.WriteLine(o.ToString());
+                }
             }
         }
 
@@ -364,19 +327,16 @@ namespace MobileTag
                     double lng = myPositionMarker.Position.Longitude;
                     int playerCellID = GameModel.GetCellID((decimal)lat, (decimal)lng);
                     LatLng latlng = GameModel.GetLatLng(playerCellID);
-
                     mMap.Clear();
 
-                    // Add marker
                     MarkerOptions markerOpt = new MarkerOptions();
                     markerOpt.SetPosition(new LatLng(lat, lng));
                     markerOpt.SetTitle("My Location");
                     markerOpt.SetSnippet(lat + " : " + lng);
                     myPositionMarker = mMap.AddMarker(markerOpt);
-                    lngLatText.Text = lat + " : " + lng;
+                    lngLatText.Text = "Lat " + lat + " : " + "Long " + lng;
                 }
-
-                // Add overlays                    
+                  
                 foreach (MapOverlay overlay in Overlays.Values)
                 {
                     mMap.AddPolygon(overlay.overlay);
@@ -399,15 +359,6 @@ namespace MobileTag
             //throw new NotImplementedException();
         }
 
-        public void OnCameraMoveStarted(int reason)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnCameraMove()
-        {
-            //throw new NotImplementedException();
-        }
 
 
         /* [[Example Code]] 
