@@ -193,7 +193,7 @@ namespace MobileTag
                     if (distanceFromInitialCameraPosition > CELL_LOAD_RADIUS)
                     {
                         initialCameraLatLng = mMap.CameraPosition.Target;
-                        Toast.MakeText(this, "Loading new cells: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
+                        Toast.MakeText(this, "Loading new cells at Zoom Level: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
 
                         ThreadPool.QueueUserWorkItem(delegate (object state)
                         {
