@@ -34,7 +34,6 @@ namespace MobileTag
         private LatLng initialCameraLatLng = null;
 
         private Location lastKnownLocation;
-        private Marker myPositionMarker;
         private TextView lngLatText;
         private Button tagButton;
         private Button locationButton;
@@ -210,23 +209,14 @@ namespace MobileTag
         {
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
-                if (myPositionMarker != null)
-                {
-                    myPositionMarker.Remove();
-                }
                 if (mMap.MyLocationEnabled != true)
                 {
                     mMap.MyLocationEnabled = true;
                 }
+
                 Double lat, lng;
                 lat = location.Latitude;
                 lng = location.Longitude;
-
-                MarkerOptions markerOpt = new MarkerOptions();
-                markerOpt.SetPosition(new LatLng(lat, lng));
-                markerOpt.SetTitle("My Location");
-                markerOpt.SetSnippet(lat + " : " + lng);
-                myPositionMarker = mMap.AddMarker(markerOpt);
 
                 lngLatText.Text = "Lat" + lat + " : " + "Long" + lng;
             }
@@ -269,9 +259,9 @@ namespace MobileTag
 
         private void CenterMapCameraOnLocation()
         {
-            if (myPositionMarker != null)
+            if (mMap.MyLocation != null)
             {
-                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(myPositionMarker.Position, 10);
+                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude), 10);
                 mMap.MoveCamera(mapCameraPos);
             }
         }
@@ -283,8 +273,8 @@ namespace MobileTag
 
         private void TagButton_Click(object sender, EventArgs e)
         {
-            decimal decLat = (decimal)(myPositionMarker.Position.Latitude);
-            decimal decLng = (decimal)(myPositionMarker.Position.Longitude);
+            decimal decLat = (decimal)(mMap.MyLocation.Latitude);
+            decimal decLng = (decimal)(mMap.MyLocation.Longitude);
             int playerCellID = GameModel.GetCellID(decLat, decLng);
             if (GameModel.CellsInView.ContainsKey(playerCellID))
             {           
@@ -321,19 +311,14 @@ namespace MobileTag
         {
             RunOnUiThread(() =>
             {
-                if (myPositionMarker.Position != null)
+                if (mMap.MyLocation != null)
                 {
-                    double lat = myPositionMarker.Position.Latitude;
-                    double lng = myPositionMarker.Position.Longitude;
+                    double lat = mMap.MyLocation.Latitude;
+                    double lng = mMap.MyLocation.Longitude;
                     int playerCellID = GameModel.GetCellID((decimal)lat, (decimal)lng);
                     LatLng latlng = GameModel.GetLatLng(playerCellID);
                     mMap.Clear();
 
-                    MarkerOptions markerOpt = new MarkerOptions();
-                    markerOpt.SetPosition(new LatLng(lat, lng));
-                    markerOpt.SetTitle("My Location");
-                    markerOpt.SetSnippet(lat + " : " + lng);
-                    myPositionMarker = mMap.AddMarker(markerOpt);
                     lngLatText.Text = "Lat " + lat + " : " + "Long " + lng;
                 }
                   
