@@ -26,7 +26,7 @@ namespace MobileTag.Models
         public const decimal frontierLowerLeftLong = -123.4m;
         public const decimal frontierUpperRightLat = 45.5m;
         public const decimal frontierUpperRightLong = -122.4m;
-        private const int viewRadius = 2;
+        private const int viewRadius = 5;
 
         public static decimal FrontierInterval => frontierInterval;
 
