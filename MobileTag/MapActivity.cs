@@ -322,11 +322,14 @@ namespace MobileTag
 
                     lngLatText.Text = "Lat " + lat + " : " + "Long " + lng;
                 }
-                  
+
                 foreach (MapOverlay overlay in Overlays.Values)
                 {
-                    Polygon poly = mMap.AddPolygon(overlay.overlay);
-                    PolyOverlays.TryAdd(overlay.CellID, poly);
+                    if (!PolyOverlays.ContainsKey(overlay.CellID))
+                    {
+                        Polygon poly = mMap.AddPolygon(overlay.overlay);
+                        PolyOverlays.TryAdd(overlay.CellID, poly);
+                    }
                 }
             });
         }
