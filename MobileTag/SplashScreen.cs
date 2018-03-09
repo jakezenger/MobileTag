@@ -38,7 +38,7 @@ namespace MobileTag
 
             //Wait for 6 seconds and start new Activity
             System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Interval = 6000;
+            timer.Interval = 1000;
             timer.AutoReset = false;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
