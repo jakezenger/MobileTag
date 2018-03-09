@@ -128,14 +128,16 @@ namespace MobileTag.Models
 
         public static ConcurrentDictionary<int, MapOverlay> LoadProximalCells(LatLng playerLatLng)
         {
-            //CellsInView = RetrieveProximalCells(playerLatLng);
-            CellsInView = Database.GetProxyCells(viewRadius, frontierInterval, (decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
+            CellsInView = RetrieveProximalCells(playerLatLng);
 
             var Overlays = new ConcurrentDictionary<int, MapOverlay>();
 
             foreach (Cell cell in CellsInView.Values)
             {
-                Overlays.TryAdd(cell.ID, new MapOverlay(cell));
+                if (cell.TeamID > 0)
+                {
+                    Overlays.TryAdd(cell.ID, new MapOverlay(cell));
+                }
             }
 
             SubscribeToUpdates();
@@ -146,31 +148,25 @@ namespace MobileTag.Models
         private static ConcurrentDictionary<int, Cell> RetrieveProximalCells(LatLng playerLatLng)
         {
             int playerCellID = GetCellID((decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
-            ConcurrentDictionary<int, Cell> frontierDict = CellsInView;
-            /*
+            ConcurrentDictionary<int, Cell> frontierDict = Database.GetProxyCells(viewRadius, frontierInterval, (decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
+
             for (int row = -viewRadius; row <= viewRadius; row++)
             {
                 for (int col = -viewRadius; col <= viewRadius; col++)
                 {
                     int cellID = (int)(playerCellID + (row * GridWidth) + col);
-                    Cell cell = Database.GetCell(cellID);
 
-                    if (cell.ID == -1)
+                    if (!CellsInView.Keys.Contains(cellID))
                     {
-                        // Cell does not exist in DB
-
                         decimal cellLat = Math.Floor((decimal)playerLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
                         decimal cellLng = Math.Floor((decimal)playerLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);
-                        cell = new Cell(cellLat, cellLng);
-                    }
+                        Cell cell = new Cell(cellLat, cellLng);
 
-                    if (!CellsInView.Keys.Contains(cell.ID))
-                    {
-                        frontierDict.TryAdd(cell.ID, cell);
+                        frontierDict.TryAdd(cellID, cell);
                     }
                 }
             }
-            */
+
             return frontierDict;
         }
 
