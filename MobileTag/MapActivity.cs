@@ -322,7 +322,16 @@ namespace MobileTag
         {
             RunOnUiThread(() =>
             {
-                PolyOverlays[updatedCell.ID].FillColor = ColorCode.TeamColor(updatedCell.TeamID);
+                if (!PolyOverlays.ContainsKey(updatedCell.ID))
+                {
+                    MapOverlay mapOverlay = new MapOverlay(updatedCell);
+                    Polygon poly = mMap.AddPolygon(mapOverlay.overlay);
+                    PolyOverlays.TryAdd(mapOverlay.CellID, poly);
+                }
+                else
+                {
+                    PolyOverlays[updatedCell.ID].FillColor = ColorCode.TeamColor(updatedCell.TeamID);
+                }
             });
         }
 
