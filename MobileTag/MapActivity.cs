@@ -24,7 +24,7 @@ namespace MobileTag
     [Activity(Label = "MapActivity")]
     public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener
     {
-        private const double CELL_LOAD_RADIUS = .001;
+        private const double CELL_LOAD_RADIUS = .0006;
         private const int ZOOM_LEVEL_LOAD = 15;
         private GoogleMap mMap;
         private float currentZoomLevel = 0.0F;
@@ -277,26 +277,44 @@ namespace MobileTag
             decimal decLat = (decimal)(mMap.MyLocation.Latitude);
             decimal decLng = (decimal)(mMap.MyLocation.Longitude);
             int playerCellID = GameModel.GetCellID(decLat, decLng);
+            Cell cell;
 
-            if (GameModel.CellsInView.ContainsKey(playerCellID))
-            {           
-                Cell cell = GameModel.CellsInView[playerCellID];
-                cell.TeamID = GameModel.Player.Team.ID;
-                UpdateOverlay(cell);
+            if (!GameModel.CellsInView.ContainsKey(playerCellID))
+            {
+                // Generate the new cell and add it to CellsInView
+                cell = GameModel.GenerateCell(decLat, decLng);
+                GameModel.CellsInView.TryAdd(cell.ID, cell);
 
-                try
-                {
-                    cell.Tag();
-                }
-                catch (AggregateException exc)
-                {
-                    foreach (Exception ie in exc.InnerExceptions)
-                        Console.WriteLine(ie.ToString());
-                }
-                catch (Exception o)
-                {
-                    Console.WriteLine(o.ToString());
-                }
+               
+            }
+            else
+            {
+                cell = GameModel.CellsInView[playerCellID];
+            }
+
+            if (!PolyOverlays.ContainsKey(cell.ID))
+            {
+                // Add the new cell's overlay to the map
+                MapOverlay newMapOverlay = new MapOverlay(cell);
+                Polygon poly = mMap.AddPolygon(newMapOverlay.overlay);
+                PolyOverlays.TryAdd(newMapOverlay.CellID, poly);
+            }
+
+            cell.TeamID = GameModel.Player.Team.ID;
+            UpdateOverlay(cell);
+
+            try
+            {
+                cell.Tag();
+            }
+            catch (AggregateException exc)
+            {
+                foreach (Exception ie in exc.InnerExceptions)
+                    Console.WriteLine(ie.ToString());
+            }
+            catch (Exception o)
+            {
+                Console.WriteLine(o.ToString());
             }
         }
 

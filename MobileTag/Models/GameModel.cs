@@ -173,5 +173,12 @@ namespace MobileTag.Models
             */
             return frontierDict;
         }
+
+        public static Cell GenerateCell(decimal lat, decimal lng)
+        {
+            decimal cellLat = Math.Floor(lat / frontierInterval) * frontierInterval;
+            decimal cellLng = Math.Floor(lng / frontierInterval) * frontierInterval;
+            return new Cell(cellLat, cellLng);
+        }
     }
 }
