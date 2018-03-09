@@ -128,7 +128,8 @@ namespace MobileTag.Models
 
         public static ConcurrentDictionary<int, MapOverlay> LoadProximalCells(LatLng playerLatLng)
         {
-            CellsInView = RetrieveProximalCells(playerLatLng);
+            //CellsInView = RetrieveProximalCells(playerLatLng);
+            CellsInView = Database.GetProxyCells(viewRadius, frontierInterval, (decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
 
             var Overlays = new ConcurrentDictionary<int, MapOverlay>();
 
@@ -146,7 +147,7 @@ namespace MobileTag.Models
         {
             int playerCellID = GetCellID((decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
             ConcurrentDictionary<int, Cell> frontierDict = CellsInView;
-
+            /*
             for (int row = -viewRadius; row <= viewRadius; row++)
             {
                 for (int col = -viewRadius; col <= viewRadius; col++)
@@ -169,7 +170,7 @@ namespace MobileTag.Models
                     }
                 }
             }
-
+            */
             return frontierDict;
         }
     }
