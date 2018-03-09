@@ -26,9 +26,10 @@ namespace MobileTag.Models
         public const decimal frontierLowerLeftLong = -124.5m;
         public const decimal frontierUpperRightLat = 47.0m;
         public const decimal frontierUpperRightLong = -116.5m;
-        private const int viewRadius = 10;
+        private const int viewRadius = 15;
 
         public static decimal FrontierInterval => frontierInterval;
+        public static int ViewRadius => viewRadius;
 
         public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
         public static Player Player { get; set; }
