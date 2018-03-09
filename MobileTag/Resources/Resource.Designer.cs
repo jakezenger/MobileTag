@@ -1178,44 +1178,44 @@ namespace MobileTag
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f0a004e
-			public const int abc_background_cache_hint_selector_material_dark = 2131361870;
+			// aapt resource value: 0x7f0a0056
+			public const int abc_background_cache_hint_selector_material_dark = 2131361878;
 			
-			// aapt resource value: 0x7f0a004f
-			public const int abc_background_cache_hint_selector_material_light = 2131361871;
+			// aapt resource value: 0x7f0a0057
+			public const int abc_background_cache_hint_selector_material_light = 2131361879;
 			
-			// aapt resource value: 0x7f0a0050
-			public const int abc_btn_colored_borderless_text_material = 2131361872;
+			// aapt resource value: 0x7f0a0058
+			public const int abc_btn_colored_borderless_text_material = 2131361880;
 			
-			// aapt resource value: 0x7f0a0051
-			public const int abc_btn_colored_text_material = 2131361873;
+			// aapt resource value: 0x7f0a0059
+			public const int abc_btn_colored_text_material = 2131361881;
 			
-			// aapt resource value: 0x7f0a0052
-			public const int abc_color_highlight_material = 2131361874;
+			// aapt resource value: 0x7f0a005a
+			public const int abc_color_highlight_material = 2131361882;
 			
-			// aapt resource value: 0x7f0a0053
-			public const int abc_hint_foreground_material_dark = 2131361875;
+			// aapt resource value: 0x7f0a005b
+			public const int abc_hint_foreground_material_dark = 2131361883;
 			
-			// aapt resource value: 0x7f0a0054
-			public const int abc_hint_foreground_material_light = 2131361876;
+			// aapt resource value: 0x7f0a005c
+			public const int abc_hint_foreground_material_light = 2131361884;
 			
 			// aapt resource value: 0x7f0a0009
 			public const int abc_input_method_navigation_guard = 2131361801;
 			
-			// aapt resource value: 0x7f0a0055
-			public const int abc_primary_text_disable_only_material_dark = 2131361877;
+			// aapt resource value: 0x7f0a005d
+			public const int abc_primary_text_disable_only_material_dark = 2131361885;
 			
-			// aapt resource value: 0x7f0a0056
-			public const int abc_primary_text_disable_only_material_light = 2131361878;
+			// aapt resource value: 0x7f0a005e
+			public const int abc_primary_text_disable_only_material_light = 2131361886;
 			
-			// aapt resource value: 0x7f0a0057
-			public const int abc_primary_text_material_dark = 2131361879;
+			// aapt resource value: 0x7f0a005f
+			public const int abc_primary_text_material_dark = 2131361887;
 			
-			// aapt resource value: 0x7f0a0058
-			public const int abc_primary_text_material_light = 2131361880;
+			// aapt resource value: 0x7f0a0060
+			public const int abc_primary_text_material_light = 2131361888;
 			
-			// aapt resource value: 0x7f0a0059
-			public const int abc_search_url_text = 2131361881;
+			// aapt resource value: 0x7f0a0061
+			public const int abc_search_url_text = 2131361889;
 			
 			// aapt resource value: 0x7f0a000a
 			public const int abc_search_url_text_normal = 2131361802;
@@ -1226,32 +1226,32 @@ namespace MobileTag
 			// aapt resource value: 0x7f0a000c
 			public const int abc_search_url_text_selected = 2131361804;
 			
-			// aapt resource value: 0x7f0a005a
-			public const int abc_secondary_text_material_dark = 2131361882;
-			
-			// aapt resource value: 0x7f0a005b
-			public const int abc_secondary_text_material_light = 2131361883;
-			
-			// aapt resource value: 0x7f0a005c
-			public const int abc_tint_btn_checkable = 2131361884;
-			
-			// aapt resource value: 0x7f0a005d
-			public const int abc_tint_default = 2131361885;
-			
-			// aapt resource value: 0x7f0a005e
-			public const int abc_tint_edittext = 2131361886;
-			
-			// aapt resource value: 0x7f0a005f
-			public const int abc_tint_seek_thumb = 2131361887;
-			
-			// aapt resource value: 0x7f0a0060
-			public const int abc_tint_spinner = 2131361888;
-			
-			// aapt resource value: 0x7f0a0061
-			public const int abc_tint_switch_thumb = 2131361889;
-			
 			// aapt resource value: 0x7f0a0062
-			public const int abc_tint_switch_track = 2131361890;
+			public const int abc_secondary_text_material_dark = 2131361890;
+			
+			// aapt resource value: 0x7f0a0063
+			public const int abc_secondary_text_material_light = 2131361891;
+			
+			// aapt resource value: 0x7f0a0064
+			public const int abc_tint_btn_checkable = 2131361892;
+			
+			// aapt resource value: 0x7f0a0065
+			public const int abc_tint_default = 2131361893;
+			
+			// aapt resource value: 0x7f0a0066
+			public const int abc_tint_edittext = 2131361894;
+			
+			// aapt resource value: 0x7f0a0067
+			public const int abc_tint_seek_thumb = 2131361895;
+			
+			// aapt resource value: 0x7f0a0068
+			public const int abc_tint_spinner = 2131361896;
+			
+			// aapt resource value: 0x7f0a0069
+			public const int abc_tint_switch_thumb = 2131361897;
+			
+			// aapt resource value: 0x7f0a006a
+			public const int abc_tint_switch_track = 2131361898;
 			
 			// aapt resource value: 0x7f0a000d
 			public const int accent_material_dark = 2131361805;
@@ -1295,8 +1295,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0a001a
 			public const int button_material_light = 2131361818;
 			
-			// aapt resource value: 0x7f0a0063
-			public const int common_google_signin_btn_text_dark = 2131361891;
+			// aapt resource value: 0x7f0a006b
+			public const int common_google_signin_btn_text_dark = 2131361899;
 			
 			// aapt resource value: 0x7f0a0000
 			public const int common_google_signin_btn_text_dark_default = 2131361792;
@@ -1310,8 +1310,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0a0003
 			public const int common_google_signin_btn_text_dark_pressed = 2131361795;
 			
-			// aapt resource value: 0x7f0a0064
-			public const int common_google_signin_btn_text_light = 2131361892;
+			// aapt resource value: 0x7f0a006c
+			public const int common_google_signin_btn_text_light = 2131361900;
 			
 			// aapt resource value: 0x7f0a0004
 			public const int common_google_signin_btn_text_light_default = 2131361796;
@@ -1325,14 +1325,14 @@ namespace MobileTag
 			// aapt resource value: 0x7f0a0007
 			public const int common_google_signin_btn_text_light_pressed = 2131361799;
 			
-			// aapt resource value: 0x7f0a0065
-			public const int common_google_signin_btn_tint = 2131361893;
+			// aapt resource value: 0x7f0a006d
+			public const int common_google_signin_btn_tint = 2131361901;
 			
 			// aapt resource value: 0x7f0a0043
 			public const int design_bottom_navigation_shadow_color = 2131361859;
 			
-			// aapt resource value: 0x7f0a0066
-			public const int design_error = 2131361894;
+			// aapt resource value: 0x7f0a006e
+			public const int design_error = 2131361902;
 			
 			// aapt resource value: 0x7f0a0044
 			public const int design_fab_shadow_end_color = 2131361860;
@@ -1364,8 +1364,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0a004d
 			public const int design_textinput_error_color_light = 2131361869;
 			
-			// aapt resource value: 0x7f0a0067
-			public const int design_tint_password_toggle = 2131361895;
+			// aapt resource value: 0x7f0a006f
+			public const int design_tint_password_toggle = 2131361903;
 			
 			// aapt resource value: 0x7f0a001b
 			public const int dim_foreground_disabled_material_dark = 2131361819;
@@ -1436,6 +1436,18 @@ namespace MobileTag
 			// aapt resource value: 0x7f0a0030
 			public const int notification_material_background_media_default_color = 2131361840;
 			
+			// aapt resource value: 0x7f0a004e
+			public const int primaryColor = 2131361870;
+			
+			// aapt resource value: 0x7f0a0050
+			public const int primaryDarkColor = 2131361872;
+			
+			// aapt resource value: 0x7f0a004f
+			public const int primaryLightColor = 2131361871;
+			
+			// aapt resource value: 0x7f0a0054
+			public const int primaryTextColor = 2131361876;
+			
 			// aapt resource value: 0x7f0a0031
 			public const int primary_dark_material_dark = 2131361841;
 			
@@ -1466,6 +1478,18 @@ namespace MobileTag
 			// aapt resource value: 0x7f0a003a
 			public const int ripple_material_light = 2131361850;
 			
+			// aapt resource value: 0x7f0a0051
+			public const int secondaryColor = 2131361873;
+			
+			// aapt resource value: 0x7f0a0053
+			public const int secondaryDarkColor = 2131361875;
+			
+			// aapt resource value: 0x7f0a0052
+			public const int secondaryLightColor = 2131361874;
+			
+			// aapt resource value: 0x7f0a0055
+			public const int secondaryTextColor = 2131361877;
+			
 			// aapt resource value: 0x7f0a003b
 			public const int secondary_text_default_material_dark = 2131361851;
 			
@@ -1484,11 +1508,11 @@ namespace MobileTag
 			// aapt resource value: 0x7f0a0040
 			public const int switch_thumb_disabled_material_light = 2131361856;
 			
-			// aapt resource value: 0x7f0a0068
-			public const int switch_thumb_material_dark = 2131361896;
+			// aapt resource value: 0x7f0a0070
+			public const int switch_thumb_material_dark = 2131361904;
 			
-			// aapt resource value: 0x7f0a0069
-			public const int switch_thumb_material_light = 2131361897;
+			// aapt resource value: 0x7f0a0071
+			public const int switch_thumb_material_light = 2131361905;
 			
 			// aapt resource value: 0x7f0a0041
 			public const int switch_thumb_normal_material_dark = 2131361857;

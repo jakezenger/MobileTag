@@ -21,7 +21,7 @@ using System.Threading;
 
 namespace MobileTag
 {
-    [Activity(Label = "MapActivity")]
+    [Activity(Label = "MapActivity", Theme = "@style/AppTheme")]
     public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener
     {
         private const double CELL_LOAD_RADIUS = .0006;
@@ -53,6 +53,7 @@ namespace MobileTag
          
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetActionBar(toolbar);
+            //toolbar.SetTitleTextColor(ColorCode.GREEN);
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
