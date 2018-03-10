@@ -17,7 +17,14 @@ namespace MobileTag.Models
     {
         public int ID { get; }
         public string TeamName { get; }
-       
+        public Color TeamColor { get; }
+
+        public Team(int id, string teamName, Color teamColor)
+        {
+            ID = id;
+            TeamName = teamName;
+            TeamColor = teamColor;
+        }
 
         //Constructor that does not initialize Color
         public Team(int id, string teamName)
