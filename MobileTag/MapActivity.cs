@@ -24,7 +24,7 @@ namespace MobileTag
     [Activity(Label = "MapActivity")]
     public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener
     {
-        private const double CELL_LOAD_RADIUS = .0010;
+        private const double CELL_LOAD_RADIUS = .0006;
         private const int ZOOM_LEVEL_LOAD = 15;
         private GoogleMap mMap;
         private float currentZoomLevel = 0.0F;
