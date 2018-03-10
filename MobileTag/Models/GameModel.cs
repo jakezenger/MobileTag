@@ -22,14 +22,13 @@ namespace MobileTag.Models
         // IMPORTANT: corresponds to Frontier's specifications.
         // Do not change this unless you first recreate the Frontier's cell database using your new specifications.
         public const decimal frontierInterval = .0001m;
-        public const decimal frontierLowerLeftLat = 43.0m;
-        public const decimal frontierLowerLeftLong = -124.5m;
-        public const decimal frontierUpperRightLat = 47.0m;
-        public const decimal frontierUpperRightLong = -116.5m;
-        private const int viewRadius = 15;
+        public const decimal frontierLowerLeftLat = 45.0m;
+        public const decimal frontierLowerLeftLong = -123.4m;
+        public const decimal frontierUpperRightLat = 45.5m;
+        public const decimal frontierUpperRightLong = -122.4m;
+        private const int viewRadius = 5;
 
         public static decimal FrontierInterval => frontierInterval;
-        public static int ViewRadius => viewRadius;
 
         public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
         public static Player Player { get; set; }
