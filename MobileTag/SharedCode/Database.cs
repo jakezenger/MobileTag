@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Data;
 using MobileTag.Models;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace MobileTag
 {
@@ -297,6 +298,39 @@ namespace MobileTag
             };
 
             ExecuteQuery(readerProcedure);
+        }
+
+        public static ConcurrentDictionary<int, Cell> GetProxyCells(int viewRadius, decimal cellInterval, decimal roundedLat, decimal roundedLng)
+        {
+            ConcurrentDictionary<int, Cell> cellDict = new ConcurrentDictionary<int, Cell>();
+
+            Del readerProcedure = delegate (SqlConnection connection)
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetProxyCell", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@viewRadius", SqlDbType.Int).Value = viewRadius;
+                cmd.Parameters.Add("@cellInterval", SqlDbType.Decimal).Value = cellInterval;
+                cmd.Parameters.Add("@centerCellLat", SqlDbType.Decimal).Value = roundedLat;
+                cmd.Parameters.Add("@centerCellLng", SqlDbType.Decimal).Value = roundedLng;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int cellID = (int)reader["CellID"];
+                    decimal lat = (decimal)reader["Latitude"];
+                    decimal lng = (decimal)reader["Longitude"];
+                    int teamID = (int)reader["TeamID"];
+                    Cell cell = new Cell(cellID, lat, lng, teamID);
+
+                    cellDict.TryAdd(cellID, cell);
+                }
+                reader.Close();
+            };
+
+            ExecuteQuery(readerProcedure);
+
+            return cellDict;
         }
         ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         ////////////////////////////////////////// OLDE IMPLEMENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
