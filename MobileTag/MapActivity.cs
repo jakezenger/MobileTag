@@ -262,14 +262,14 @@ namespace MobileTag
         {
             if (mMap.MyLocation != null)
             {
-                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude), 10);
-                mMap.MoveCamera(mapCameraPos);
+                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude), 17);
+                mMap.AnimateCamera(mapCameraPos);
             }
         }
 
         private void LocationButton_Click(object sender, EventArgs e)
         {
-            CenterMapCameraOnLocation();
+          CenterMapCameraOnLocation();
         }
 
         private void TagButton_Click(object sender, EventArgs e)
