@@ -60,7 +60,7 @@ namespace MobileTag
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
             locationButton = FindViewById<Button>(Resource.Id.clientCameraLocationbtn);
 
-            ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_menu_black_24dp);
+            ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_dehaze_white_24dp);
             ActionBar.SetDisplayHomeAsUpEnabled(true);
                      
             tagButton.Click += TagButton_Click;
