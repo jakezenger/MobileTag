@@ -43,8 +43,7 @@ namespace MobileTag
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
 
-        ConcurrentDictionary<int, MapOverlay> Overlays;
-        ConcurrentDictionary<int, Polygon> PolyOverlays = new ConcurrentDictionary<int, Polygon>();
+        ConcurrentDictionary<int, MapOverlay> Overlays = new ConcurrentDictionary<int, MapOverlay>();
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -104,7 +103,7 @@ namespace MobileTag
                     LatLng cameraPos = mMap.CameraPosition.Target;
 
                     mMap.Clear();
-                    PolyOverlays.Clear();
+                    Overlays.Clear();
 
                     DrawCellsInView();
                 }
@@ -211,7 +210,26 @@ namespace MobileTag
         {
             ThreadPool.QueueUserWorkItem(delegate (object state)
             {
-                Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                if (Overlays.IsEmpty)
+                {
+                    Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                }
+                else
+                {
+                    ConcurrentDictionary<int, MapOverlay> temp = GameModel.LoadProximalCells(initialCameraLatLng);
+
+                    foreach (MapOverlay mOverlay in Overlays.Values)
+                    {
+                        if (mOverlay.IsOnMap)
+                        {
+                            // Copy the existing overlay into temp
+                            temp[mOverlay.CellID] = mOverlay;
+                        }
+                    }
+
+                    Overlays = temp;
+                }
+
                 DrawOverlays();
             }, null);
         }
@@ -300,14 +318,6 @@ namespace MobileTag
                 cell = GameModel.CellsInView[playerCellID];
             }
 
-            if (!PolyOverlays.ContainsKey(cell.ID))
-            {
-                // Add the new cell's overlay to the map
-                MapOverlay newMapOverlay = new MapOverlay(cell);
-                Polygon poly = mMap.AddPolygon(newMapOverlay.overlay);
-                PolyOverlays.TryAdd(newMapOverlay.CellID, poly);
-            }
-
             cell.TeamID = GameModel.Player.Team.ID;
             UpdateOverlay(cell);
 
@@ -330,15 +340,15 @@ namespace MobileTag
         {
             RunOnUiThread(() =>
             {
-                if (!PolyOverlays.ContainsKey(updatedCell.ID))
+                if (!Overlays.ContainsKey(updatedCell.ID))
                 {
                     MapOverlay mapOverlay = new MapOverlay(updatedCell);
-                    Polygon poly = mMap.AddPolygon(mapOverlay.overlay);
-                    PolyOverlays.TryAdd(mapOverlay.CellID, poly);
+                    mapOverlay.Polygon = mMap.AddPolygon(mapOverlay.PolygonOptions);
+                    Overlays.TryAdd(updatedCell.ID, mapOverlay);
                 }
                 else
                 {
-                    PolyOverlays[updatedCell.ID].FillColor = ColorCode.TeamColor(updatedCell.TeamID);
+                    Overlays[updatedCell.ID].SetColor(ColorCode.TeamColor(updatedCell.TeamID));
                 }
             });
         }
@@ -359,10 +369,9 @@ namespace MobileTag
 
                 foreach (MapOverlay overlay in Overlays.Values)
                 {
-                    if (!PolyOverlays.ContainsKey(overlay.CellID))
+                    if (!overlay.IsOnMap)
                     {
-                        Polygon poly = mMap.AddPolygon(overlay.overlay);
-                        PolyOverlays.TryAdd(overlay.CellID, poly);
+                        overlay.Polygon = mMap.AddPolygon(overlay.PolygonOptions);
                     }
                 }
             });

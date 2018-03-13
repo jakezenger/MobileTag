@@ -19,35 +19,30 @@ namespace MobileTag.SharedCode
 {
     public class MapOverlay
     {
-        public PolygonOptions overlay { get; }
+        public PolygonOptions PolygonOptions { get; }
+        public Polygon Polygon { get; set; }
+        public bool IsOnMap { get { return Polygon != null; } }
         public int CellID;
 
         public MapOverlay(Cell cell)
         {
             CellID = cell.ID;
 
-            PolygonOptions squareOverlay = new PolygonOptions();
-            squareOverlay.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
-            squareOverlay.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
-            squareOverlay.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
-            squareOverlay.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
+            PolygonOptions = new PolygonOptions();
+            PolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
+            PolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
 
             Color color = ColorCode.TeamColor(cell.TeamID);
-            squareOverlay.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
-            squareOverlay.InvokeStrokeWidth(0);
-
-            overlay = squareOverlay;
-        }
-
-        public void UpdateColor()
-        {
-            Color color = ColorCode.TeamColor(GameModel.Player.Team.ID);
-            overlay.InvokeFillColor(color);
+            PolygonOptions.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
+            PolygonOptions.InvokeStrokeWidth(0);
         }
 
         public void SetColor(Color color)
         {
-            overlay.InvokeFillColor(color);
+            if (Polygon != null)
+                Polygon.FillColor = color;
         }
     }
 }
