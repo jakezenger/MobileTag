@@ -53,6 +53,7 @@ namespace MobileTag
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetActionBar(toolbar);
             //toolbar.SetTitleTextColor(ColorCode.GREEN);
+            toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
