@@ -11,33 +11,16 @@ using MobileTag.Models;
 
 namespace MobileTag.Tests
 {
-
-    //[TestClass]
-    //public void Save_CustomerIsNotNull_GetsAddedToRepository()
-    //{
-    ////Arrange
-    //Mock<IContainer> mockContainer = new Mock<IContainer>();
-    //Mock<ICustomerView> mockView = new Mock<ICustomerView>();
-
-    //CustomerViewModel viewModel = new CustomerViewModel(mockView.Object, mockContainer.Object);
-    //viewModel.CustomersRepository = new CustomersRepository();
-    //viewModel.Customer = new Mock<Customer>().Object;
-
-    ////Act
-    //viewModel.Save();
-
-    ////Assert
-    //Assert.IsTrue(viewModel.CustomersRepository.Count == 1);
-    //}
-
+    
 
     [TestClass()]
     public class DatabaseTests
     {
+        
         [TestInitialize]
         public void _init()
         {
-
+            
         }
 
         [TestMethod()]
