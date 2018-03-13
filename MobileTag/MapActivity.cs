@@ -338,19 +338,24 @@ namespace MobileTag
 
         public void UpdateOverlay(Cell updatedCell)
         {
-            RunOnUiThread(() =>
+            if (!Overlays.ContainsKey(updatedCell.ID))
             {
-                if (!Overlays.ContainsKey(updatedCell.ID))
+                MapOverlay mapOverlay = new MapOverlay(updatedCell);
+
+                RunOnUiThread(() =>
                 {
-                    MapOverlay mapOverlay = new MapOverlay(updatedCell);
                     mapOverlay.Polygon = mMap.AddPolygon(mapOverlay.PolygonOptions);
-                    Overlays.TryAdd(updatedCell.ID, mapOverlay);
-                }
-                else
+                });
+
+                Overlays.TryAdd(updatedCell.ID, mapOverlay);
+            }
+            else
+            {
+                RunOnUiThread(() =>
                 {
                     Overlays[updatedCell.ID].SetColor(ColorCode.TeamColor(updatedCell.TeamID));
-                }
-            });
+                });
+            }
         }
 
         private void DrawOverlays()
@@ -366,15 +371,16 @@ namespace MobileTag
 
                     lngLatText.Text = "Lat " + lat + " : " + "Long " + lng;
                 }
+            });
 
-                foreach (MapOverlay overlay in Overlays.Values)
+            foreach (MapOverlay overlay in Overlays.Values)
                 {
                     if (!overlay.IsOnMap)
                     {
-                        overlay.Polygon = mMap.AddPolygon(overlay.PolygonOptions);
+                        RunOnUiThread(() => overlay.Polygon = mMap.AddPolygon(overlay.PolygonOptions));
                     }
                 }
-            });
+            
         }
 
         public void OnProviderDisabled(string provider)
