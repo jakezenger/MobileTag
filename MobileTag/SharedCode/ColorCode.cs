@@ -2,7 +2,7 @@
 
 public static class ColorCode
 {
-    public static Color RED = Color.Argb(120, 255, 0, 0);
+    public static Color RED = Color.Argb(180, 255, 0, 0);
     public static Color GREEN = Color.Argb(120, 0, 255, 128);
     public static Color BLUE = Color.Argb(120, 0, 0, 255);
     public static Color PURPLE = Color.Argb(120, 128, 0, 255);
