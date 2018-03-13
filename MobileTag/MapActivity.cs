@@ -67,6 +67,7 @@ namespace MobileTag
 
             SetUpMap();
             SetUpCellHub();
+            
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
@@ -185,6 +186,7 @@ namespace MobileTag
                     }
                     , null);
                     InitialCameraLocSet = true;
+                   
                 }
                 else
                 {
