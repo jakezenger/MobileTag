@@ -11,7 +11,7 @@ using Android.Views;
 using Android.Widget;
 using MobileTag.Models;
 
-namespace MobileTag.Repositories
+namespace MobileTag
 {
     class DatabaseRepository : IDatabaseRepository
     {
