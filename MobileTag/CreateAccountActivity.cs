@@ -89,8 +89,9 @@ namespace MobileTag
             }
             else
             {
-                // User succesfully added... go to main activity
-                StartActivity(new Intent(this, typeof(MapActivity)));
+                // User succesfully added... go to splash screen
+
+                StartActivity(new Intent(this, typeof(SplashScreen)));
             }
         }
 
