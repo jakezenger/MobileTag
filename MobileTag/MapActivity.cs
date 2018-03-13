@@ -103,17 +103,10 @@ namespace MobileTag
                     // Refresh stale cell data
                     LatLng cameraPos = mMap.CameraPosition.Target;
 
-                    ThreadPool.QueueUserWorkItem(delegate (object state)
-                    {
-                        Overlays = GameModel.LoadProximalCells(cameraPos);
+                    mMap.Clear();
+                    PolyOverlays.Clear();
 
-                        RunOnUiThread(() =>
-                            {
-                                mMap.Clear();
-                                PolyOverlays.Clear();
-                                DrawOverlays();
-                            });
-                    }, null);
+                    DrawCellsInView();
                 }
             }
         }
@@ -126,6 +119,7 @@ namespace MobileTag
             {
                 locMgr.RemoveUpdates(this);
             }
+
             GameModel.CellHubConnection.Stop();
         }
         
