@@ -20,7 +20,7 @@
       android:textSize="14sp"
       android:layout_marginTop="20dp"
       android:textStyle="bold"
-      android:text="test" />
+      android:text="Username" />
   <TextView
       android:id="@+id/emailTxt"
       android:layout_width="wrap_content"
@@ -29,5 +29,5 @@
       android:layout_marginTop="5dp"
       android:textSize="14sp"
       android:textStyle="normal"
-      android:text ="test email"/>
+      android:text ="username@email"/>
 </LinearLayout>
