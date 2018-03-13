@@ -17,7 +17,7 @@ using MobileTag.Models;
 
 namespace MobileTag
 {
-    [Activity(Label = "SplashScreen", MainLauncher = true, NoHistory = true, Theme = "@style/Theme.AppCompat.Light.NoActionBar")]
+    [Activity(Label = "@string/app_name", MainLauncher = true, NoHistory = true, Theme = "@style/Theme.AppCompat.Light.NoActionBar")]
     public class SplashScreen : AppCompatActivity
     {
         private GifImageView gifImageView;
