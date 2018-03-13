@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace MobileTag
 {
-    [Activity(Label = "Create Account")]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class CreateAccountActivity : Activity
     {
         private bool validTeamSelected = false;
@@ -26,6 +26,9 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.CreateAccount);
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
 
             string[] teams = { GetString(Resource.String.select_team_prompt), "Red", "Green", "Blue", "Purple", "Pink" };
 
