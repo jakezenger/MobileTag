@@ -21,7 +21,7 @@ using System.Threading;
 
 namespace MobileTag
 {
-    [Activity(Label = "MapActivity")]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener
     {
         private const double CELL_LOAD_RADIUS = .0006;
@@ -52,13 +52,14 @@ namespace MobileTag
          
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetActionBar(toolbar);
+            //toolbar.SetTitleTextColor(ColorCode.GREEN);
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
             locationButton = FindViewById<Button>(Resource.Id.clientCameraLocationbtn);
 
-            ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_menu_black_24dp);
+            ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_dehaze_white_24dp);
             ActionBar.SetDisplayHomeAsUpEnabled(true);
                      
             tagButton.Click += TagButton_Click;
@@ -288,14 +289,14 @@ namespace MobileTag
         {
             if (mMap.MyLocation != null)
             {
-                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude), 10);
-                mMap.MoveCamera(mapCameraPos);
+                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude), 17);
+                mMap.AnimateCamera(mapCameraPos);
             }
         }
 
         private void LocationButton_Click(object sender, EventArgs e)
         {
-            CenterMapCameraOnLocation();
+          CenterMapCameraOnLocation();
         }
 
         private void TagButton_Click(object sender, EventArgs e)

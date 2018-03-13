@@ -3,14 +3,22 @@
   <!-- Base application theme. -->
   <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <!-- Customize your theme here. -->
-    <item name="android:colorPrimary">#5A8622</item>
+    <item name="android:colorPrimary">@color/primaryColor</item>
+    <item name="android:textColorPrimary">@color/primaryColor</item>
+    <!--<item name="android:textColor">@color/primaryTextColor</item> -->
+    <!--<item name="android:actionMenuTextColor">@color/primaryTextColor</item> -->
+    <item name="android:titleTextColor">@color/primaryTextColor</item>
+    <item name="android:actionMenuTextColor">@color/primaryColor</item>
+    <!-- <item name="android:titleTextAppearance">@color/primaryTextColor</item> -->
   </style>
 
   <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
     <!-- android:textColorPrimary is the color of the title text in the Toolbar  -->
-    <item name="android:textColorPrimary">@android:color/holo_blue_light</item>
+    <!--<item name="android:textColorPrimary">@color/primaryTextColor</item> -->
     <!-- actionMenuTextColor is the color of the text of action (menu) items  -->
-    <item name="actionMenuTextColor">@android:color/holo_green_light</item>
+    <item name="actionMenuTextColor">@color/primaryTextColor</item>
+    <item name="titleTextAppearance">@color/primaryTextColor</item>
+    <item name="titleTextColor">@color/primaryTextColor</item>
 
     <!-- Enable these below if you want clicking icons to trigger a ripple effect -->
     <!-- 
