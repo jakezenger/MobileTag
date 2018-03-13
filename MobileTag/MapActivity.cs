@@ -97,7 +97,7 @@ namespace MobileTag
             {
                 GameModel.CellHubConnection.Start().Wait();
 
-                if (mMap.CameraPosition.Target != null)
+                if (initialCameraLatLng != null)
                 {
                     // Refresh stale cell data
                     LatLng cameraPos = mMap.CameraPosition.Target;
