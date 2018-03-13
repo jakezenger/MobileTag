@@ -79,9 +79,21 @@ namespace MobileTag
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
 
+
+
             navigationView.NavigationItemSelected += (sender, e) =>
             {
-                e.MenuItem.SetChecked(true);              
+                e.MenuItem.SetChecked(true);
+                
+                switch (e.MenuItem.ItemId)
+                {
+                    case Resource.Id.nav_logout:
+                        GameModel.Logout();
+                        StartActivity(new Intent(this, typeof(LoginActivity)));
+                        break;
+                    default:
+                        break;
+                }
                 drawerLayout.CloseDrawers();
             };
         }

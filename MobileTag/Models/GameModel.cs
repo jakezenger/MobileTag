@@ -102,6 +102,23 @@ namespace MobileTag.Models
         //        Console.WriteLine(e.ToString());
         //    }
         //}
+        public static void Logout()
+        {
+            string path = Application.Context.FilesDir.Path;
+            var filePath = System.IO.Path.Combine(path, "username.txt");
+            var filePath2 = System.IO.Path.Combine(path, "password.txt");
+
+            try
+            {
+                System.IO.File.Delete(filePath);
+                System.IO.File.Delete(filePath2);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+        }
 
         public static int GetCellID(decimal lat, decimal lng)
         {

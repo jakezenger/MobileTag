@@ -17,7 +17,7 @@ using MobileTag.Models;
 
 namespace MobileTag
 {
-    [Activity(Label = "LoginActivity")]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class LoginActivity : Activity
     {
         private bool validUsername = false;
@@ -30,6 +30,9 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.Login);
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
 
             // Set up createAccountLink textview
             SpannableString createAccountPrompt = new SpannableString(GetString(Resource.String.create_account_prompt));
