@@ -97,7 +97,23 @@ namespace MobileTag
             if (GameModel.CellHubConnection.State != ConnectionState.Connected && GameModel.CellHubConnection.State != ConnectionState.Connecting)
             {
                 GameModel.CellHubConnection.Start().Wait();
-                GameModel.SubscribeToUpdates();
+
+                if (mMap.CameraPosition.Target != null)
+                {
+                    LatLng cameraPos = mMap.CameraPosition.Target;
+
+                    ThreadPool.QueueUserWorkItem(delegate (object state)
+                    {
+                        Overlays = GameModel.LoadProximalCells(cameraPos);
+
+                        RunOnUiThread(() =>
+                            {
+                                mMap.Clear();
+                                PolyOverlays.Clear();
+                                DrawOverlays();
+                            });
+                    }, null);
+                }
             }
         }
 
@@ -374,64 +390,5 @@ namespace MobileTag
         {
             //throw new NotImplementedException();
         }
-
-
-
-        /* [[Example Code]] 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         ////New Latitude and Longitude
-             LatLng newYorkLatLng = new LatLng(40.776408, -73.9);
-             ////New Camera Position with a zoom level
-             CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(newYorkLatLng, 10);
-
-             ////Panning map view to camera updated position
-                    //mMap.MoveCamera(mapCameraPos);
-
-             ////Creating a marker and setting option to the marker
-             MarkerOptions markerOpt = new MarkerOptions();
-             markerOpt.SetPosition(newYorkLatLng);
-             markerOpt.SetTitle("New York");
-             markerOpt.SetSnippet("AKA: The Big Apple");
-             markerOpt.Draggable(true);
-
-             ////Adding the marker to be displayed on the map
-             mMap.AddMarker(markerOpt);
-       
-             ////Event after marker finishes being dragged
-             mMap.MarkerDragEnd += MMap_MarkerDragEnd;
-
-
-
-            PolygonOptions OiT = new PolygonOptions();
-            OiT.Add(new LatLng(45.322012, -122.7635097)); //first rectangle point
-            OiT.Add(new LatLng(45.319, -122.7635097));
-            OiT.Add(new LatLng(45.319, -122.7735097));
-            OiT.Add(new LatLng(45.322012, -122.7735097)); //automatically connects last two points
-
-            OiT.InvokeFillColor(Color.Argb(120, 255, 105, 180)); //Transparent int [0-255] 255 being opaque
-            OiT.InvokeStrokeWidth(0);
-
-            Polygon polygonOit = mMap.AddPolygon(OiT);
-
-
-            PolygonOptions rectangle2 = new PolygonOptions();
-            rectangle2.Add(new LatLng(47.35, -122.0)); //first rectangle point
-            rectangle2.Add(new LatLng(47.45, -122.0));
-            rectangle2.Add(new LatLng(47.45, -122.2));
-            rectangle2.Add(new LatLng(47.35, -122.2)); //automatically connects last two points
-
-            rectangle2.InvokeFillColor(Color.Argb(120, 20, 50, 0)); //Transparent int [0-255] 255 being opaque
-            rectangle2.InvokeStrokeWidth(0);
-            
-            Polygon polygon = mMap.AddPolygon(rectangle2);
-         
-      
-         
-         */
     }
 }
