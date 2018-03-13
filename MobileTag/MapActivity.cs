@@ -58,6 +58,7 @@ namespace MobileTag
             lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
             locationButton = FindViewById<Button>(Resource.Id.clientCameraLocationbtn);
+            
 
             ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_dehaze_white_24dp);
             ActionBar.SetDisplayHomeAsUpEnabled(true);
@@ -127,6 +128,8 @@ namespace MobileTag
             {
                 case Android.Resource.Id.Home:
                     drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+                    TextView usernameHeader = FindViewById<TextView>(Resource.Id.nameTxt);
+                    usernameHeader.Text = GameModel.Player.Username;
                     return true;
             }
             return base.OnOptionsItemSelected(item);
