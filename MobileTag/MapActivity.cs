@@ -374,13 +374,12 @@ namespace MobileTag
             });
 
             foreach (MapOverlay overlay in Overlays.Values)
+            {
+                if (!overlay.IsOnMap)
                 {
-                    if (!overlay.IsOnMap)
-                    {
-                        RunOnUiThread(() => overlay.Polygon = mMap.AddPolygon(overlay.PolygonOptions));
-                    }
+                    RunOnUiThread(() => overlay.Polygon = mMap.AddPolygon(overlay.PolygonOptions));
                 }
-            
+            }
         }
 
         public void OnProviderDisabled(string provider)
