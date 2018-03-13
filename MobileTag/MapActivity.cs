@@ -21,7 +21,7 @@ using System.Threading;
 
 namespace MobileTag
 {
-    [Activity(Label = "MapActivity", Theme = "@style/AppTheme")]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener
     {
         private const double CELL_LOAD_RADIUS = .0006;

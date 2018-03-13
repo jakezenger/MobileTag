@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">MobileTag</string>
+  <string name="app_name">Confinium</string>
   <string name="select_team_prompt">Pick a team</string>
   <string name="invalid_username_prompt">Please enter a valid username.</string>
   <string name="invalid_password_prompt">Please enter a valid password.</string>
