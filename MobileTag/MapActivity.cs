@@ -100,6 +100,7 @@ namespace MobileTag
 
                 if (mMap.CameraPosition.Target != null)
                 {
+                    // Refresh stale cell data
                     LatLng cameraPos = mMap.CameraPosition.Target;
 
                     ThreadPool.QueueUserWorkItem(delegate (object state)
@@ -194,13 +195,8 @@ namespace MobileTag
                 if (InitialCameraLocSet == false)
                 {
                     initialCameraLatLng = mMap.CameraPosition.Target;
-                    ThreadPool.QueueUserWorkItem(delegate (object state)
-                    {
-                        Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
-                        DrawOverlays();
-                    }
-                    , null);
                     InitialCameraLocSet = true;
+                    DrawCellsInView();
                 }
                 else
                 {
@@ -209,17 +205,21 @@ namespace MobileTag
                     if (distanceFromInitialCameraPosition > CELL_LOAD_RADIUS)
                     {
                         initialCameraLatLng = mMap.CameraPosition.Target;
-                        Toast.MakeText(this, "Loading new cells at Zoom Level: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
 
-                        ThreadPool.QueueUserWorkItem(delegate (object state)
-                        {
-                            Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
-                            DrawOverlays();
-                        }
-                        , null);
+                        Toast.MakeText(this, "Loading new cells at Zoom Level: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
+                        DrawCellsInView();
                     }
                 }
             }
+        }
+
+        private void DrawCellsInView()
+        {
+            ThreadPool.QueueUserWorkItem(delegate (object state)
+            {
+                Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                DrawOverlays();
+            }, null);
         }
 
         public void OnLocationChanged(Location location)
@@ -300,8 +300,6 @@ namespace MobileTag
                 // Generate the new cell and add it to CellsInView
                 cell = GameModel.GenerateCell(decLat, decLng);
                 GameModel.CellsInView.TryAdd(cell.ID, cell);
-
-               
             }
             else
             {
