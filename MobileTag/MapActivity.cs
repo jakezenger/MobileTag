@@ -100,8 +100,6 @@ namespace MobileTag
                 if (initialCameraLatLng != null)
                 {
                     // Refresh stale cell data
-                    LatLng cameraPos = mMap.CameraPosition.Target;
-
                     mMap.Clear();
                     Overlays.Clear();
 
