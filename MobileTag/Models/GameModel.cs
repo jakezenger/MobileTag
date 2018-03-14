@@ -188,7 +188,7 @@ namespace MobileTag.Models
                 {
                     int cellID = (int)(playerCellID + (row * GridWidth) + col);
 
-                    if (!frontierDict.Keys.Contains(cellID))
+                    if (!CellsInView.Keys.Contains(cellID))
                     {
                         decimal cellLat = Math.Floor((decimal)playerLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
                         decimal cellLng = Math.Floor((decimal)playerLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);
