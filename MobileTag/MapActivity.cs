@@ -329,6 +329,7 @@ namespace MobileTag
                 // Generate the new cell and add it to CellsInView
                 cell = GameModel.GenerateCell(decLat, decLng);
                 GameModel.CellsInView.TryAdd(cell.ID, cell);
+                GameModel.SubscribeToUpdates(cell.ID);
             }
             else
             {
@@ -383,8 +384,6 @@ namespace MobileTag
                 {
                     double lat = mMap.MyLocation.Latitude;
                     double lng = mMap.MyLocation.Longitude;
-                    int playerCellID = GameModel.GetCellID((decimal)lat, (decimal)lng);
-                    LatLng latlng = GameModel.GetLatLng(playerCellID);
 
                     lngLatText.Text = "Lat " + lat + " : " + "Long " + lng;
                 }

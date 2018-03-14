@@ -91,6 +91,18 @@ namespace MobileTag.Models
             }
         }
 
+        async static public void SubscribeToUpdates(int cellID)
+        {
+            try
+            {
+                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates", cellID);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
         //async static public void UnsubscribeFromUpdates(int cellID)
         //{
         //    try
