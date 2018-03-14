@@ -155,11 +155,11 @@ namespace MobileTag.Models
             return latLng;
         }
 
-        public static ConcurrentDictionary<int, MapOverlay> LoadProximalCells(LatLng playerLatLng)
+        public static ConcurrentDictionary<int, MapOverlay> LoadProximalCells(LatLng targetLatLng)
         {
             var Overlays = new ConcurrentDictionary<int, MapOverlay>();
 
-            foreach (Cell cell in RetrieveProximalCells(playerLatLng).Values)
+            foreach (Cell cell in RetrieveProximalCells(targetLatLng).Values)
             {
                 if (!CellsInView.ContainsKey(cell.ID))
                 {
@@ -177,10 +177,10 @@ namespace MobileTag.Models
             return Overlays;
         }
 
-        private static ConcurrentDictionary<int, Cell> RetrieveProximalCells(LatLng playerLatLng)
+        private static ConcurrentDictionary<int, Cell> RetrieveProximalCells(LatLng targetLatLng)
         {
-            int playerCellID = GetCellID((decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
-            ConcurrentDictionary<int, Cell> frontierDict = Database.GetProxyCells(viewRadius, frontierInterval, (decimal)playerLatLng.Latitude, (decimal)playerLatLng.Longitude);
+            int playerCellID = GetCellID((decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
+            ConcurrentDictionary<int, Cell> frontierDict = Database.GetProxyCells(viewRadius, frontierInterval, (decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
 
             for (int row = -viewRadius; row <= viewRadius; row++)
             {
@@ -190,8 +190,8 @@ namespace MobileTag.Models
 
                     if (!CellsInView.Keys.Contains(cellID))
                     {
-                        decimal cellLat = Math.Floor((decimal)playerLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
-                        decimal cellLng = Math.Floor((decimal)playerLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);
+                        decimal cellLat = Math.Floor((decimal)targetLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
+                        decimal cellLng = Math.Floor((decimal)targetLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);
                         Cell cell = new Cell(cellLat, cellLng);
 
                         frontierDict.TryAdd(cellID, cell);
