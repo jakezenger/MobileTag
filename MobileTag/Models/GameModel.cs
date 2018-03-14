@@ -95,7 +95,7 @@ namespace MobileTag.Models
         {
             try
             {
-                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates", cellID);
+                await GameModel.CellHubProxy.Invoke("SubscribeToSingleCellUpdates", cellID);
             }
             catch (Exception e)
             {
@@ -157,12 +157,15 @@ namespace MobileTag.Models
 
         public static ConcurrentDictionary<int, MapOverlay> LoadProximalCells(LatLng playerLatLng)
         {
-            CellsInView = RetrieveProximalCells(playerLatLng);
-
             var Overlays = new ConcurrentDictionary<int, MapOverlay>();
 
-            foreach (Cell cell in CellsInView.Values)
+            foreach (Cell cell in RetrieveProximalCells(playerLatLng).Values)
             {
+                if (!CellsInView.ContainsKey(cell.ID))
+                {
+                    CellsInView.TryAdd(cell.ID, cell);
+                }
+
                 if (cell.TeamID > 0)
                 {
                     Overlays.TryAdd(cell.ID, new MapOverlay(cell));
@@ -185,7 +188,7 @@ namespace MobileTag.Models
                 {
                     int cellID = (int)(playerCellID + (row * GridWidth) + col);
 
-                    if (!CellsInView.Keys.Contains(cellID))
+                    if (!frontierDict.Keys.Contains(cellID))
                     {
                         decimal cellLat = Math.Floor((decimal)playerLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
                         decimal cellLng = Math.Floor((decimal)playerLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);

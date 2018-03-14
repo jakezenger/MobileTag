@@ -125,6 +125,7 @@ namespace MobileTag
                     // Refresh stale cell data
                     mMap.Clear();
                     Overlays.Clear();
+                    GameModel.CellsInView.Clear();
 
                     DrawCellsInView();
                 }
@@ -233,6 +234,7 @@ namespace MobileTag
                 }
                 else
                 {
+                    // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
                     ConcurrentDictionary<int, MapOverlay> temp = GameModel.LoadProximalCells(initialCameraLatLng);
 
                     foreach (MapOverlay mOverlay in Overlays.Values)
@@ -358,14 +360,14 @@ namespace MobileTag
         {
             if (!Overlays.ContainsKey(updatedCell.ID))
             {
-                MapOverlay mapOverlay = new MapOverlay(updatedCell);
-
                 RunOnUiThread(() =>
                 {
-                    mapOverlay.Polygon = mMap.AddPolygon(mapOverlay.PolygonOptions);
-                });
+                    MapOverlay mapOverlay = new MapOverlay(updatedCell);
 
-                Overlays.TryAdd(updatedCell.ID, mapOverlay);
+                    mapOverlay.Polygon = mMap.AddPolygon(mapOverlay.PolygonOptions);
+
+                    Overlays.TryAdd(updatedCell.ID, mapOverlay);
+                });
             }
             else
             {
