@@ -63,7 +63,9 @@ namespace MobileTag
 
             ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_dehaze_white_24dp);
             ActionBar.SetDisplayHomeAsUpEnabled(true);
-                     
+
+            drawerLayout.DrawerStateChanged += DrawerLayout_DrawerStateChanged;
+
             tagButton.Click += TagButton_Click;
             locationButton.Click += LocationButton_Click;
 
@@ -96,6 +98,12 @@ namespace MobileTag
                 }
                 drawerLayout.CloseDrawers();
             };
+        }
+
+        private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
+        {
+            TextView usernameHeader = FindViewById<TextView>(Resource.Id.nameTxt);
+            usernameHeader.Text = GameModel.Player.Username;
         }
 
         protected override void OnResume()
@@ -137,14 +145,8 @@ namespace MobileTag
         
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            switch (item.ItemId)
-            {
-                case Android.Resource.Id.Home:
-                    drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
-                    TextView usernameHeader = FindViewById<TextView>(Resource.Id.nameTxt);
-                    usernameHeader.Text = GameModel.Player.Username;
-                    return true;
-            }
+            drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+
             return base.OnOptionsItemSelected(item);
         }
 
