@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MobileTag.SharedCode;
 using Newtonsoft.Json;
 
@@ -45,16 +46,16 @@ namespace MobileTag.Models
             TeamID = 0;
         }
 
-        public void Tag()
+        public async Task Tag()
         {
             TeamID = GameModel.Player.Team.ID;
             
-            BroadcastCellUpdate();
-            Database.UpdateCell(this, TeamID);
+            await BroadcastCellUpdate();
+            await Database.UpdateCell(this, TeamID);
         }
 
         // Broadcast the updated cell to all of the clients that are currently looking at this cell
-        async private void BroadcastCellUpdate()
+        async private Task BroadcastCellUpdate()
         {
             if (CellHub.Connection.State == Microsoft.AspNet.SignalR.Client.ConnectionState.Connected)
             {

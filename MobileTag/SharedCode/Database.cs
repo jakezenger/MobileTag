@@ -5,6 +5,7 @@ using System.Data;
 using MobileTag.Models;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace MobileTag
 {
@@ -21,11 +22,12 @@ namespace MobileTag
             builder.UserID = "eallgood";
             builder.Password = "orangeChicken17";
             builder.InitialCatalog = "MobileTagDB";
+            builder.AsynchronousProcessing = true;
             CONNECTION_STRING = builder.ConnectionString.ToString();
             initialized = true;
         }
 
-        private static void ExecuteQuery(Del del)
+        private async static Task ExecuteQueryAsync(Func<SqlConnection, Task> del)
         {
             if (!initialized) Init_();
             using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
@@ -33,7 +35,7 @@ namespace MobileTag
                 try
                 {
                     connection.Open();
-                    del(connection);
+                    await del(connection);
                     connection.Close();
                 }
                 catch (Exception e)
@@ -44,11 +46,11 @@ namespace MobileTag
         }
 
         // can we use player instead of user?  
-        public static int AddUser(string username, string password, int teamID)
+        public async static Task<int> AddUser(string username, string password, int teamID)
         {
             int available = 0;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("AddPlayer", connection);
@@ -56,7 +58,7 @@ namespace MobileTag
                 cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
                 cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
                 cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -65,23 +67,23 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
 
             return available;
         }
 
-        public static int ValidateLoginCredentials(string username, string password)
+        public async static Task<int> ValidateLoginCredentials(string username, string password)
         {
             int userValidity = 0;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("LookUpUserName", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
                 cmd.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -90,22 +92,22 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
 
             return userValidity;
         }
 
-        public static int GetCellTeam(int cellID)
+        public async static Task<int> GetCellTeam(int cellID)
         {
             int teamID = 0;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetCellTeam", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -114,12 +116,12 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
 
             return teamID;
         }
 
-        public static Player GetPlayer(string username)
+        public async static Task<Player> GetPlayer(string username)
         {
             int playerID = 0;
             int teamID = 0;
@@ -127,13 +129,13 @@ namespace MobileTag
 
             int cellID = 0;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetPlayer", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -145,26 +147,26 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
 
             Team team = new Team(teamID, teamName);
             Player player = new Player(playerID, username, team, cellID);
             return player;
         }
 
-        public static Cell GetCell(int cellID)
+        public async static Task<Cell> GetCell(int cellID)
         {
             decimal lat = 0.00m;
             decimal lng = 0.00m;
             int teamID = 0;
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetCell", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -176,24 +178,24 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
 
             Cell cell = new Cell(cellID, lat, lng, teamID);
             return cell;
         }
 
 
-        public static List<Cell> GetAllCells()
+        public async static Task<List<Cell>> GetAllCells()
         {
             var cellList = new List<Cell>(256);
 
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetAllCells", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -205,14 +207,14 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
 
             return cellList;
         }
 
-        public static void UpdateCell(Cell cell, int teamID)
+        public async static Task UpdateCell(Cell cell, int teamID)
         {
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("UpdateCell", connection);
@@ -222,7 +224,7 @@ namespace MobileTag
                 cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = cell.Latitude;
                 cmd.Parameters.Add("@lng", SqlDbType.Decimal).Value = cell.Longitude;
 
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -231,56 +233,55 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
         }
 
-        public static void DeletePlayer(int playerID)
+        public async static void DeletePlayer(int playerID)
         {
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlCommand cmd = new SqlCommand("DeletePlayer", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
         }
 
-        public static void DeleteCell(int cellID)
+        public async static Task DeleteCell(int cellID)
         {
-
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlCommand cmd = new SqlCommand("DeleteCell", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
         }
 
-        public static void UpdatePlayerInfo(Player player, string newUsername, string newPassword)
+        public async static Task UpdatePlayerInfo(Player player, string newUsername, string newPassword)
         {
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlCommand cmd = new SqlCommand("UpdatePlayer", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
                 cmd.Parameters.Add("@newUsername", SqlDbType.NVarChar).Value = newUsername;
                 cmd.Parameters.Add("@newPassword", SqlDbType.NVarChar).Value = newPassword;
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
 
         }
 
-        public static void AddCell(int cellID, decimal lat, decimal lng)
+        public async static Task AddCell(int cellID, decimal lat, decimal lng)
         {
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("AddCell", connection);
@@ -288,7 +289,7 @@ namespace MobileTag
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
                 cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = lat;
                 cmd.Parameters.Add("@long", SqlDbType.Decimal).Value = lng;
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -297,14 +298,14 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
         }
 
-        public static ConcurrentDictionary<int, Cell> GetProxyCells(int viewRadius, decimal cellInterval, decimal roundedLat, decimal roundedLng)
+        public async static Task<ConcurrentDictionary<int, Cell>> GetProxyCells(int viewRadius, decimal cellInterval, decimal roundedLat, decimal roundedLng)
         {
             ConcurrentDictionary<int, Cell> cellDict = new ConcurrentDictionary<int, Cell>();
 
-            Del readerProcedure = delegate (SqlConnection connection)
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("GetProxyCell", connection);
@@ -313,7 +314,7 @@ namespace MobileTag
                 cmd.Parameters.Add("@cellInterval", SqlDbType.Decimal).Value = cellInterval;
                 cmd.Parameters.Add("@centerCellLat", SqlDbType.Decimal).Value = roundedLat;
                 cmd.Parameters.Add("@centerCellLng", SqlDbType.Decimal).Value = roundedLng;
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -328,7 +329,7 @@ namespace MobileTag
                 reader.Close();
             };
 
-            ExecuteQuery(readerProcedure);
+            await ExecuteQueryAsync(readerProcedure);
 
             return cellDict;
         }

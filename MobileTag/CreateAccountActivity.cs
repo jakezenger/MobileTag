@@ -71,7 +71,7 @@ namespace MobileTag
             Validate();
         }
 
-        private void DoneButton_Click(object sender, EventArgs e)
+        private async void DoneButton_Click(object sender, EventArgs e)
         {
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
             EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
@@ -81,7 +81,7 @@ namespace MobileTag
             string username = usernameField.Text.Trim();
             string password = passwordField.Text;
 
-            int exitCode = Database.AddUser(username, password, teamID);
+            int exitCode = await Database.AddUser(username, password, teamID);
 
             if (exitCode == 0)
             {
@@ -89,8 +89,7 @@ namespace MobileTag
             }
             else
             {
-                // User succesfully added... go to splash screen
-
+                // User successfully added... go to splash screen
                 StartActivity(new Intent(this, typeof(SplashScreen)));
             }
         }

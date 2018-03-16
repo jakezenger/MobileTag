@@ -18,6 +18,7 @@ using MobileTag.SharedCode;
 using System.Collections.Concurrent;
 using Android.Support.V7.App;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MobileTag
 {
@@ -105,7 +106,7 @@ namespace MobileTag
             usernameHeader.Text = GameModel.Player.Username;
         }
 
-        protected override void OnResume()
+        protected override async void OnResume()
         {
             base.OnResume();
 
@@ -126,7 +127,7 @@ namespace MobileTag
                     Overlays.Clear();
                     GameModel.CellsInView.Clear();
 
-                    DrawCellsInView();
+                    await DrawCellsInView();
                 }
             }
         }
@@ -193,7 +194,7 @@ namespace MobileTag
             mMap.SetOnCameraIdleListener(this);
         }
 
-        public void OnCameraIdle()
+        public async void OnCameraIdle()
         {
             currentZoomLevel = mMap.CameraPosition.Zoom;
             LatLng currentCameraLatLng = mMap.CameraPosition.Target;
@@ -204,7 +205,7 @@ namespace MobileTag
                 {
                     initialCameraLatLng = mMap.CameraPosition.Target;
                     InitialCameraLocSet = true;
-                    DrawCellsInView();
+                    await DrawCellsInView();
                 }
                 else
                 {
@@ -215,24 +216,24 @@ namespace MobileTag
                         initialCameraLatLng = mMap.CameraPosition.Target;
 
                         Toast.MakeText(this, "Loading new cells at Zoom Level: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
-                        DrawCellsInView();
+                        await DrawCellsInView();
                     }
                 }
             }
         }
 
-        private void DrawCellsInView()
+        private async Task DrawCellsInView()
         {
-            ThreadPool.QueueUserWorkItem(delegate (object state)
+            await Task.Run(async () =>
             {
                 if (Overlays.IsEmpty)
                 {
-                    Overlays = GameModel.LoadProximalCells(initialCameraLatLng);
+                    Overlays = await GameModel.LoadProximalCells(initialCameraLatLng);
                 }
                 else
                 {
                     // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
-                    ConcurrentDictionary<int, MapOverlay> temp = GameModel.LoadProximalCells(initialCameraLatLng);
+                    ConcurrentDictionary<int, MapOverlay> temp = await GameModel.LoadProximalCells(initialCameraLatLng);
 
                     foreach (MapOverlay mOverlay in Overlays.Values)
                     {
@@ -247,7 +248,7 @@ namespace MobileTag
                 }
 
                 DrawOverlays();
-            }, null);
+            });
         }
 
         public void OnLocationChanged(Location location)
@@ -316,7 +317,7 @@ namespace MobileTag
           CenterMapCameraOnLocation();
         }
 
-        private void TagButton_Click(object sender, EventArgs e)
+        private async void TagButton_Click(object sender, EventArgs e)
         {
             decimal decLat = (decimal)(mMap.MyLocation.Latitude);
             decimal decLng = (decimal)(mMap.MyLocation.Longitude);
@@ -335,12 +336,11 @@ namespace MobileTag
                 cell = GameModel.CellsInView[playerCellID];
             }
 
-            cell.TeamID = GameModel.Player.Team.ID;
-            UpdateOverlay(cell);
-
             try
             {
-                cell.Tag();
+                var tagTask = cell.Tag();
+                UpdateOverlay(cell);
+                await tagTask;
             }
             catch (AggregateException exc)
             {

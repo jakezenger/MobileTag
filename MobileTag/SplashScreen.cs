@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using Android.App;
 using Android.Content;
@@ -45,12 +46,12 @@ namespace MobileTag
             Toast.MakeText(this, "Logging in...", ToastLength.Long).Show();
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            CheckLocalLoginInformation();
+            await CheckLocalLoginInformation();
         }
 
-        private void CheckLocalLoginInformation()
+        private async Task CheckLocalLoginInformation()
         {
             // Check for local login information
             string path = Application.Context.FilesDir.Path;
@@ -63,23 +64,18 @@ namespace MobileTag
                 username = System.IO.File.ReadAllText(filePath);
                 password = System.IO.File.ReadAllText(filePath2);
 
-                ThreadPool.QueueUserWorkItem(delegate (object state)
+                int result = await Database.ValidateLoginCredentials(username, password);
+
+                if (result == 1)
                 {
-                    if (Database.ValidateLoginCredentials(username, password) == 1)
-                    {
-                        GameModel.Player = Database.GetPlayer(username.Trim());
-                        Intent intent = new Intent(this, typeof(MapActivity));
-                        RunOnUiThread(() =>
-                        {
-                            StartActivity(intent);
-                        });
-                    }
-                    else
-                        RunOnUiThread(() =>
-                        {
-                            StartActivity(new Intent(this, typeof(LoginActivity)));
-                        });
-                }, null);
+                    GameModel.Player = await Database.GetPlayer(username.Trim());
+                    Intent intent = new Intent(this, typeof(MapActivity));
+
+                    StartActivity(intent);
+                }
+                else
+
+                    StartActivity(new Intent(this, typeof(LoginActivity)));
             }
             else
                 StartActivity(new Intent(this, typeof(LoginActivity)));

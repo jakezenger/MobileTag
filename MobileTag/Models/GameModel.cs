@@ -13,6 +13,7 @@ using Android.Widget;
 using System.Drawing;
 using Android.Gms.Maps.Model;
 using MobileTag.SharedCode;
+using System.Threading.Tasks;
 
 namespace MobileTag.Models
 {
@@ -77,11 +78,12 @@ namespace MobileTag.Models
             return latLng;
         }
 
-        public static ConcurrentDictionary<int, MapOverlay> LoadProximalCells(LatLng targetLatLng)
+        public async static Task<ConcurrentDictionary<int, MapOverlay>> LoadProximalCells(LatLng targetLatLng)
         {
             var Overlays = new ConcurrentDictionary<int, MapOverlay>();
+            var ProximalCells = await RetrieveProximalCells(targetLatLng);
 
-            foreach (Cell cell in RetrieveProximalCells(targetLatLng).Values)
+            foreach (Cell cell in ProximalCells.Values)
             {
                 if (!CellsInView.ContainsKey(cell.ID))
                 {
@@ -99,10 +101,10 @@ namespace MobileTag.Models
             return Overlays;
         }
 
-        private static ConcurrentDictionary<int, Cell> RetrieveProximalCells(LatLng targetLatLng)
+        private async static Task<ConcurrentDictionary<int, Cell>> RetrieveProximalCells(LatLng targetLatLng)
         {
             int playerCellID = GetCellID((decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
-            ConcurrentDictionary<int, Cell> frontierDict = Database.GetProxyCells(viewRadius, frontierInterval, (decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
+            ConcurrentDictionary<int, Cell> frontierDict = await Database.GetProxyCells(viewRadius, frontierInterval, (decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
 
             for (int row = -viewRadius; row <= viewRadius; row++)
             {
