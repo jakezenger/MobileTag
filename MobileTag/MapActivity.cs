@@ -116,9 +116,9 @@ namespace MobileTag
                 locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
                 locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
             }
-            if (GameModel.CellHubConnection.State != ConnectionState.Connected && GameModel.CellHubConnection.State != ConnectionState.Connecting)
+            if (CellHub.Connection.State != ConnectionState.Connected && CellHub.Connection.State != ConnectionState.Connecting)
             {
-                GameModel.CellHubConnection.Start().Wait();
+                CellHub.Connection.Start().Wait();
 
                 if (initialCameraLatLng != null)
                 {
@@ -141,7 +141,7 @@ namespace MobileTag
                 locMgr.RemoveUpdates(this);
             }
 
-            GameModel.CellHubConnection.Stop();
+            CellHub.Connection.Stop();
         }
         
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -159,9 +159,9 @@ namespace MobileTag
         {
             try
             {
-                GameModel.CellHubProxy = GameModel.CellHubConnection.CreateHubProxy("cellHub");
+                CellHub.HubProxy = CellHub.Connection.CreateHubProxy("cellHub");
 
-                GameModel.CellHubProxy.On<Cell>("broadcastCell", updatedCell =>
+                CellHub.HubProxy.On<Cell>("broadcastCell", updatedCell =>
                 {
                     // Handle SignalR cell update notification
                     Console.WriteLine("Cell {0} updated!", updatedCell.ID);
@@ -169,7 +169,7 @@ namespace MobileTag
                     UpdateOverlay(updatedCell);
                 });
 
-                GameModel.CellHubConnection.Start().Wait();
+                CellHub.Connection.Start().Wait();
             }
             catch (Exception e)
             {
@@ -331,7 +331,7 @@ namespace MobileTag
                 // Generate the new cell and add it to CellsInView
                 cell = GameModel.GenerateCell(decLat, decLng);
                 GameModel.CellsInView.TryAdd(cell.ID, cell);
-                GameModel.SubscribeToUpdates(cell.ID);
+                CellHub.SubscribeToUpdates(cell.ID);
             }
             else
             {

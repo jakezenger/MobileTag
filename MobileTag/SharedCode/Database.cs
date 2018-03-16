@@ -14,7 +14,7 @@ namespace MobileTag
         private static bool initialized = false;
         private delegate void Del(SqlConnection connection);
 
-        private static void Init_()
+        private static void Init_() // We can actually add a static constructor to automatically take care of initialization
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = "mobiletag-jp.database.windows.net";

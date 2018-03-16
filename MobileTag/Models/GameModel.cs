@@ -11,7 +11,6 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Drawing;
-using Microsoft.AspNet.SignalR.Client;
 using Android.Gms.Maps.Model;
 using MobileTag.SharedCode;
 
@@ -37,83 +36,6 @@ namespace MobileTag.Models
         public const decimal GridHeight = ((frontierUpperRightLat - frontierLowerLeftLat) / frontierInterval);
         public const decimal GridWidth = ((frontierUpperRightLong - frontierLowerLeftLong) / frontierInterval);
 
-        // SignalR
-        public static HubConnection CellHubConnection = new HubConnection("https://mobiletag.azurewebsites.net/");
-        public static IHubProxy CellHubProxy;
-
-        async static public void SubscribeToUpdates(HashSet<int> cellIDs)
-        {
-            try
-            {
-                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates", cellIDs);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        async static public void SubscribeToUpdates(ConcurrentDictionary<int, Cell> cellsInView)
-        {
-            HashSet<int> cellIDs = new HashSet<int>();
-
-            foreach(Cell cell in cellsInView.Values)
-            {
-                cellIDs.Add(cell.ID);
-            }
-
-            try
-            {
-                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates",cellIDs);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        async static public void SubscribeToUpdates()
-        {
-            HashSet<int> cellIDs = new HashSet<int>();
-
-            foreach (Cell cell in CellsInView.Values)
-            {
-                cellIDs.Add(cell.ID);
-            }
-
-            try
-            {
-                await GameModel.CellHubProxy.Invoke("SubscribeToCellUpdates", cellIDs);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        async static public void SubscribeToUpdates(int cellID)
-        {
-            try
-            {
-                await GameModel.CellHubProxy.Invoke("SubscribeToSingleCellUpdates", cellID);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        //async static public void UnsubscribeFromUpdates(int cellID)
-        //{
-        //    try
-        //    {
-        //        await GameModel.CellHubProxy.Invoke("UnsubscribeFromCellUpdates", cellID);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.ToString());
-        //    }
-        //}
         public static void Logout()
         {
             string path = Application.Context.FilesDir.Path;
@@ -172,7 +94,7 @@ namespace MobileTag.Models
                 }
             }
 
-            SubscribeToUpdates();
+            CellHub.SubscribeToUpdates(CellsInView);
 
             return Overlays;
         }

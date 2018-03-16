@@ -1,4 +1,5 @@
 ﻿using System;
+using MobileTag.SharedCode;
 using Newtonsoft.Json;
 
 namespace MobileTag.Models
@@ -55,11 +56,11 @@ namespace MobileTag.Models
         // Broadcast the updated cell to all of the clients that are currently looking at this cell
         async private void BroadcastCellUpdate()
         {
-            if (GameModel.CellHubConnection.State == Microsoft.AspNet.SignalR.Client.ConnectionState.Connected)
+            if (CellHub.Connection.State == Microsoft.AspNet.SignalR.Client.ConnectionState.Connected)
             {
                 try
                 {
-                    await GameModel.CellHubProxy.Invoke("UpdateCell", this);
+                    await CellHub.HubProxy.Invoke("UpdateCell", this);
                 }
                 catch (Exception e)
                 {
