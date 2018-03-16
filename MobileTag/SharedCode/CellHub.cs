@@ -21,6 +21,11 @@ namespace MobileTag.SharedCode
         public static HubConnection Connection = new HubConnection("https://mobiletag.azurewebsites.net/");
         public static IHubProxy HubProxy;
 
+        static CellHub()
+        {
+            HubProxy = Connection.CreateHubProxy("cellHub");
+        }
+
         async static public void SubscribeToUpdates(HashSet<int> cellIDs)
         {
             try
