@@ -380,17 +380,6 @@ namespace MobileTag
 
         private void DrawOverlays()
         {
-            RunOnUiThread(() =>
-            {
-                if (mMap.MyLocation != null)
-                {
-                    double lat = mMap.MyLocation.Latitude;
-                    double lng = mMap.MyLocation.Longitude;
-
-                    lngLatText.Text = "Lat " + lat + " : " + "Long " + lng;
-                }
-            });
-
             foreach (MapOverlay overlay in Overlays.Values)
             {
                 if (!overlay.IsOnMap)
