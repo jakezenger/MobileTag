@@ -62,7 +62,7 @@ namespace MobileTag.Models
             nearestLongInterval = (Math.Floor((lng - frontierLowerLeftLong) / frontierInterval) * frontierInterval);
 
             int id = Convert.ToInt32((nearestLongInterval / frontierInterval) + (nearestLatInterval / frontierInterval)
-                * ((frontierUpperRightLong - frontierLowerLeftLong) / frontierInterval));
+                * GridWidth);
 
             return id;
         }
