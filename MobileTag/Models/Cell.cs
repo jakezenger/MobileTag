@@ -6,9 +6,9 @@ namespace MobileTag.Models
 {
     public class Cell
     {
-        public int ID { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
+        public int ID { get; }
+        public decimal Latitude { get; }
+        public decimal Longitude { get; }
 
         public int TeamID { get; set; }
 
