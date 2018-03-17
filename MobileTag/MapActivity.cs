@@ -246,7 +246,7 @@ namespace MobileTag
                 Overlays = temp;
             }
             
-            await Task.Run(() => DrawOverlays());
+            await DrawOverlays();
         }
 
         public void OnLocationChanged(Location location)
@@ -373,15 +373,16 @@ namespace MobileTag
             }
         }
 
-        private void DrawOverlays()
+        private async Task DrawOverlays()
         {
-            foreach (MapOverlay overlay in Overlays.Values)
+            await Task.Run(() => Parallel.ForEach(Overlays.Values, overlay =>
             {
                 if (!overlay.IsOnMap)
                 {
                     RunOnUiThread(() => overlay.Polygon = mMap.AddPolygon(overlay.PolygonOptions));
+                    Thread.Sleep(50); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
                 }
-            }
+            }));
         }
 
         public void OnProviderDisabled(string provider)
