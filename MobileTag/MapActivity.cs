@@ -46,7 +46,7 @@ namespace MobileTag
 
         ConcurrentDictionary<int, MapOverlay> Overlays = new ConcurrentDictionary<int, MapOverlay>();
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Map);
@@ -70,7 +70,8 @@ namespace MobileTag
             locationButton.Click += LocationButton_Click;
 
             SetUpMap();
-            SetUpCellHub();
+
+            var cellHubSetupTask = SetUpCellHub();
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
@@ -80,8 +81,6 @@ namespace MobileTag
             {
                 RequestPermissions(LocationPermissions, RequestLocationID);
             }
-
-
 
             navigationView.NavigationItemSelected += (sender, e) =>
             {
@@ -98,6 +97,8 @@ namespace MobileTag
                 }
                 drawerLayout.CloseDrawers();
             };
+
+            await cellHubSetupTask;
         }
 
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
@@ -155,7 +156,7 @@ namespace MobileTag
         // SignalR------------------------------------------------------------------------------------------
 
         // Start the CellHub SignalR connection
-        private void SetUpCellHub()
+        private async Task SetUpCellHub()
         {
             try
             {
@@ -167,7 +168,7 @@ namespace MobileTag
                     UpdateOverlay(updatedCell);
                 });
 
-                CellHub.Connection.Start().Wait();
+                await CellHub.Connection.Start();
             }
             catch (Exception e)
             {
@@ -224,31 +225,28 @@ namespace MobileTag
 
         private async Task DrawCellsInView()
         {
-            await Task.Run(async () =>
+            if (Overlays.IsEmpty)
             {
-                if (Overlays.IsEmpty)
-                {
-                    Overlays = await GameModel.LoadProximalCells(initialCameraLatLng);
-                }
-                else
-                {
-                    // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
-                    ConcurrentDictionary<int, MapOverlay> temp = await GameModel.LoadProximalCells(initialCameraLatLng);
+                Overlays = await GameModel.LoadProximalCells(initialCameraLatLng);
+            }
+            else
+            {
+                // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
+                ConcurrentDictionary<int, MapOverlay> temp = await GameModel.LoadProximalCells(initialCameraLatLng);
 
-                    foreach (MapOverlay mOverlay in Overlays.Values)
+                foreach (MapOverlay mOverlay in Overlays.Values)
+                {
+                    if (mOverlay.IsOnMap)
                     {
-                        if (mOverlay.IsOnMap)
-                        {
-                            // Copy the existing overlay into temp
-                            temp[mOverlay.CellID] = mOverlay;
-                        }
+                        // Copy the existing overlay into temp
+                        temp[mOverlay.CellID] = mOverlay;
                     }
-
-                    Overlays = temp;
                 }
 
-                DrawOverlays();
-            });
+                Overlays = temp;
+            }
+            
+            await Task.Run(() => DrawOverlays());
         }
 
         public void OnLocationChanged(Location location)

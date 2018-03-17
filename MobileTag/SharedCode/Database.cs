@@ -34,7 +34,7 @@ namespace MobileTag
             {
                 try
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     await del(connection);
                     connection.Close();
                 }
@@ -326,6 +326,7 @@ namespace MobileTag
 
                     cellDict.TryAdd(cellID, cell);
                 }
+
                 reader.Close();
             };
 
@@ -333,6 +334,7 @@ namespace MobileTag
 
             return cellDict;
         }
+
         ///////////////////////////////////////////|||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         ////////////////////////////////////////// OLDE IMPLEMENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         //////////////////////////////////////////|||||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
