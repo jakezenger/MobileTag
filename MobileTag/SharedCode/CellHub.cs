@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -26,7 +26,7 @@ namespace MobileTag.SharedCode
             HubProxy = Connection.CreateHubProxy("cellHub");
         }
 
-        async static public void SubscribeToUpdates(HashSet<int> cellIDs)
+        async static public Task SubscribeToUpdates(HashSet<int> cellIDs)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace MobileTag.SharedCode
             }
         }
 
-        async static public void SubscribeToUpdates(ConcurrentDictionary<int, Cell> cellsInView)
+        async static public Task SubscribeToUpdates(ConcurrentDictionary<int, Cell> cellsInView)
         {
             HashSet<int> cellIDs = new HashSet<int>();
 
@@ -57,7 +57,7 @@ namespace MobileTag.SharedCode
             }
         }
 
-        async static public void SubscribeToUpdates(int cellID)
+        async static public Task SubscribeToUpdates(int cellID)
         {
             try
             {

@@ -327,7 +327,7 @@ namespace MobileTag
                 // Generate the new cell and add it to CellsInView
                 cell = GameModel.GenerateCell(decLat, decLng);
                 GameModel.CellsInView.TryAdd(cell.ID, cell);
-                CellHub.SubscribeToUpdates(cell.ID);
+                await CellHub.SubscribeToUpdates(cell.ID);
             }
             else
             {

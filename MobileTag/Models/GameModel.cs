@@ -82,21 +82,29 @@ namespace MobileTag.Models
         {
             var Overlays = new ConcurrentDictionary<int, MapOverlay>();
             var ProximalCells = await RetrieveProximalCells(targetLatLng);
+            var NewSubscriptions = new HashSet<int>();
 
-            foreach (Cell cell in ProximalCells.Values)
+            await Task.Run(() =>
             {
-                if (!CellsInView.ContainsKey(cell.ID))
+                foreach (Cell cell in ProximalCells.Values)
                 {
-                    CellsInView.TryAdd(cell.ID, cell);
-                }
+                    if (!CellsInView.ContainsKey(cell.ID))
+                    {
+                        CellsInView.TryAdd(cell.ID, cell);
+                        NewSubscriptions.Add(cell.ID);
+                    }
 
-                if (cell.TeamID > 0)
-                {
-                    Overlays.TryAdd(cell.ID, new MapOverlay(cell));
+                    if (cell.TeamID > 0)
+                    {
+                        Overlays.TryAdd(cell.ID, new MapOverlay(cell));
+                    }
                 }
+            });
+
+            if (NewSubscriptions.Count > 0)
+            {
+                await CellHub.SubscribeToUpdates(NewSubscriptions);
             }
-
-            CellHub.SubscribeToUpdates(CellsInView);
 
             return Overlays;
         }
@@ -106,22 +114,26 @@ namespace MobileTag.Models
             int playerCellID = GetCellID((decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
             ConcurrentDictionary<int, Cell> frontierDict = await Database.GetProxyCells(viewRadius, frontierInterval, (decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
 
-            for (int row = -viewRadius; row <= viewRadius; row++)
+            await Task.Run(() =>
             {
-                for (int col = -viewRadius; col <= viewRadius; col++)
+                for (int row = -viewRadius; row <= viewRadius; row++)
                 {
-                    int cellID = (int)(playerCellID + (row * GridWidth) + col);
-
-                    if (!CellsInView.ContainsKey(cellID))
+                    for (int col = -viewRadius; col <= viewRadius; col++)
                     {
-                        decimal cellLat = Math.Floor((decimal)targetLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
-                        decimal cellLng = Math.Floor((decimal)targetLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);
-                        Cell cell = new Cell(cellLat, cellLng);
+                        int cellID = (int)(playerCellID + (row * GridWidth) + col);
 
-                        frontierDict.TryAdd(cellID, cell);
+                        if (!CellsInView.ContainsKey(cellID))
+                        {
+                            decimal cellLat = Math.Floor((decimal)targetLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
+                            decimal cellLng = Math.Floor((decimal)targetLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);
+                            Cell cell = new Cell(cellLat, cellLng);
+
+                            frontierDict.TryAdd(cellID, cell);
+                        }
                     }
+
                 }
-            }
+            });
 
             return frontierDict;
         }
