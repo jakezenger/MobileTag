@@ -119,7 +119,7 @@ namespace MobileTag
             }
             if (CellHub.Connection.State != ConnectionState.Connected && CellHub.Connection.State != ConnectionState.Connecting)
             {
-                CellHub.Connection.Start().Wait();
+                await CellHub.Connection.Start();
 
                 if (initialCameraLatLng != null)
                 {
