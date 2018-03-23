@@ -49,6 +49,7 @@ namespace MobileTag
         private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             await CheckLocalLoginInformation();
+            ((System.Timers.Timer)sender).Stop();
         }
 
         private async Task CheckLocalLoginInformation()

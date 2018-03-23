@@ -35,7 +35,7 @@ namespace MobileTag
         private LatLng initialCameraLatLng = null;
 
         private Location lastKnownLocation;
-        private TextView lngLatText;
+        private TextView statusText;
         private Button tagButton;
         private Button locationButton;
         readonly string[] LocationPermissions = { Android.Manifest.Permission.AccessFineLocation, Android.Manifest.Permission.AccessCoarseLocation };
@@ -57,7 +57,7 @@ namespace MobileTag
 
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-            lngLatText = FindViewById<TextView>(Resource.Id.textBelowMap);
+            statusText = FindViewById<TextView>(Resource.Id.textBelowMap);
             tagButton = FindViewById<Button>(Resource.Id.claimButton);
             locationButton = FindViewById<Button>(Resource.Id.clientCameraLocationbtn);
 
@@ -206,6 +206,9 @@ namespace MobileTag
                 {
                     initialCameraLatLng = mMap.CameraPosition.Target;
                     InitialCameraLocSet = true;
+
+                    DisplayStatus("Loading new cells...", 5000);
+
                     await DrawCellsInView();
                 }
                 else
@@ -216,7 +219,8 @@ namespace MobileTag
                     {
                         initialCameraLatLng = mMap.CameraPosition.Target;
 
-                        Toast.MakeText(this, "Loading new cells at Zoom Level: " + currentZoomLevel.ToString(), ToastLength.Long).Show();
+                        DisplayStatus("Loading new cells...", 5000);
+
                         await DrawCellsInView();
                     }
                 }
@@ -258,11 +262,16 @@ namespace MobileTag
                     mMap.MyLocationEnabled = true;
                 }
 
-                Double lat, lng;
-                lat = location.Latitude;
-                lng = location.Longitude;
-
-                lngLatText.Text = "Lat" + lat + " : " + "Long" + lng;
+                if (lastKnownLocation == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No Location");
+                    statusText.Visibility = ViewStates.Visible;
+                    statusText.Text = "No Location";
+                }
+                else
+                {
+                    statusText.Visibility = ViewStates.Gone;
+                }
             }
         }
 
@@ -298,7 +307,38 @@ namespace MobileTag
             lastKnownLocation = locMgr.GetLastKnownLocation(provider);
 
             if (lastKnownLocation == null)
+            {
                 System.Diagnostics.Debug.WriteLine("No Location");
+                DisplayStatus("No Location");
+            }
+        }
+
+        private void DisplayStatus(string status)
+        {
+            statusText.Visibility = ViewStates.Visible;
+            statusText.Text = status;
+        }
+
+        private void DisplayStatus(string status, double length)
+        {
+            statusText.Visibility = ViewStates.Visible;
+            statusText.Text = status;
+
+            System.Timers.Timer timer = new System.Timers.Timer(length);
+            timer.AutoReset = false;
+
+            timer.Elapsed += (o, e) => {
+                RunOnUiThread(() => statusText.Visibility = ViewStates.Gone);
+                timer.Stop();
+            };
+
+            timer.Start();
+        }
+
+        private void HideStatusBar()
+        {
+            statusText.Visibility = ViewStates.Gone;
+            statusText.Text = "";
         }
 
         private void CenterMapCameraOnLocation()
@@ -312,7 +352,7 @@ namespace MobileTag
 
         private void LocationButton_Click(object sender, EventArgs e)
         {
-          CenterMapCameraOnLocation();
+            CenterMapCameraOnLocation();
         }
 
         private async void TagButton_Click(object sender, EventArgs e)
