@@ -265,12 +265,7 @@ namespace MobileTag
                 if (lastKnownLocation == null)
                 {
                     System.Diagnostics.Debug.WriteLine("No Location");
-                    statusText.Visibility = ViewStates.Visible;
-                    statusText.Text = "No Location";
-                }
-                else
-                {
-                    statusText.Visibility = ViewStates.Gone;
+                    DisplayStatus("Couldn't find location");
                 }
             }
         }
@@ -308,36 +303,33 @@ namespace MobileTag
 
             if (lastKnownLocation == null)
             {
-                System.Diagnostics.Debug.WriteLine("No Location");
-                DisplayStatus("No Location");
+                System.Diagnostics.Debug.WriteLine("Couldn't find location");
+                DisplayStatus("Couldn't find location");
             }
         }
 
         private void DisplayStatus(string status)
         {
-            statusText.Visibility = ViewStates.Visible;
             statusText.Text = status;
         }
 
         private void DisplayStatus(string status, double length)
         {
-            statusText.Visibility = ViewStates.Visible;
             statusText.Text = status;
 
             System.Timers.Timer timer = new System.Timers.Timer(length);
             timer.AutoReset = false;
 
             timer.Elapsed += (o, e) => {
-                RunOnUiThread(() => statusText.Visibility = ViewStates.Gone);
+                RunOnUiThread(() => ClearStatus());
                 timer.Stop();
             };
 
             timer.Start();
         }
 
-        private void HideStatusBar()
+        private void ClearStatus()
         {
-            statusText.Visibility = ViewStates.Gone;
             statusText.Text = "";
         }
 
