@@ -275,6 +275,11 @@ namespace MobileTag
                     locationFound = true;
                     DisplayStatus("Location found!", 5000);
                 }
+
+                if (location != null)
+                {
+                    lastKnownLocation = location;
+                }
             }
         }
 
