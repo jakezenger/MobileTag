@@ -33,6 +33,7 @@ namespace MobileTag
         private String provider;
         private bool InitialCameraLocSet = false;
         private LatLng initialCameraLatLng = null;
+        private bool locationFound = false;
 
         private Location lastKnownLocation;
         private TextView statusText;
@@ -75,6 +76,7 @@ namespace MobileTag
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
+                DisplayStatus("Finding location...");
                 GetLocation();
             }
             else
@@ -207,7 +209,7 @@ namespace MobileTag
                     initialCameraLatLng = mMap.CameraPosition.Target;
                     InitialCameraLocSet = true;
 
-                    DisplayStatus("Loading new cells...", 5000);
+                    DisplayStatus("Loading new cells...", 4000);
 
                     await DrawCellsInView();
                 }
@@ -219,7 +221,7 @@ namespace MobileTag
                     {
                         initialCameraLatLng = mMap.CameraPosition.Target;
 
-                        DisplayStatus("Loading new cells...", 5000);
+                        DisplayStatus("Loading new cells...", 4000);
 
                         await DrawCellsInView();
                     }
@@ -262,10 +264,16 @@ namespace MobileTag
                     mMap.MyLocationEnabled = true;
                 }
 
-                if (lastKnownLocation == null)
+                if (location == null)
                 {
                     System.Diagnostics.Debug.WriteLine("No Location");
+                    locationFound = false;
                     DisplayStatus("Couldn't find location");
+                }
+                else if (locationFound == false)
+                {
+                    locationFound = true;
+                    DisplayStatus("Location found!", 5000);
                 }
             }
         }
@@ -349,37 +357,45 @@ namespace MobileTag
 
         private async void TagButton_Click(object sender, EventArgs e)
         {
-            decimal decLat = (decimal)(mMap.MyLocation.Latitude);
-            decimal decLng = (decimal)(mMap.MyLocation.Longitude);
-            int playerCellID = GameModel.GetCellID(decLat, decLng);
-            Cell cell;
-
-            if (!GameModel.CellsInView.ContainsKey(playerCellID))
+            if (locationFound == false)
             {
-                // Generate the new cell and add it to CellsInView
-                cell = GameModel.GenerateCell(decLat, decLng);
-                GameModel.CellsInView.TryAdd(cell.ID, cell);
-                await CellHub.SubscribeToUpdates(cell.ID);
+                Toast.MakeText(this, "Tag failed... location unknown", ToastLength.Long).Show();
+                return;
             }
             else
             {
-                cell = GameModel.CellsInView[playerCellID];
-            }
+                decimal decLat = (decimal)(mMap.MyLocation.Latitude);
+                decimal decLng = (decimal)(mMap.MyLocation.Longitude);
+                int playerCellID = GameModel.GetCellID(decLat, decLng);
+                Cell cell;
 
-            try
-            {
-                var tagTask = cell.Tag();
-                UpdateOverlay(cell);
-                await tagTask;
-            }
-            catch (AggregateException exc)
-            {
-                foreach (Exception ie in exc.InnerExceptions)
-                    Console.WriteLine(ie.ToString());
-            }
-            catch (Exception o)
-            {
-                Console.WriteLine(o.ToString());
+                if (!GameModel.CellsInView.ContainsKey(playerCellID))
+                {
+                    // Generate the new cell and add it to CellsInView
+                    cell = GameModel.GenerateCell(decLat, decLng);
+                    GameModel.CellsInView.TryAdd(cell.ID, cell);
+                    await CellHub.SubscribeToUpdates(cell.ID);
+                }
+                else
+                {
+                    cell = GameModel.CellsInView[playerCellID];
+                }
+
+                try
+                {
+                    var tagTask = cell.Tag();
+                    UpdateOverlay(cell);
+                    await tagTask;
+                }
+                catch (AggregateException exc)
+                {
+                    foreach (Exception ie in exc.InnerExceptions)
+                        Console.WriteLine(ie.ToString());
+                }
+                catch (Exception o)
+                {
+                    Console.WriteLine(o.ToString());
+                }
             }
         }
 
