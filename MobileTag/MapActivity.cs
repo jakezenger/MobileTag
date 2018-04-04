@@ -209,8 +209,6 @@ namespace MobileTag
                     initialCameraLatLng = mMap.CameraPosition.Target;
                     InitialCameraLocSet = true;
 
-                    DisplayStatus("Loading new cells...", 4000);
-
                     await DrawCellsInView();
                 }
                 else
@@ -221,8 +219,6 @@ namespace MobileTag
                     {
                         initialCameraLatLng = mMap.CameraPosition.Target;
 
-                        DisplayStatus("Loading new cells...", 4000);
-
                         await DrawCellsInView();
                     }
                 }
@@ -231,6 +227,8 @@ namespace MobileTag
 
         private async Task DrawCellsInView()
         {
+            DisplayStatus("Loading new cells...");
+
             await Task.Run(async () =>
             {
                 if (Overlays.IsEmpty)
@@ -260,6 +258,8 @@ namespace MobileTag
             });
             
             await DrawOverlays();
+
+            ClearStatus();
         }
 
         public void OnLocationChanged(Location location)
@@ -447,7 +447,7 @@ namespace MobileTag
                 {
                     Overlay.Draw(mMap);
                     OverlaysToDraw.TryRemove(Overlay.CellID, out MapOverlay value);
-                    await Task.Delay(50); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
+                    await Task.Delay(40); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
                 }
             }
         }
