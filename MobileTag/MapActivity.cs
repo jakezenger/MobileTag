@@ -357,7 +357,14 @@ namespace MobileTag
 
         private void LocationButton_Click(object sender, EventArgs e)
         {
-            CenterMapCameraOnLocation();
+            if (locationFound == true)
+            {
+                CenterMapCameraOnLocation();
+            }
+            else
+            {
+                Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
+            }
         }
 
         private async void TagButton_Click(object sender, EventArgs e)
@@ -365,7 +372,6 @@ namespace MobileTag
             if (locationFound == false)
             {
                 Toast.MakeText(this, "Tag failed... location unknown", ToastLength.Long).Show();
-                return;
             }
             else
             {
@@ -437,7 +443,7 @@ namespace MobileTag
                     }
                 });
 
-                Thread.Sleep(50); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
+                Thread.Sleep(100); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
             }));
         }
 
