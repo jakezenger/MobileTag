@@ -425,7 +425,7 @@ namespace MobileTag
                 {
                     MapOverlay mapOverlay = new MapOverlay(updatedCell);
 
-                    mapOverlay.Polygon = mMap.AddPolygon(mapOverlay.PolygonOptions);
+                    mapOverlay.Draw(mMap);
 
                     Overlays.TryAdd(updatedCell.ID, mapOverlay);
                 });

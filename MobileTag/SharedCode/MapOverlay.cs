@@ -19,12 +19,12 @@ namespace MobileTag.SharedCode
 {
     public class MapOverlay
     {
-        public PolygonOptions PolygonOptions { get; }
-        public Polygon Polygon { get; set; }
+        private PolygonOptions PolygonOptions;
+        private Polygon Polygon;
         public bool IsOnMap { get { lock (locker) { return Polygon != null; } } }
         public int CellID;
 
-        public readonly object locker = new object();
+        private object locker = new object();
 
         public MapOverlay(Cell cell)
         {
