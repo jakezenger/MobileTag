@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Android.Gms.Maps.Model;
 using MobileTag.SharedCode;
 using Newtonsoft.Json;
 
@@ -23,9 +24,9 @@ namespace MobileTag.Models
         //CTOR's
         public Cell(decimal lat, decimal lng)
         {
-            ID = GameModel.GetCellID(lat, lng);
-            Latitude = lat;
-            Longitude = lng;
+            ID = FindID(lat, lng);
+            Latitude = Math.Floor(lat / GameModel.frontierInterval) * GameModel.frontierInterval;
+            Longitude = Math.Floor(lng / GameModel.frontierInterval) * GameModel.frontierInterval;
             TeamID = 0;
         }
 
@@ -44,6 +45,29 @@ namespace MobileTag.Models
             Latitude = GameModel.frontierLowerLeftLat + (id / GameModel.GridWidth * GameModel.frontierInterval);
             Longitude = GameModel.frontierLowerLeftLong + (id % GameModel.GridWidth * GameModel.frontierInterval);
             TeamID = 0;
+        }
+
+        public static int FindID(decimal lat, decimal lng)
+        {
+            decimal nearestLatInterval, nearestLongInterval;
+
+            nearestLatInterval = (Math.Floor((lat - GameModel.frontierLowerLeftLat) / GameModel.frontierInterval) * GameModel.frontierInterval);
+            nearestLongInterval = (Math.Floor((lng - GameModel.frontierLowerLeftLong) / GameModel.frontierInterval) * GameModel.frontierInterval);
+
+            int id = Convert.ToInt32((nearestLongInterval / GameModel.frontierInterval) + (nearestLatInterval / GameModel.frontierInterval)
+                * GameModel.GridWidth);
+
+            return id;
+        }
+
+        public static LatLng FindLatLng(int cellID)
+        {
+            decimal lat = GameModel.frontierLowerLeftLat + (cellID / GameModel.GridWidth * GameModel.frontierInterval);
+            decimal lng = GameModel.frontierLowerLeftLong + (cellID % GameModel.GridWidth * GameModel.frontierInterval);
+
+            LatLng latLng = new LatLng((double)lat, (double)lng);
+
+            return latLng;
         }
 
         public async Task Tag()

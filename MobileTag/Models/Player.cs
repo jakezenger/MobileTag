@@ -31,7 +31,7 @@ namespace MobileTag.Models
         {
             ID = id;
             Team = team;
-            CurrentCellID = GameModel.GetCellID(lat, lng);
+            CurrentCellID = Cell.FindID(lat, lng);
             Username = username;
         }
     }

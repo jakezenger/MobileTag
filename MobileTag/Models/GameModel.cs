@@ -55,29 +55,6 @@ namespace MobileTag.Models
 
         }
 
-        public static int GetCellID(decimal lat, decimal lng)
-        {
-            decimal nearestLatInterval, nearestLongInterval;
-
-            nearestLatInterval = (Math.Floor((lat - frontierLowerLeftLat) / frontierInterval) * frontierInterval);
-            nearestLongInterval = (Math.Floor((lng - frontierLowerLeftLong) / frontierInterval) * frontierInterval);
-
-            int id = Convert.ToInt32((nearestLongInterval / frontierInterval) + (nearestLatInterval / frontierInterval)
-                * GridWidth);
-
-            return id;
-        }
-
-        public static LatLng GetLatLng(int cellID)
-        {
-            decimal lat = frontierLowerLeftLat + (cellID / GridWidth * frontierInterval);
-            decimal lng = frontierLowerLeftLong + (cellID % GridWidth * frontierInterval);
-
-            LatLng latLng = new LatLng((double)lat, (double)lng);
-
-            return latLng;
-        }
-
         public async static Task<ConcurrentDictionary<int, MapOverlay>> LoadProximalCells(LatLng targetLatLng)
         {
             var Overlays = new ConcurrentDictionary<int, MapOverlay>();
@@ -111,7 +88,7 @@ namespace MobileTag.Models
 
         private async static Task<ConcurrentDictionary<int, Cell>> RetrieveProximalCells(LatLng targetLatLng)
         {
-            int playerCellID = GetCellID((decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
+            int playerCellID = Cell.FindID((decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
             ConcurrentDictionary<int, Cell> frontierDict = await Database.GetProxyCells(viewRadius, frontierInterval, (decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
 
             await Task.Run(() =>
@@ -131,18 +108,10 @@ namespace MobileTag.Models
                             frontierDict.TryAdd(cellID, cell);
                         }
                     }
-
                 }
             });
 
             return frontierDict;
-        }
-
-        public static Cell GenerateCell(decimal lat, decimal lng)
-        {
-            decimal cellLat = Math.Floor(lat / frontierInterval) * frontierInterval;
-            decimal cellLng = Math.Floor(lng / frontierInterval) * frontierInterval;
-            return new Cell(cellLat, cellLng);
         }
     }
 }

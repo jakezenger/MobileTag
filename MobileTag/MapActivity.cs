@@ -385,13 +385,13 @@ namespace MobileTag
             {
                 decimal decLat = (decimal)(mMap.MyLocation.Latitude);
                 decimal decLng = (decimal)(mMap.MyLocation.Longitude);
-                int playerCellID = GameModel.GetCellID(decLat, decLng);
+                int playerCellID = Cell.FindID(decLat, decLng);
                 Cell cell;
 
                 if (!GameModel.CellsInView.ContainsKey(playerCellID))
                 {
                     // Generate the new cell and add it to CellsInView
-                    cell = GameModel.GenerateCell(decLat, decLng);
+                    cell = new Cell(decLat, decLng);
                     GameModel.CellsInView.TryAdd(cell.ID, cell);
                     await CellHub.SubscribeToUpdates(cell.ID);
                 }
