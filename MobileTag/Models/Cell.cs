@@ -28,21 +28,21 @@ namespace MobileTag.Models
             Longitude = lng;
             TeamID = 0;
         }
-      
-        public Cell(int id, decimal lat, decimal lng, int teamID)
+
+        [JsonConstructor]
+        public Cell(int id, decimal latitude, decimal longitude, int teamID)
         {
             ID = id;
-            Latitude = lat;
-            Longitude = lng;
+            Latitude = latitude;
+            Longitude = longitude;
             TeamID = teamID;
         }
 
-        [JsonConstructor]
         public Cell(int id)
         {
             ID = id;
-            Latitude = 0;
-            Longitude = 0;
+            Latitude = GameModel.frontierLowerLeftLat + (id / GameModel.GridWidth * GameModel.frontierInterval);
+            Longitude = GameModel.frontierLowerLeftLong + (id % GameModel.GridWidth * GameModel.frontierInterval);
             TeamID = 0;
         }
 
