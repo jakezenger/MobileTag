@@ -128,6 +128,7 @@ namespace MobileTag
                     // Refresh stale cell data
                     mMap.Clear();
                     Overlays.Clear();
+                    OverlaysToDraw.Clear();
                     GameModel.CellsInView.Clear();
 
                     await DrawCellsInView();
