@@ -17,7 +17,6 @@ using Android.Support.Design.Widget;
 using MobileTag.SharedCode;
 using System.Collections.Concurrent;
 using Android.Support.V7.App;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MobileTag
@@ -46,6 +45,7 @@ namespace MobileTag
         private NavigationView navigationView;
 
         ConcurrentDictionary<int, MapOverlay> Overlays = new ConcurrentDictionary<int, MapOverlay>();
+        ConcurrentDictionary<int, MapOverlay> OverlaysToDraw = new ConcurrentDictionary<int, MapOverlay>();
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
@@ -231,28 +231,35 @@ namespace MobileTag
 
         private async Task DrawCellsInView()
         {
-            if (Overlays.IsEmpty)
+            await Task.Run(async () =>
             {
-                Overlays = await GameModel.LoadProximalCells(initialCameraLatLng);
-            }
-            else
-            {
-                // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
-                ConcurrentDictionary<int, MapOverlay> temp = await GameModel.LoadProximalCells(initialCameraLatLng);
-
-                foreach (MapOverlay mOverlay in Overlays.Values)
+                if (Overlays.IsEmpty)
                 {
-                    if (mOverlay.IsOnMap)
+                    Overlays = await GameModel.LoadProximalCells(initialCameraLatLng);
+
+                    foreach (MapOverlay overlay in Overlays.Values)
                     {
-                        // Copy the existing overlay into temp
-                        temp[mOverlay.CellID] = mOverlay;
+                        OverlaysToDraw.TryAdd(overlay.CellID, overlay);
                     }
                 }
+                else
+                {
+                    // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
+                    ConcurrentDictionary<int, MapOverlay> temp = await GameModel.LoadProximalCells(initialCameraLatLng);
 
-                Overlays = temp;
-            }
+                    foreach (MapOverlay mOverlay in temp.Values)
+                    {
+                        if (!Overlays.Keys.Contains(mOverlay.CellID))
+                        {
+                            // Add the new overlay to Overlays
+                            Overlays.TryAdd(mOverlay.CellID, mOverlay);
+                            OverlaysToDraw.TryAdd(mOverlay.CellID, mOverlay);
+                        }
+                    }
+                }
+            });
             
-            DrawOverlays();
+            await DrawOverlays();
         }
 
         public void OnLocationChanged(Location location)
@@ -432,19 +439,17 @@ namespace MobileTag
             }
         }
 
-        private void DrawOverlays()
+        private async Task DrawOverlays()
         {
-            Task.Run(() => Parallel.ForEach(Overlays.Values, overlay =>
+            foreach (MapOverlay Overlay in Overlays.Values)
             {
-                RunOnUiThread(() => {
-                    if (!overlay.IsOnMap)
-                    {
-                        overlay.Polygon = mMap.AddPolygon(overlay.PolygonOptions);
-                    }
-                });
-
-                Thread.Sleep(100); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
-            }));
+                if (OverlaysToDraw.Keys.Contains(Overlay.CellID))
+                {
+                    Overlay.Draw(mMap);
+                    OverlaysToDraw.TryRemove(Overlay.CellID, out MapOverlay value);
+                    await Task.Delay(50); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
+                }
+            }
         }
 
         public void OnProviderDisabled(string provider)

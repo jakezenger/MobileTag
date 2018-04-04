@@ -21,8 +21,10 @@ namespace MobileTag.SharedCode
     {
         public PolygonOptions PolygonOptions { get; }
         public Polygon Polygon { get; set; }
-        public bool IsOnMap { get { return Polygon != null; } }
+        public bool IsOnMap { get { lock (locker) { return Polygon != null; } } }
         public int CellID;
+
+        public readonly object locker = new object();
 
         public MapOverlay(Cell cell)
         {
@@ -43,6 +45,15 @@ namespace MobileTag.SharedCode
         {
             if (Polygon != null)
                 Polygon.FillColor = color;
+        }
+
+        public void Draw(GoogleMap map)
+        {
+            lock (locker)
+            {
+                if (!IsOnMap)
+                    Polygon = map.AddPolygon(PolygonOptions);
+            }
         }
     }
 }
