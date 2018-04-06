@@ -40,6 +40,15 @@ namespace MobileTag.SharedCode
             Color color = ColorCode.TeamColor(cell.TeamID);
             PolygonOptions.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
             PolygonOptions.InvokeStrokeWidth(0);
+
+            if (cell.TeamID == GameModel.Player.Team.ID)
+            {
+                // add IMapOverlayClickHandler implementation for same team cell click
+            }
+            else
+            {
+                // add IMapOverlayClickHandler implementation for different team cell click
+            }
         }
 
         public void SetColor(Color color)
