@@ -35,6 +35,7 @@ namespace MobileTag.Models
             Team = team;
             CurrentCellID = Cell.FindID(lat, lng);
             Username = username;
+            Mines = mines;
         }
 
         public Mine CreateMine()
