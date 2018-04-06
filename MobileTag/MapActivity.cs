@@ -69,7 +69,6 @@ namespace MobileTag
 
             tagButton.Click += TagButton_Click;
             locationButton.Click += LocationButton_Click;
-            mMap.MapClick += MMap_MapClick;
 
             SetUpMap();
 
@@ -108,7 +107,10 @@ namespace MobileTag
         {
             int clickedCellID = Cell.FindID(e.Point);
 
-            Overlays[clickedCellID].MapOverlayClickHandler.HandleClickEvent();
+            if (Overlays.ContainsKey(clickedCellID))
+            {
+                Overlays[clickedCellID].Click(this);
+            }
         }
 
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
@@ -204,6 +206,7 @@ namespace MobileTag
             mMap = googleMap;
             mMap.UiSettings.ZoomControlsEnabled = true;
             mMap.SetOnCameraIdleListener(this);
+            mMap.MapClick += MMap_MapClick;
         }
 
         public async void OnCameraIdle()
@@ -338,12 +341,12 @@ namespace MobileTag
             }
         }
 
-        private void DisplayStatus(string status)
+        public void DisplayStatus(string status)
         {
             statusText.Text = status;
         }
 
-        private void DisplayStatus(string status, double length)
+        public void DisplayStatus(string status, double length)
         {
             statusText.Text = status;
 
@@ -444,7 +447,7 @@ namespace MobileTag
             {
                 RunOnUiThread(() =>
                 {
-                    Overlays[updatedCell.ID].SetColor(ColorCode.TeamColor(updatedCell.TeamID));
+                    Overlays[updatedCell.ID].SetTeam(updatedCell.TeamID);
                 });
             }
         }

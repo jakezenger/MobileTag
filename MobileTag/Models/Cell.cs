@@ -11,8 +11,8 @@ namespace MobileTag.Models
         public int ID { get; }
         public decimal Latitude { get; }
         public decimal Longitude { get; }
-
         public int TeamID { get; set; }
+        public MapOverlay MapOverlay { get; set; }
 
         //public int HoldStrength { get { return Database.GetCellHoldStrength(ID); } }
 

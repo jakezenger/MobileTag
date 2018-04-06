@@ -13,8 +13,11 @@ using MobileTag.Models;
 
 namespace MobileTag.SharedCode
 {
-    public interface IMapOverlayClickHandler
+    class EnemyOverlayClickHandler : IMapOverlayClickHandler
     {
-        void HandleClickEvent(MapActivity mapActivity, Cell cell);
+        public void HandleClickEvent(MapActivity mapActivity, Cell cell)
+        {
+            mapActivity.DisplayStatus(String.Format("Enemy cell! Cell ID: {0}", cell.ID), 3000);
+        }
     }
 }

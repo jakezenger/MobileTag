@@ -136,9 +136,11 @@
     <Compile Include="SharedCode\ActivityLink.cs" />
     <Compile Include="SharedCode\ColorCode.cs" />
     <Compile Include="SharedCode\Database.cs" />
+    <Compile Include="SharedCode\EnemyOverlayClickHandler.cs" />
     <Compile Include="SharedCode\IOverlayClickHandler.cs" />
     <Compile Include="SharedCode\MapOverlay.cs" />
     <Compile Include="SharedCode\CellHub.cs" />
+    <Compile Include="SharedCode\FriendlyOverlayClickHandler.cs" />
     <Compile Include="SplashScreen.cs" />
   </ItemGroup>
   <ItemGroup>
