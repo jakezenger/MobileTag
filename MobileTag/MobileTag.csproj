@@ -126,6 +126,7 @@
     <Compile Include="MapActivity.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\GameModel.cs" />
+    <Compile Include="Models\Mine.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="ProfileActivity.cs" />

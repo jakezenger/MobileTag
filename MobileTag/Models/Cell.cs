@@ -73,9 +73,9 @@ namespace MobileTag.Models
         public async Task Tag()
         {
             TeamID = GameModel.Player.Team.ID;
-            
-            await BroadcastCellUpdate();
+
             await Database.UpdateCell(this, TeamID);
+            await BroadcastCellUpdate();
         }
 
         // Broadcast the updated cell to all of the clients that are currently looking at this cell
