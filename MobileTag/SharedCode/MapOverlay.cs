@@ -23,6 +23,7 @@ namespace MobileTag.SharedCode
         private Polygon Polygon;
         public bool IsOnMap { get { lock (locker) { return Polygon != null; } } }
         public int CellID;
+        public IMapOverlayClickHandler MapOverlayClickHandler { get; set; } // Strategy pattern
 
         private object locker = new object();
 

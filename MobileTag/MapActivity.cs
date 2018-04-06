@@ -69,6 +69,7 @@ namespace MobileTag
 
             tagButton.Click += TagButton_Click;
             locationButton.Click += LocationButton_Click;
+            mMap.MapClick += MMap_MapClick;
 
             SetUpMap();
 
@@ -101,6 +102,13 @@ namespace MobileTag
             };
 
             await cellHubSetupTask;
+        }
+
+        private void MMap_MapClick(object sender, GoogleMap.MapClickEventArgs e)
+        {
+            int clickedCellID = Cell.FindID(e.Point);
+
+            Overlays[clickedCellID].MapOverlayClickHandler.HandleClickEvent();
         }
 
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)

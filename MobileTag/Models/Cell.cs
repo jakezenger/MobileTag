@@ -60,6 +60,11 @@ namespace MobileTag.Models
             return id;
         }
 
+        public static int FindID(LatLng latLng)
+        {
+            return FindID((decimal)latLng.Latitude, (decimal)latLng.Longitude);
+        }
+
         public static LatLng FindLatLng(int cellID)
         {
             decimal lat = GameModel.frontierLowerLeftLat + (cellID / GameModel.GridWidth * GameModel.frontierInterval);
