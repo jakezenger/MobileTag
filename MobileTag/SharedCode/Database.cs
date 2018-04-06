@@ -128,6 +128,7 @@ namespace MobileTag
             string teamName = "";
 
             int cellID = 0;
+            Wallet playerWallet = new Wallet();
 
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -143,6 +144,7 @@ namespace MobileTag
                     teamID = (int)reader["TeamID"];
                     teamName = (string)reader["TeamName"];
                     cellID = 0; //(int)reader["CellID"];
+                    playerWallet.Confinium = 12345;  //(int)reader["Confinium"];
                 }
                 reader.Close();
             };
@@ -150,7 +152,7 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);
 
             Team team = new Team(teamID, teamName);
-            Player player = new Player(playerID, username, team, cellID);
+            Player player = new Player(playerID, username, team, cellID, playerWallet);
             return player;
         }
 

@@ -18,21 +18,24 @@ namespace MobileTag.Models
         public int ID { get; }
         public Team Team { get; set; }
         public int CurrentCellID { get; set; }
+        public Wallet Wallet { get; set; }
 
-        public Player(int id, string username, Team team, int currentCellID)
+        public Player(int id, string username, Team team, int currentCellID, Wallet wallet)
         {
             ID = id;
             Team = team;
             CurrentCellID = currentCellID;
             Username = username;
+            Wallet = wallet;
         }
 
-        public Player(int id, string username, Team team, decimal lat, decimal lng)
+        public Player(int id, string username, Team team, decimal lat, decimal lng, Wallet wallet)
         {
             ID = id;
             Team = team;
             CurrentCellID = Cell.FindID(lat, lng);
             Username = username;
+            Wallet = wallet;
         }
     }
 }
