@@ -12,17 +12,21 @@ using Android.Widget;
 
 namespace MobileTag.Models
 {
-    class Mine
+    public class Mine
     {
-        public int MineID { get; }
         public int CellID { get; }
         public int PlayerID { get; }
 
-        public Mine(int mineID, int cellID, int playerID)
+        public Mine(int cellID, int playerID)
         {
-            MineID = mineID;
             CellID = cellID;
             PlayerID = playerID;
+        }
+
+        public void Construct()
+        {
+            throw new NotImplementedException();
+            // Add mine to DB... and update UI?
         }
     }
 }

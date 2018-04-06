@@ -287,6 +287,7 @@ namespace MobileTag
                 if (location != null)
                 {
                     lastKnownLocation = location;
+                    GameModel.Player.CurrentCellID = Cell.FindID((decimal)location.Latitude, (decimal)location.Longitude);
                 }
             }
         }

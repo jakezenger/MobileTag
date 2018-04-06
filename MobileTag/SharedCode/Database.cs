@@ -126,7 +126,7 @@ namespace MobileTag
             int playerID = 0;
             int teamID = 0;
             string teamName = "";
-
+            List<Mine> mines = new List<Mine>();
             int cellID = 0;
 
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
@@ -150,7 +150,7 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);
 
             Team team = new Team(teamID, teamName);
-            Player player = new Player(playerID, username, team, cellID);
+            Player player = new Player(playerID, username, team, cellID, mines);
             return player;
         }
 
