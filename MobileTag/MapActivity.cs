@@ -404,6 +404,7 @@ namespace MobileTag
                 {
                     var tagTask = cell.Tag();
                     UpdateOverlay(cell);
+                    GameModel.AddCurrency();
                     await tagTask;
                 }
                 catch (AggregateException exc)
