@@ -402,10 +402,15 @@ namespace MobileTag
 
                 try
                 {
-                    var tagTask = cell.Tag();
-                    UpdateOverlay(cell);
-                    GameModel.AddCurrency();
-                    await tagTask;
+                    
+                    if (cell.TeamID != GameModel.Player.Team.ID)
+                    {
+                        var tagTask = cell.Tag();
+                        UpdateOverlay(cell);
+                        GameModel.AddCurrency();
+                        await tagTask;
+                    }
+                    
                 }
                 catch (AggregateException exc)
                 {
