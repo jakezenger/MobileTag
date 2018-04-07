@@ -28,6 +28,9 @@ namespace MobileTag.Models
         public const decimal frontierUpperRightLong = -116.5m;
         public static decimal FrontierInterval => frontierInterval;
 
+        public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
+        public static Player Player { get; set; }
+
         // Calculated constants
         public const decimal GridHeight = ((frontierUpperRightLat - frontierLowerLeftLat) / frontierInterval);
         public const decimal GridWidth = ((frontierUpperRightLong - frontierLowerLeftLong) / frontierInterval);
@@ -40,7 +43,7 @@ namespace MobileTag.Models
 
         public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
         public static Player Player { get; set; }
-
+        private const int DEFAULT_TAG_AMOUNT = 100;
         public static void Logout()
         {
             string path = Application.Context.FilesDir.Path;
@@ -122,6 +125,17 @@ namespace MobileTag.Models
             //});
 
             return frontierDict;
+        }
+
+        internal static void AddCurrency()
+        {
+            //TODO: Send currency to database
+            if (Database.UpdatePlayerWallet(Player.ID, DEFAULT_TAG_AMOUNT))
+            {
+                //If database successful, update client player account
+                 Player.Wallet.AddConfinium(DEFAULT_TAG_AMOUNT);
+            }
+            
         }
     }
 }

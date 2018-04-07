@@ -156,6 +156,35 @@ namespace MobileTag
             return player;
         }
 
+        public static bool UpdatePlayerWallet(int playerID, int confinium)
+        {
+            return false;
+            
+            //TODO: implement database call to update players currency
+            /*******Stored Procedure not yet implemented. Code below may need altering when database is updated.
+            try
+            {
+                SqlConnection connection = new SqlConnection(CONNECTION_STRING);
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("UpdateWallet", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@confinium", SqlDbType.Int).Value = confinium;
+
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Failed to update currency: " + ex.ToString());
+            }
+            */
+           
+        }
+
         public async static Task<Cell> GetCell(int cellID)
         {
             decimal lat = 0.00m;
