@@ -8,13 +8,30 @@ namespace MobileTag.Models
 {
     public class Cell
     {
+        private int teamID = 0;
+        private int holdStrength = 0;
+
         public int ID { get; }
         public decimal Latitude { get; }
         public decimal Longitude { get; }
-        public int TeamID { get; set; }
+        public int TeamID
+        {
+            get
+            {
+                return teamID;
+            }
+            set
+            {
+                teamID = value;
+
+                if (MapOverlay != null)
+                    MapOverlay.SetTeam(teamID);
+            }
+        }
+
         public MapOverlay MapOverlay { get; set; }
 
-        //public int HoldStrength { get { return Database.GetCellHoldStrength(ID); } }
+        public int HoldStrength { get { return HoldStrength; } set { holdStrength = value; } }
 
         public bool AreEqual(Cell obj1, Cell obj2)
         {
@@ -28,6 +45,7 @@ namespace MobileTag.Models
             Latitude = Math.Floor(lat / GameModel.frontierInterval) * GameModel.frontierInterval;
             Longitude = Math.Floor(lng / GameModel.frontierInterval) * GameModel.frontierInterval;
             TeamID = 0;
+            MapOverlay = new MapOverlay(this);
         }
 
         [JsonConstructor]
@@ -37,6 +55,7 @@ namespace MobileTag.Models
             Latitude = latitude;
             Longitude = longitude;
             TeamID = teamID;
+            MapOverlay = new MapOverlay(this);
         }
 
         public Cell(int id)
@@ -45,6 +64,7 @@ namespace MobileTag.Models
             Latitude = GameModel.frontierLowerLeftLat + (id / GameModel.GridWidth * GameModel.frontierInterval);
             Longitude = GameModel.frontierLowerLeftLong + (id % GameModel.GridWidth * GameModel.frontierInterval);
             TeamID = 0;
+            MapOverlay = new MapOverlay(this);
         }
 
         public static int FindID(decimal lat, decimal lng)

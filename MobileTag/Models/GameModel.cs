@@ -55,9 +55,8 @@ namespace MobileTag.Models
 
         }
 
-        public async static Task<ConcurrentDictionary<int, MapOverlay>> LoadProximalCells(LatLng targetLatLng)
+        public async static Task LoadProximalCells(LatLng targetLatLng)
         {
-            var Overlays = new ConcurrentDictionary<int, MapOverlay>();
             var ProximalCells = await RetrieveProximalCells(targetLatLng);
             var NewSubscriptions = new HashSet<int>();
 
@@ -70,11 +69,6 @@ namespace MobileTag.Models
                         CellsInView.TryAdd(cell.ID, cell);
                         NewSubscriptions.Add(cell.ID);
                     }
-
-                    if (cell.TeamID > 0)
-                    {
-                        Overlays.TryAdd(cell.ID, new MapOverlay(cell));
-                    }
                 }
             });
 
@@ -82,8 +76,6 @@ namespace MobileTag.Models
             {
                 await CellHub.SubscribeToUpdates(NewSubscriptions);
             }
-
-            return Overlays;
         }
 
         private async static Task<ConcurrentDictionary<int, Cell>> RetrieveProximalCells(LatLng targetLatLng)
