@@ -322,7 +322,8 @@ namespace MobileTag
                     decimal lat = (decimal)reader["Latitude"];
                     decimal lng = (decimal)reader["Longitude"];
                     int teamID = (int)reader["TeamID"];
-                    Cell cell = new Cell(cellID, lat, lng, teamID);
+                    int holdStrength = (int)reader["HoldStrength"];
+                    Cell cell = new Cell(cellID, lat, lng, teamID, holdStrength);
 
                     cellDict.TryAdd(cellID, cell);
                 }

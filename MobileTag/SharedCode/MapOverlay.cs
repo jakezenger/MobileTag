@@ -37,8 +37,7 @@ namespace MobileTag.SharedCode
             PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
             PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
 
-            Color color = ColorCode.TeamColor(cell.TeamID);
-            PolygonOptions.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
+            UpdateColor(cell.HoldStrength, cell.TeamID);
             PolygonOptions.InvokeStrokeWidth(0);
 
             if (cell.TeamID == GameModel.Player.Team.ID)
@@ -62,10 +61,8 @@ namespace MobileTag.SharedCode
                 PolygonOptions.InvokeFillColor(color);
         }
 
-        public void SetTeam(int teamID)
+        public void UpdateColor(int holdStrength, int teamID)
         {
-            SetColor(ColorCode.TeamColor(teamID));
-
             if (teamID != GameModel.Player.Team.ID && MapOverlayClickHandler is FriendlyOverlayClickHandler)
             {
                 MapOverlayClickHandler = new EnemyOverlayClickHandler();
@@ -74,6 +71,12 @@ namespace MobileTag.SharedCode
             {
                 MapOverlayClickHandler = new FriendlyOverlayClickHandler();
             }
+
+            byte alpha = Convert.ToByte((int)(((float)holdStrength / GameModel.maxHoldStrength) * 255));
+            Color overlayColor = ColorCode.TeamColor(teamID);
+            overlayColor.A = alpha;
+
+            SetColor(overlayColor);
         }
 
         public void Draw(GoogleMap map)

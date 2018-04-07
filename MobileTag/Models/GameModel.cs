@@ -26,16 +26,20 @@ namespace MobileTag.Models
         public const decimal frontierLowerLeftLong = -124.5m;
         public const decimal frontierUpperRightLat = 47.0m;
         public const decimal frontierUpperRightLong = -116.5m;
-        private const int viewRadius = 10;
-
         public static decimal FrontierInterval => frontierInterval;
-
-        public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
-        public static Player Player { get; set; }
 
         // Calculated constants
         public const decimal GridHeight = ((frontierUpperRightLat - frontierLowerLeftLat) / frontierInterval);
         public const decimal GridWidth = ((frontierUpperRightLong - frontierLowerLeftLong) / frontierInterval);
+
+        // Defines how many cells around the target cell to load when using LoadProximalCells
+        private const int viewRadius = 10;
+
+        // GAMEPLAY CONSTANTS
+        public const int maxHoldStrength = 1000;
+
+        public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
+        public static Player Player { get; set; }
 
         public static void Logout()
         {

@@ -44,7 +44,6 @@ namespace MobileTag
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
 
-        //ConcurrentDictionary<int, MapOverlay> Overlays = new ConcurrentDictionary<int, MapOverlay>();
         ConcurrentDictionary<int, MapOverlay> OverlaysToDraw = new ConcurrentDictionary<int, MapOverlay>();
 
         protected async override void OnCreate(Bundle savedInstanceState)
@@ -423,7 +422,7 @@ namespace MobileTag
         {
             RunOnUiThread(() =>
             {
-                updatedCell.MapOverlay.SetTeam(updatedCell.TeamID);
+                updatedCell.MapOverlay.UpdateColor(updatedCell.HoldStrength, updatedCell.TeamID);
 
                 if (!updatedCell.MapOverlay.IsOnMap)
                 {

@@ -25,13 +25,26 @@ namespace MobileTag.Models
                 teamID = value;
 
                 if (MapOverlay != null)
-                    MapOverlay.SetTeam(teamID);
+                    MapOverlay.UpdateColor(holdStrength, teamID);
             }
         }
 
         public MapOverlay MapOverlay { get; set; }
 
-        public int HoldStrength { get { return HoldStrength; } set { holdStrength = value; } }
+        public int HoldStrength
+        {
+            get
+            {
+                return holdStrength;
+            }
+            set
+            {
+                holdStrength = value;
+
+                if (MapOverlay != null)
+                    MapOverlay.UpdateColor(holdStrength, teamID);
+            }
+        }
 
         public bool AreEqual(Cell obj1, Cell obj2)
         {
@@ -45,16 +58,18 @@ namespace MobileTag.Models
             Latitude = Math.Floor(lat / GameModel.frontierInterval) * GameModel.frontierInterval;
             Longitude = Math.Floor(lng / GameModel.frontierInterval) * GameModel.frontierInterval;
             TeamID = 0;
+            HoldStrength = 0;
             MapOverlay = new MapOverlay(this);
         }
 
         [JsonConstructor]
-        public Cell(int id, decimal latitude, decimal longitude, int teamID)
+        public Cell(int id, decimal latitude, decimal longitude, int teamID, int holdStrength = 0)
         {
             ID = id;
             Latitude = latitude;
             Longitude = longitude;
             TeamID = teamID;
+            HoldStrength = holdStrength;
             MapOverlay = new MapOverlay(this);
         }
 
@@ -64,6 +79,7 @@ namespace MobileTag.Models
             Latitude = GameModel.frontierLowerLeftLat + (id / GameModel.GridWidth * GameModel.frontierInterval);
             Longitude = GameModel.frontierLowerLeftLong + (id % GameModel.GridWidth * GameModel.frontierInterval);
             TeamID = 0;
+            HoldStrength = 0;
             MapOverlay = new MapOverlay(this);
         }
 
@@ -74,10 +90,25 @@ namespace MobileTag.Models
             nearestLatInterval = (Math.Floor((lat - GameModel.frontierLowerLeftLat) / GameModel.frontierInterval) * GameModel.frontierInterval);
             nearestLongInterval = (Math.Floor((lng - GameModel.frontierLowerLeftLong) / GameModel.frontierInterval) * GameModel.frontierInterval);
 
-            int id = Convert.ToInt32((nearestLongInterval / GameModel.frontierInterval) + (nearestLatInterval / GameModel.frontierInterval)
-                * GameModel.GridWidth);
+            int id = 0;
+
+            if (IsInFrontier(lat, lng))
+            {
+                id = Convert.ToInt32((nearestLongInterval / GameModel.frontierInterval) + (nearestLatInterval / GameModel.frontierInterval)
+                    * GameModel.GridWidth);
+            }
 
             return id;
+        }
+
+        public static bool IsInFrontier(decimal lat, decimal lng)
+        {
+            return (lat >= GameModel.frontierLowerLeftLat && lat <= GameModel.frontierUpperRightLat && lng >= GameModel.frontierLowerLeftLong && lng <= GameModel.frontierUpperRightLong);
+        }
+
+        public static bool IsInFrontier(LatLng latLng)
+        {
+            return IsInFrontier((decimal)latLng.Latitude, (decimal)latLng.Longitude);
         }
 
         public static int FindID(LatLng latLng)
