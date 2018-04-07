@@ -44,6 +44,9 @@ namespace MobileTag
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
 
+        private System.Timers.Timer timer = new System.Timers.Timer();
+
+
         ConcurrentDictionary<int, MapOverlay> OverlaysToDraw = new ConcurrentDictionary<int, MapOverlay>();
 
         protected async override void OnCreate(Bundle savedInstanceState)
@@ -108,7 +111,10 @@ namespace MobileTag
 
             if (GameModel.CellsInView.ContainsKey(clickedCellID))
             {
-                GameModel.CellsInView[clickedCellID].MapOverlay.Click(this);
+                Cell cell = GameModel.CellsInView[clickedCellID];
+
+                if (cell.MapOverlay.IsOnMap)
+                    cell.MapOverlay.Click(this);
             }
         }
 
@@ -339,7 +345,8 @@ namespace MobileTag
         {
             statusText.Text = status;
 
-            System.Timers.Timer timer = new System.Timers.Timer(length);
+            timer.Stop();
+            timer = new System.Timers.Timer(length);
             timer.AutoReset = false;
 
             timer.Elapsed += (o, e) => {
@@ -352,7 +359,10 @@ namespace MobileTag
 
         private void ClearStatus()
         {
-            statusText.Text = "";
+            if (timer.Enabled == false)
+            {
+                statusText.Text = "";
+            }
         }
 
         private void CenterMapCameraOnLocation()
