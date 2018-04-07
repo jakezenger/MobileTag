@@ -436,9 +436,12 @@ namespace MobileTag
                     if (!cell.MapOverlay.IsOnMap)
                         cell.MapOverlay.Draw(mMap);
 
-                    var tagTask = cell.Tag();              
-                    GameModel.AddCurrency();
-                    await tagTask;
+                    if (cell.TeamID != GameModel.Player.Team.ID)
+                    {
+                        var tagTask = cell.Tag();
+                        GameModel.AddCurrency();
+                        await tagTask;
+                    }
                 }
                 catch (AggregateException exc)
                 {
