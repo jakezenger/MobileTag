@@ -73,6 +73,10 @@ namespace MobileTag.SharedCode
             }
 
             byte alpha = Convert.ToByte((int)(((float)holdStrength / GameModel.maxHoldStrength) * 255));
+
+            if (alpha > 255)
+                alpha = 255;
+
             Color overlayColor = ColorCode.TeamColor(teamID);
             overlayColor.A = alpha;
 

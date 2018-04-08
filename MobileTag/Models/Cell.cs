@@ -39,7 +39,10 @@ namespace MobileTag.Models
             }
             set
             {
-                holdStrength = value;
+                if (value <= GameModel.maxHoldStrength)
+                    holdStrength = value;
+                else
+                    holdStrength = GameModel.maxHoldStrength;
 
                 if (MapOverlay != null)
                     MapOverlay.UpdateColor(holdStrength, teamID);
@@ -128,9 +131,16 @@ namespace MobileTag.Models
 
         public async Task Tag()
         {
-            TeamID = GameModel.Player.Team.ID;
+            if (TeamID == GameModel.Player.Team.ID)
+            {
+                HoldStrength += 100;
+            }
+            else
+            {
+                TeamID = GameModel.Player.Team.ID;
 
-            HoldStrength = 500; // FOR TESTING PURPOSES
+                HoldStrength = 500;
+            }
 
             await Database.UpdateCell(this, TeamID);
             await BroadcastCellUpdate();

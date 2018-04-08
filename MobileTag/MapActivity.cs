@@ -399,11 +399,6 @@ namespace MobileTag
             if (locationFound == true)
             {
                 CenterMapCameraOnLocation();
-                
-                if (GameModel.CellsInView.ContainsKey(GameModel.Player.CurrentCellID))
-                {
-                    GameModel.CellsInView[GameModel.Player.CurrentCellID].HoldStrength += 100;
-                }
             }
             else
             {
