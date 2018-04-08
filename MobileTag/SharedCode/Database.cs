@@ -223,6 +223,7 @@ namespace MobileTag
                 cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
                 cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = cell.Latitude;
                 cmd.Parameters.Add("@lng", SqlDbType.Decimal).Value = cell.Longitude;
+                cmd.Parameters.Add("@holdStrength", SqlDbType.Int).Value = cell.HoldStrength;
 
                 reader = await cmd.ExecuteReaderAsync();
 

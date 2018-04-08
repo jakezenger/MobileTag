@@ -132,8 +132,7 @@ namespace MobileTag
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
                 locMgr = GetSystemService(Context.LocationService) as LocationManager;
-                locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
-                locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
+                RequestLocationUpdates();
             }
             if (CellHub.Connection.State != ConnectionState.Connected && CellHub.Connection.State != ConnectionState.Connecting)
             {
@@ -152,13 +151,23 @@ namespace MobileTag
             }
         }
 
+        private void RequestLocationUpdates()
+        {
+            if (locMgr != null)
+            {
+                locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 2, this);
+                locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 2, this);
+            }
+        }
+
         protected override void OnPause()
         {
             base.OnPause();
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
-                locMgr.RemoveUpdates(this);
+                if (locMgr != null)
+                    locMgr.RemoveUpdates(this);
             }
 
             CellHub.Connection.Stop();
@@ -338,6 +347,8 @@ namespace MobileTag
             provider = locMgr.GetBestProvider(locationCriteria, true);
             lastKnownLocation = locMgr.GetLastKnownLocation(provider);
 
+            RequestLocationUpdates();
+
             if (lastKnownLocation == null)
             {
                 System.Diagnostics.Debug.WriteLine("Couldn't find location");
@@ -388,6 +399,11 @@ namespace MobileTag
             if (locationFound == true)
             {
                 CenterMapCameraOnLocation();
+                
+                if (GameModel.CellsInView.ContainsKey(GameModel.Player.CurrentCellID))
+                {
+                    GameModel.CellsInView[GameModel.Player.CurrentCellID].HoldStrength += 100;
+                }
             }
             else
             {
