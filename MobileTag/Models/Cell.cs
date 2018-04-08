@@ -130,6 +130,8 @@ namespace MobileTag.Models
         {
             TeamID = GameModel.Player.Team.ID;
 
+            HoldStrength = 500; // FOR TESTING PURPOSES
+
             await Database.UpdateCell(this, TeamID);
             await BroadcastCellUpdate();
         }
