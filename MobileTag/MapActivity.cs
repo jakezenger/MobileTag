@@ -186,16 +186,17 @@ namespace MobileTag
 
                     if (GameModel.CellsInView.ContainsKey(updatedCell.ID))
                     {
-                        // Set updateCell's MapOverlay to existing MapOverlay
+                        // Set updateCell's MapOverlay to existing MapOverlay so we don't lose that reference and draw on top of the lost overlay
                         updatedCell.MapOverlay = GameModel.CellsInView[updatedCell.ID].MapOverlay;
+
                         GameModel.CellsInView[updatedCell.ID] = updatedCell;
-                        UpdateOverlay(updatedCell);
                     }
                     else
                     {
                         GameModel.CellsInView.TryAdd(updatedCell.ID, updatedCell);
-                        UpdateOverlay(updatedCell);
                     }
+
+                    UpdateOverlay(updatedCell);
                 });
 
                 await CellHub.Connection.Start();
