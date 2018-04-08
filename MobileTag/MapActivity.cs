@@ -248,11 +248,12 @@ namespace MobileTag
         {
             DisplayStatus("Loading new cells...");
 
-            await GameModel.LoadProximalCells(initialCameraLatLng);
-
-            await Task.Run(() =>
+            
+            await Task.Run(async () =>
             {
-                foreach(Cell cell in GameModel.CellsInView.Values)
+                await GameModel.LoadProximalCells(initialCameraLatLng);
+
+                foreach (Cell cell in GameModel.CellsInView.Values)
                 {
                     if (cell.TeamID != 0 && !cell.MapOverlay.IsOnMap)
                     {

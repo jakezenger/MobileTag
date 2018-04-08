@@ -73,6 +73,13 @@ namespace MobileTag.Models
                         CellsInView.TryAdd(cell.ID, cell);
                         NewSubscriptions.Add(cell.ID);
                     }
+                    else
+                    {
+                        if (CellsInView[cell.ID].TeamID != cell.TeamID)
+                        {
+                            CellsInView[cell.ID] = cell;
+                        }
+                    }
                 }
             });
 
