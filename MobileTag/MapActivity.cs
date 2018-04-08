@@ -48,7 +48,7 @@ namespace MobileTag
 
 
         ConcurrentDictionary<int, MapOverlay> OverlaysToDraw = new ConcurrentDictionary<int, MapOverlay>();
-        ConcurrentDictionary<int, MapOverlay> Overlays = new ConcurrentDictionary<int, MapOverlay>();
+        // ConcurrentDictionary<int, MapOverlay> Overlays = new ConcurrentDictionary<int, MapOverlay>();
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
@@ -144,6 +144,7 @@ namespace MobileTag
                     // Refresh stale cell data
                     mMap.Clear();
                     OverlaysToDraw.Clear();
+                    //Overlays.Clear();
                     GameModel.CellsInView.Clear();
 
                     await DrawCellsInView();
@@ -183,10 +184,18 @@ namespace MobileTag
                     // Handle SignalR cell update notification
                     Console.WriteLine("Cell {0} updated!", updatedCell.ID);
 
-                    // Set updateCell's MapOverlay to existing MapOverlay
-                    updatedCell.MapOverlay = GameModel.CellsInView[updatedCell.ID].MapOverlay;
-                    GameModel.CellsInView[updatedCell.ID] = updatedCell;
-                    UpdateOverlay(updatedCell);
+                    if (GameModel.CellsInView.ContainsKey(updatedCell.ID))
+                    {
+                        // Set updateCell's MapOverlay to existing MapOverlay
+                        updatedCell.MapOverlay = GameModel.CellsInView[updatedCell.ID].MapOverlay;
+                        GameModel.CellsInView[updatedCell.ID] = updatedCell;
+                        UpdateOverlay(updatedCell);
+                    }
+                    else
+                    {
+                        GameModel.CellsInView.TryAdd(updatedCell.ID, updatedCell);
+                        UpdateOverlay(updatedCell);
+                    }
                 });
 
                 await CellHub.Connection.Start();
@@ -251,28 +260,14 @@ namespace MobileTag
 
             await Task.Run(async () =>
             {
-                if (Overlays.IsEmpty)
-                {
-                    Overlays = await GameModel.LoadProximalCells(initialCameraLatLng);
+                // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
+                await GameModel.LoadProximalCells(initialCameraLatLng);
 
-                    foreach (MapOverlay overlay in Overlays.Values)
-                    {
-                        OverlaysToDraw.TryAdd(overlay.CellID, overlay);
-                    }
-                }
-                else
+                foreach (Cell cell in GameModel.CellsInView.Values)
                 {
-                    // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
-                    ConcurrentDictionary<int, MapOverlay> temp = await GameModel.LoadProximalCells(initialCameraLatLng);
-
-                    foreach (MapOverlay mOverlay in temp.Values)
+                    if (cell.TeamID > 0 && !cell.MapOverlay.IsOnMap)
                     {
-                        if (!Overlays.Keys.Contains(mOverlay.CellID))
-                        {
-                            // Add the new overlay to Overlays
-                            Overlays.TryAdd(mOverlay.CellID, mOverlay);
-                            OverlaysToDraw.TryAdd(mOverlay.CellID, mOverlay);
-                        }
+                        OverlaysToDraw.TryAdd(cell.MapOverlay.CellID, cell.MapOverlay);
                     }
                 }
             });
@@ -460,12 +455,12 @@ namespace MobileTag
 
         private async Task DrawOverlays()
         {
-            foreach (MapOverlay overlay in Overlays.Values)
+            foreach (Cell cell in GameModel.CellsInView.Values)
             {
-                if (OverlaysToDraw.ContainsKey(overlay.CellID))
+                if (OverlaysToDraw.ContainsKey(cell.MapOverlay.CellID))
                 {
-                    overlay.Draw(mMap);
-                    OverlaysToDraw.TryRemove(overlay.CellID, out MapOverlay value);
+                    cell.MapOverlay.Draw(mMap);
+                    OverlaysToDraw.TryRemove(cell.MapOverlay.CellID, out MapOverlay value);
                     await Task.Delay(40); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
                 }
             }
