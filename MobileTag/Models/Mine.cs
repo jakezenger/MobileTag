@@ -25,8 +25,8 @@ namespace MobileTag.Models
 
         public void Construct()
         {
-            throw new NotImplementedException();
             // Add mine to DB... and update UI?
+
         }
     }
 }
