@@ -244,6 +244,41 @@ namespace MobileTag
             }
         }
 
+        public void PlantMinePrompt()
+        {
+            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
+            builder.SetCancelable(true);
+            builder.SetPositiveButton(Resource.String.yes, (e, o) => GameModel.Player.CreateMine());
+            builder.SetNegativeButton(Resource.String.no, (e, o) => { });
+            builder.SetTitle("Build a mine");
+            builder.SetMessage("Are you sure you want to build a mine here?");
+
+            builder.Show();
+        }
+
+        private async Task DrawCellsInView()
+        {
+            DisplayStatus("Loading new cells...");
+
+            await Task.Run(async () =>
+            {
+                // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
+                await GameModel.LoadProximalCells(initialCameraLatLng);
+
+                foreach (Cell cell in GameModel.CellsInView.Values)
+                {
+                    if (cell.TeamID > 0 && !cell.MapOverlay.IsOnMap)
+                    {
+                        OverlaysToDraw.TryAdd(cell.MapOverlay.CellID, cell.MapOverlay);
+                    }
+                }
+            });
+
+            await DrawOverlays();
+
+            ClearStatus();
+        }
+
         public void OnLocationChanged(Location location)
         {
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
