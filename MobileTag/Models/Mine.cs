@@ -22,11 +22,5 @@ namespace MobileTag.Models
             CellID = cellID;
             PlayerID = playerID;
         }
-
-        public void Construct()
-        {
-            // Add mine to DB... and update UI?
-
-        }
     }
 }
