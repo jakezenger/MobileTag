@@ -3455,6 +3455,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f09003e
 			public const int login_failed = 2131296318;
 			
+			// aapt resource value: 0x7f090047
+			public const int no = 2131296327;
+			
 			// aapt resource value: 0x7f090041
 			public const int ok = 2131296321;
 			
@@ -3487,6 +3490,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f09003f
 			public const int username_taken = 2131296319;
+			
+			// aapt resource value: 0x7f090046
+			public const int yes = 2131296326;
 			
 			static String()
 			{

@@ -112,10 +112,17 @@ namespace MobileTag
 
             if (GameModel.CellsInView.ContainsKey(clickedCellID))
             {
-                Cell cell = GameModel.CellsInView[clickedCellID];
+                if (clickedCellID == GameModel.Player.CurrentCellID && GameModel.Player.Team.ID == GameModel.CellsInView[clickedCellID].TeamID)
+                {
+                    PlantMinePrompt();
+                }
+                else
+                {
+                    Cell cell = GameModel.CellsInView[clickedCellID];
 
-                if (cell.MapOverlay.IsOnMap)
-                    cell.MapOverlay.Click(this);
+                    if (cell.MapOverlay.IsOnMap)
+                        cell.MapOverlay.Click(this);
+                }
             }
         }
 
@@ -262,6 +269,18 @@ namespace MobileTag
                     }
                 }
             }
+        }
+
+        public void PlantMinePrompt()
+        {
+            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
+            builder.SetCancelable(true);
+            builder.SetPositiveButton(Resource.String.yes, (e, o) => GameModel.Player.CreateMine());
+            builder.SetNegativeButton(Resource.String.no, (e, o) => { });
+            builder.SetTitle("Build a mine");
+            builder.SetMessage("Are you sure you want to build a mine here?");
+
+            builder.Show();
         }
 
         private async Task DrawCellsInView()
