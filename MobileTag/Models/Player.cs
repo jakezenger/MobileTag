@@ -44,7 +44,7 @@ namespace MobileTag.Models
         public Mine CreateMine()
         {
             Mine mine = new Mine(CurrentCellID, ID);
-            mine.Construct();
+            // TODO: Add mine to DB
             Mines.Add(mine);
 
             return mine;
