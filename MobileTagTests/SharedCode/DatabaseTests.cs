@@ -41,23 +41,24 @@ namespace MobileTag.Tests
         }
 
         [TestMethod()]
-        public void GetCellTest()
+        public async void GetCellTest()
         {
-            Cell comparisonCell = new Cell(0);
-            comparisonCell.Latitude = 44.677684000000000m;
-            comparisonCell.Longitude = 57.23257900000000m;
-            Cell TestCell = Database.GetCell(0);
+            decimal lat = 44.677684000000000m;
+            decimal lng = 57.23257900000000m;
+            Cell comparisonCell = new Cell(lat, lng);
+
+            Cell TestCell = await Database.GetCell(0);
 
             Assert.AreEqual(comparisonCell.Latitude, TestCell.Latitude);
             Assert.AreEqual(comparisonCell.Longitude, TestCell.Longitude);
         }
 
         [TestMethod()]
-        public void GetPlayerTest()
+        public async void GetPlayerTest()
         {
             Team team = new Team(2, "Green");
             Player testPlayer = new Player(1, "ethan", team, 0);
-            Player fromServer = Database.GetPlayer("ethan");
+            Player fromServer = await Database.GetPlayer("ethan");
 
             Assert.AreEqual(testPlayer.ID, fromServer.ID);
             Assert.AreEqual(testPlayer.Team.ID, fromServer.Team.ID);

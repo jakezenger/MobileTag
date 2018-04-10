@@ -17,7 +17,7 @@ using MobileTag.Models;
 
 namespace MobileTag
 {
-    [Activity(Label = "LoginActivity")]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class LoginActivity : Activity
     {
         private bool validUsername = false;
@@ -30,6 +30,9 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.Login);
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
 
             // Set up createAccountLink textview
             SpannableString createAccountPrompt = new SpannableString(GetString(Resource.String.create_account_prompt));
@@ -51,12 +54,12 @@ namespace MobileTag
             passwordField.TextChanged += PasswordField_TextChanged;
         }
 
-        private void SignInButton_Click(object sender, EventArgs e)
+        private async void SignInButton_Click(object sender, EventArgs e)
         {
             EditText usernameField = FindViewById<EditText>(Resource.Id.usernameField);
             EditText passwordField = FindViewById<EditText>(Resource.Id.passwordField);
 
-            if (Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
+            if (await Database.ValidateLoginCredentials(usernameField.Text.Trim(), passwordField.Text) == 1)
             {
                 // Save login information
                 string path = Application.Context.FilesDir.Path;
@@ -65,7 +68,7 @@ namespace MobileTag
                 System.IO.File.WriteAllText(filePath, usernameField.Text);
 
                 System.IO.File.WriteAllText(filePath2, passwordField.Text);
-                GameModel.Player = Database.GetPlayer(usernameField.Text.Trim());
+                GameModel.Player = await Database.GetPlayer(usernameField.Text.Trim());
                 Intent intent = new Intent(this, typeof(MapActivity));
                 StartActivity(intent);
             }

@@ -126,6 +126,7 @@
     <Compile Include="MapActivity.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\GameModel.cs" />
+    <Compile Include="Models\Mine.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="ProfileActivity.cs" />
@@ -135,7 +136,11 @@
     <Compile Include="SharedCode\ActivityLink.cs" />
     <Compile Include="SharedCode\ColorCode.cs" />
     <Compile Include="SharedCode\Database.cs" />
+    <Compile Include="SharedCode\EnemyOverlayClickHandler.cs" />
+    <Compile Include="SharedCode\IOverlayClickHandler.cs" />
     <Compile Include="SharedCode\MapOverlay.cs" />
+    <Compile Include="SharedCode\CellHub.cs" />
+    <Compile Include="SharedCode\FriendlyOverlayClickHandler.cs" />
     <Compile Include="SplashScreen.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -216,7 +221,42 @@
     <AndroidResource Include="Resources\menu\nav_menu.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\drawer_header.xml" />
+    <AndroidResource Include="Resources\layout\drawer_header.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\colors.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-hdpi\ic_account_circle_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-hdpi\ic_dehaze_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-mdpi\ic_account_circle_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-mdpi\ic_dehaze_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-xhdpi\ic_account_circle_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-xhdpi\ic_dehaze_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_account_circle_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_dehaze_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_account_circle_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_dehaze_white_24dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

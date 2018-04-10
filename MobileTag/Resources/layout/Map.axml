@@ -26,13 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".03"
-            android:background="#22bfb2"
-            android:text="Google Map Demo"
+            android:background="@color/primaryColor"
+            android:text=""
             android:textColor="#ffffff"
             android:gravity="center" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
+             android:background="@color/primaryColor"
             android:layout_height="80dp">
             <Button
                 android:id="@+id/claimButton"

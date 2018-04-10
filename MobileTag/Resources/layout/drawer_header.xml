@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="172dp">
-  <!--<ImageView
-      android:id="@+id/avatar"
-      android:layout_width="64dp"
-      android:layout_height="64dp"
-      android:layout_margin="@dimen/spacing_large"
-      android:elevation="4dp"
-      tools:src="@drawable/"/>-->
+    android:layout_height="178dp"
+    android:orientation="vertical"
+    android:background="@color/primaryColor"
+    android:paddingLeft="30dp">
+  <ImageView
+      android:id="@+id/profileImageView"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:src="@mipmap/ic_account_circle_white_24dp"
+      android:layout_gravity="left|top"
+      android:layout_marginTop="55dp" />
   <TextView
+      android:id="@+id/nameTxt"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Android"
-      android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-  <TextView
-      android:id="@+id/email"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="android@oit.edu"
-      android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-</RelativeLayout>
+      android:textColor="@color/primaryLightColor"
+      android:textSize="14sp"
+      android:layout_marginTop="20dp"
+      android:textStyle="bold"
+      android:text="Username" />
+</LinearLayout>

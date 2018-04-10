@@ -18,21 +18,33 @@ namespace MobileTag.Models
         public int ID { get; }
         public Team Team { get; set; }
         public int CurrentCellID { get; set; }
+        public List<Mine> Mines { get; }
 
-        public Player(int id, string username, Team team, int currentCellID)
+        public Player(int id, string username, Team team, int currentCellID, List<Mine> mines)
         {
             ID = id;
             Team = team;
             CurrentCellID = currentCellID;
             Username = username;
+            Mines = mines;
         }
 
-        public Player(int id, string username, Team team, decimal lat, decimal lng)
+        public Player(int id, string username, Team team, decimal lat, decimal lng, List<Mine> mines)
         {
             ID = id;
             Team = team;
-            CurrentCellID = GameModel.GetCellID(lat, lng);
+            CurrentCellID = Cell.FindID(lat, lng);
             Username = username;
+            Mines = mines;
+        }
+
+        public Mine CreateMine()
+        {
+            Mine mine = new Mine(CurrentCellID, ID);
+            mine.Construct();
+            Mines.Add(mine);
+
+            return mine;
         }
     }
 }
