@@ -438,14 +438,14 @@ namespace MobileTag
 
                     if (cell.TeamID != GameModel.Player.Team.ID)
                     {
-                        var tagTask = cell.Tag();
-                        GameModel.AddCurrency();
-                        await tagTask;
+                        await GameModel.AddCurrency();
                     }
 
-                   // GameModel.Player.Wallet.AddConfinium(1000);
-                    //await Database.UpdatePlayerWallet(GameModel.Player.ID, GameModel.Player.Wallet.Confinium);
-                    
+                    await cell.Tag(); 
+
+                   //GameModel.Player.Wallet.AddConfinium(1000);
+                   //await Database.UpdatePlayerWallet(GameModel.Player.ID, GameModel.Player.Wallet.Confinium);
+
                 }
                 catch (AggregateException exc)
                 {

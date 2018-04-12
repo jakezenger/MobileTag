@@ -144,7 +144,7 @@ namespace MobileTag
                     teamID = (int)reader["TeamID"];
                     teamName = (string)reader["TeamName"];
                     cellID = 0; //(int)reader["CellID"];
-                    playerWallet.Confinium = (int)reader["Currancy"];
+                    playerWallet.Confinium = (int)reader["Currency"];
                 }
                 reader.Close();
             };

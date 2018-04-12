@@ -28,8 +28,7 @@ namespace MobileTag.Models
         public const decimal frontierUpperRightLong = -116.5m;
         public static decimal FrontierInterval => frontierInterval;
 
-        public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
-        public static Player Player { get; set; }
+      
 
         // Calculated constants
         public const decimal GridHeight = ((frontierUpperRightLat - frontierLowerLeftLat) / frontierInterval);
@@ -127,10 +126,11 @@ namespace MobileTag.Models
             return frontierDict;
         }
 
-        internal async static void AddCurrency()
+        internal async static Task AddCurrency()
         {
             //TODO: Send currency to database
-            bool successfulDeposit = await Database.UpdatePlayerWallet(Player.ID, DEFAULT_TAG_AMOUNT);
+            int moneyToDeposit = Player.Wallet.Confinium + DEFAULT_TAG_AMOUNT;
+            bool successfulDeposit = await Database.UpdatePlayerWallet(Player.ID, moneyToDeposit);
             if (successfulDeposit == true)
             {
                 //If database successful, update client player account
