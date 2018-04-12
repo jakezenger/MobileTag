@@ -127,10 +127,11 @@ namespace MobileTag.Models
             return frontierDict;
         }
 
-        internal static void AddCurrency()
+        internal async static void AddCurrency()
         {
             //TODO: Send currency to database
-            if (Database.UpdatePlayerWallet(Player.ID, DEFAULT_TAG_AMOUNT))
+            bool successfulDeposit = await Database.UpdatePlayerWallet(Player.ID, DEFAULT_TAG_AMOUNT);
+            if (successfulDeposit == true)
             {
                 //If database successful, update client player account
                  Player.Wallet.AddConfinium(DEFAULT_TAG_AMOUNT);

@@ -144,7 +144,7 @@ namespace MobileTag
                     teamID = (int)reader["TeamID"];
                     teamName = (string)reader["TeamName"];
                     cellID = 0; //(int)reader["CellID"];
-                    playerWallet.Confinium = 12345;  //(int)reader["Confinium"];
+                    playerWallet.Confinium = (int)reader["Currancy"];
                 }
                 reader.Close();
             };
@@ -156,32 +156,40 @@ namespace MobileTag
             return player;
         }
 
-        public static bool UpdatePlayerWallet(int playerID, int confinium)
+        public async static Task<bool> UpdatePlayerWallet(int playerID, int confinium)
         {
-            return false;
-            
+
             //TODO: implement database call to update players currency
-            /*******Stored Procedure not yet implemented. Code below may need altering when database is updated.
+            //Stored Procedure not yet implemented. Code below may need altering when database is updated.
             try
             {
-                SqlConnection connection = new SqlConnection(CONNECTION_STRING);
-                SqlDataReader reader;
-                SqlCommand cmd = new SqlCommand("UpdateWallet", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@confinium", SqlDbType.Int).Value = confinium;
-
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
+                Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
                 {
+                    //SqlConnection connection = new SqlConnection(CONNECTION_STRING);
+                    SqlDataReader reader;
+                    SqlCommand cmd = new SqlCommand("UpdateWallet", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@amount", SqlDbType.Int).Value = confinium;
+                    cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
 
-                }
-                reader.Close();
+
+                    reader = await cmd.ExecuteReaderAsync();
+                    while (reader.Read())
+                    {
+
+                    }
+                    reader.Close();
+                    
+                };
+
+                await ExecuteQueryAsync(readerProcedure);
+                return true;
             }
             catch(Exception ex)
             {
                 Console.WriteLine("Failed to update currency: " + ex.ToString());
             }
-            */
+            return false;
            
         }
 
