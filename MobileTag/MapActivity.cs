@@ -130,7 +130,7 @@ namespace MobileTag
 
             if (GameModel.CellsInView.ContainsKey(clickedCellID))
             {
-                if (clickedCellID == GameModel.Player.CurrentCellID && GameModel.Player.Team.ID == GameModel.CellsInView[clickedCellID].TeamID)
+                if (clickedCellID == Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude) && GameModel.Player.Team.ID == GameModel.CellsInView[clickedCellID].TeamID)
                 {
                     PlantMinePrompt();
                 }
@@ -268,7 +268,6 @@ namespace MobileTag
                 if (location != null)
                 {
                     lastKnownLocation = location;
-                    GameModel.Player.CurrentCellID = Cell.FindID((decimal)location.Latitude, (decimal)location.Longitude);
                 }
             }
         }
@@ -364,7 +363,8 @@ namespace MobileTag
         {
             Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
-            builder.SetPositiveButton(Resource.String.yes, (e, o) => GameModel.Player.CreateMine());
+            builder.SetPositiveButton(Resource.String.yes, (e, o) =>
+                        GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude)));
             builder.SetNegativeButton(Resource.String.no, (e, o) => { });
             builder.SetTitle("Build a mine");
             builder.SetMessage("Are you sure you want to build a mine here?");
