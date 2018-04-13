@@ -9,18 +9,42 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using MobileTag.Models;
 
 namespace MobileTag
 {
-    [Activity(Label = "SettingsActivity")]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class SettingsActivity : Activity
     {
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            // Create your application here
             SetContentView(Resource.Layout.Settings);
+           
+            Button SaveButton = FindViewById<Button>(Resource.Id.Save_Button);
+            SaveButton.Click += SaveButton_Click;
+            // todo: make this checkbox do something other than display it was selected
+           
+            
+          
+            
         }
-    }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            Toast.MakeText(this, "TestSave", ToastLength.Long).Show();
+            CheckBox checkbox = FindViewById<CheckBox>(Resource.Id.CheckBox_MapStyleLight);
+            GameModel.MapStyle = checkbox.Checked ? Resource.Raw.StandardTheme : Resource.Raw.style_json;
+
+            this.Finish();
+            var intent = new Intent(this, typeof(MapActivity)).SetFlags(ActivityFlags.ClearTask);
+            StartActivity(intent);
+
+        }
+
+      };
+
+
+
 }

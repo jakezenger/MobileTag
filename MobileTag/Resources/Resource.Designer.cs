@@ -2369,6 +2369,12 @@ namespace MobileTag
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f0c00b9
+			public const int CheckBox_MapStyleLight = 2131493049;
+			
+			// aapt resource value: 0x7f0c00ba
+			public const int Save_Button = 2131493050;
+			
 			// aapt resource value: 0x7f0c009e
 			public const int action0 = 2131493022;
 			
@@ -2579,8 +2585,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0049
 			public const int @fixed = 2131492937;
 			
-			// aapt resource value: 0x7f0c00b9
-			public const int gifImageView = 2131493049;
+			// aapt resource value: 0x7f0c00bb
+			public const int gifImageView = 2131493051;
 			
 			// aapt resource value: 0x7f0c00b6
 			public const int gridLayout1 = 2131493046;
@@ -2645,8 +2651,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0096
 			public const int map = 2131493014;
 			
-			// aapt resource value: 0x7f0c00bb
-			public const int masked = 2131493051;
+			// aapt resource value: 0x7f0c00bd
+			public const int masked = 2131493053;
 			
 			// aapt resource value: 0x7f0c00a1
 			public const int media_actions = 2131493025;
@@ -2663,20 +2669,20 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0091
 			public const int nameTxt = 2131493009;
 			
+			// aapt resource value: 0x7f0c00c1
+			public const int nav_changeTeam = 2131493057;
+			
 			// aapt resource value: 0x7f0c00bf
-			public const int nav_changeTeam = 2131493055;
+			public const int nav_community = 2131493055;
 			
-			// aapt resource value: 0x7f0c00bd
-			public const int nav_community = 2131493053;
-			
-			// aapt resource value: 0x7f0c00c0
-			public const int nav_logout = 2131493056;
-			
-			// aapt resource value: 0x7f0c00bc
-			public const int nav_profile = 2131493052;
+			// aapt resource value: 0x7f0c00c2
+			public const int nav_logout = 2131493058;
 			
 			// aapt resource value: 0x7f0c00be
-			public const int nav_settings = 2131493054;
+			public const int nav_profile = 2131493054;
+			
+			// aapt resource value: 0x7f0c00c0
+			public const int nav_settings = 2131493056;
 			
 			// aapt resource value: 0x7f0c009a
 			public const int nav_view = 2131493018;
@@ -2936,8 +2942,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c000e
 			public const int view_offset_helper = 2131492878;
 			
-			// aapt resource value: 0x7f0c00ba
-			public const int visible = 2131493050;
+			// aapt resource value: 0x7f0c00bc
+			public const int visible = 2131493052;
 			
 			// aapt resource value: 0x7f0c0018
 			public const int wide = 2131492888;
@@ -3263,7 +3269,10 @@ namespace MobileTag
 		{
 			
 			// aapt resource value: 0x7f070000
-			public const int style_json = 2131165184;
+			public const int StandardTheme = 2131165184;
+			
+			// aapt resource value: 0x7f070001
+			public const int style_json = 2131165185;
 			
 			static Raw()
 			{
