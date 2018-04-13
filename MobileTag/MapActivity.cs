@@ -437,10 +437,6 @@ namespace MobileTag
                     }
 
                     await cell.Tag(); 
-
-                   //GameModel.Player.Wallet.AddConfinium(1000);
-                   //await Database.UpdatePlayerWallet(GameModel.Player.ID, GameModel.Player.Wallet.Confinium);
-
                 }
                 catch (AggregateException exc)
                 {
