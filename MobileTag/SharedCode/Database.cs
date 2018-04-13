@@ -93,7 +93,7 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);
         }
 
-        public async static Task<Player> GetMines(int playerID)
+        public async static Task<List<Mine>> GetMines(int playerID)
         {
             List<Mine> mines = new List<Mine>();
 
@@ -107,17 +107,16 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    
-                    Mine mine = new Mine()
+                    int cellID = (int)reader["CellID"];
+                    Mine mine = new Mine(playerID, cellID);
+                    mines.Add(mine);
                 }
                 reader.Close();
             };
 
             await ExecuteQueryAsync(readerProcedure);
 
-            Team team = new Team(teamID, teamName);
-            Player player = new Player(playerID, username, team, cellID);
-            return player;
+            return mines;
         }
 
         public async static Task<int> ValidateLoginCredentials(string username, string password)
@@ -191,6 +190,7 @@ namespace MobileTag
                     teamID = (int)reader["TeamID"];
                     teamName = (string)reader["TeamName"];
                     cellID = 0; //(int)reader["CellID"];
+                    mines = await GetMines(playerID);
                 }
                 reader.Close();
             };
