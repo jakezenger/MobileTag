@@ -72,6 +72,54 @@ namespace MobileTag
             return available;
         }
 
+        public async static Task AddMine(int playerID, int cellID)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("AddMine", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
+        public async static Task<Player> GetMines(int playerID)
+        {
+            List<Mine> mines = new List<Mine>();
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetMines", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    
+                    Mine mine = new Mine()
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            Team team = new Team(teamID, teamName);
+            Player player = new Player(playerID, username, team, cellID);
+            return player;
+        }
+
         public async static Task<int> ValidateLoginCredentials(string username, string password)
         {
             int userValidity = 0;
@@ -183,7 +231,6 @@ namespace MobileTag
             Cell cell = new Cell(cellID, lat, lng, teamID);
             return cell;
         }
-
 
         public async static Task<List<Cell>> GetAllCells()
         {
