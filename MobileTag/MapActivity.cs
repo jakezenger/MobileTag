@@ -48,7 +48,6 @@ namespace MobileTag
 
 
         ConcurrentDictionary<int, MapOverlay> OverlaysToDraw = new ConcurrentDictionary<int, MapOverlay>();
-        // ConcurrentDictionary<int, MapOverlay> Overlays = new ConcurrentDictionary<int, MapOverlay>();
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
@@ -120,7 +119,7 @@ namespace MobileTag
         public void OnMapReady(GoogleMap googleMap)
         {
             // Example code for map style: https://developers.google.com/maps/documentation/android-api/styling
-            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, Resource.Raw.style_json));
+            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, GameModel.MapStyle));
             mMap = googleMap;
             mMap.UiSettings.ZoomControlsEnabled = true;
             mMap.SetOnCameraIdleListener(this);
@@ -226,16 +225,6 @@ namespace MobileTag
                 locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 2, this);
                 locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 2, this);
             }
-        }
-
-        public void OnMapReady(GoogleMap googleMap)
-        {
-            // Example code for map style: https://developers.google.com/maps/documentation/android-api/styling
-            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, GameModel.MapStyle));
-            mMap = googleMap;
-            mMap.UiSettings.ZoomControlsEnabled = true;
-            mMap.SetOnCameraIdleListener(this);
-            mMap.MapClick += MMap_MapClick;
         }
         
         private void GetLocation()
