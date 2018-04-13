@@ -458,7 +458,7 @@ namespace MobileTag
 
             await Task.Run(async () =>
             {
-                // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
+                // We want to add newly created overlays while retaining all previously existing Polygon references in CellsInView
                 await GameModel.LoadProximalCells(initialCameraLatLng);
 
                 foreach (Cell cell in GameModel.CellsInView.Values)
