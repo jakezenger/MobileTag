@@ -28,6 +28,8 @@ namespace MobileTag.Models
         public const decimal frontierUpperRightLong = -116.5m;
         public static decimal FrontierInterval => frontierInterval;
 
+      
+
         // Calculated constants
         public const decimal GridHeight = ((frontierUpperRightLat - frontierLowerLeftLat) / frontierInterval);
         public const decimal GridWidth = ((frontierUpperRightLong - frontierLowerLeftLong) / frontierInterval);
@@ -40,7 +42,7 @@ namespace MobileTag.Models
 
         public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
         public static Player Player { get; set; }
-
+        private const int DEFAULT_TAG_AMOUNT = 100;
         public static void Logout()
         {
             string path = Application.Context.FilesDir.Path;
@@ -62,7 +64,7 @@ namespace MobileTag.Models
         public async static Task LoadProximalCells(LatLng targetLatLng)
         {
             int targetCellID = Cell.FindID((decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
-            var ProximalCells = await RetrieveProximalCells(targetLatLng);
+            var ProximalCells = await Database.GetProxyCells(viewRadius, frontierInterval, (decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
             var NewSubscriptions = new HashSet<int>();
 
             await Task.Run(() =>
@@ -96,32 +98,17 @@ namespace MobileTag.Models
             }
         }
 
-        private async static Task<ConcurrentDictionary<int, Cell>> RetrieveProximalCells(LatLng targetLatLng)
+        internal async static Task AddCurrency()
         {
-            int playerCellID = Cell.FindID((decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
-            ConcurrentDictionary<int, Cell> frontierDict = await Database.GetProxyCells(viewRadius, frontierInterval, (decimal)targetLatLng.Latitude, (decimal)targetLatLng.Longitude);
-
-            //await Task.Run(() =>
-            //{
-            //    for (int row = -viewRadius; row <= viewRadius; row++)
-            //    {
-            //        for (int col = -viewRadius; col <= viewRadius; col++)
-            //        {
-            //            int cellID = (int)(playerCellID + (row * GridWidth) + col);
-
-            //            if (!CellsInView.ContainsKey(cellID) && !frontierDict.ContainsKey(cellID))
-            //            {
-            //                decimal cellLat = Math.Floor((decimal)targetLatLng.Latitude / frontierInterval) * frontierInterval + (row * frontierInterval);
-            //                decimal cellLng = Math.Floor((decimal)targetLatLng.Longitude / frontierInterval) * frontierInterval + (col * frontierInterval);
-            //                Cell cell = new Cell(cellLat, cellLng);
-
-            //                frontierDict.TryAdd(cellID, cell);
-            //            }
-            //        }
-            //    }
-            //});
-
-            return frontierDict;
+            //TODO: Send currency to database
+            int moneyToDeposit = Player.Wallet.Confinium + DEFAULT_TAG_AMOUNT;
+            bool successfulDeposit = await Database.UpdatePlayerWallet(Player.ID, moneyToDeposit);
+            if (successfulDeposit == true)
+            {
+                //If database successful, update client player account
+                 Player.Wallet.AddConfinium(DEFAULT_TAG_AMOUNT);
+            }
+            
         }
     }
 }

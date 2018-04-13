@@ -57,7 +57,10 @@ namespace MobileTag.Tests
         public async void GetPlayerTest()
         {
             Team team = new Team(2, "Green");
-            Player testPlayer = new Player(1, "ethan", team, 0, new List<Mine>());
+            Wallet wallet = new Wallet();
+            wallet.Confinium = 10000;
+
+            Player testPlayer = new Player(1, "ethan", team, 0, new List<Mine>() ,wallet);
             Player fromServer = await Database.GetPlayer("ethan");
 
             Assert.AreEqual(testPlayer.ID, fromServer.ID);

@@ -12,4 +12,6 @@
   <string name="here">here.</string>
   <string name="statistics">Statistics</string>
   <string name="cells_claimed">Cells claimed:</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
 </resources>
