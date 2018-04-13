@@ -171,16 +171,16 @@ namespace MobileTag
             if (CellHub.Connection.State != ConnectionState.Connected && CellHub.Connection.State != ConnectionState.Connecting)
             {
                 await CellHub.Connection.Start();
+            }
 
-                if (initialCameraLatLng != null)
-                {
-                    // Refresh stale cell data
-                    mMap.Clear();
-                    OverlaysToDraw.Clear();
-                    GameModel.CellsInView.Clear();
+            if (initialCameraLatLng != null)
+            {
+                // Refresh stale cell data
+                mMap.Clear();
+                OverlaysToDraw.Clear();
+                GameModel.CellsInView.Clear();
 
-                    await DrawCellsInView();
-                }
+                await DrawCellsInView();
             }
         }
 
