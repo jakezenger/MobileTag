@@ -97,6 +97,9 @@ namespace MobileTag
                         GameModel.Logout();
                         StartActivity(new Intent(this, typeof(LoginActivity)));
                         break;
+                    case Resource.Id.nav_settings:
+                        StartActivity(new Intent(this, typeof(SettingsActivity)));
+                        break;
                     default:
                         break;
                 }
@@ -225,6 +228,16 @@ namespace MobileTag
             }
         }
 
+        public void OnMapReady(GoogleMap googleMap)
+        {
+            // Example code for map style: https://developers.google.com/maps/documentation/android-api/styling
+            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, GameModel.MapStyle));
+            mMap = googleMap;
+            mMap.UiSettings.ZoomControlsEnabled = true;
+            mMap.SetOnCameraIdleListener(this);
+            mMap.MapClick += MMap_MapClick;
+        }
+        
         private void GetLocation()
         {
             locMgr = GetSystemService(Context.LocationService) as LocationManager;

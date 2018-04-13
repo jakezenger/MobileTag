@@ -171,6 +171,7 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\raw\style_json.json" />
+    <AndroidResource Include="Resources\raw\StandardTheme.json" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />

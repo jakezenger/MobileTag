@@ -36,6 +36,7 @@ namespace MobileTag.Models
 
         // Defines how many cells around the target cell to load when using LoadProximalCells
         private const int viewRadius = 10;
+        public static int MapStyle = Resource.Raw.style_json;
 
         // GAMEPLAY CONSTANTS
         public const int maxHoldStrength = 1000;
