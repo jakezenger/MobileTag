@@ -365,8 +365,8 @@ namespace MobileTag
         {
             Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
-            builder.SetPositiveButton(Resource.String.yes, (e, o) =>
-                        GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude)));
+            builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
+                        await GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude)));
             builder.SetNegativeButton(Resource.String.no, (e, o) => { });
             builder.SetTitle("Build a mine");
             builder.SetMessage("Are you sure you want to build a mine here?");
