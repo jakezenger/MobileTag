@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -41,10 +41,10 @@ namespace MobileTag.Models
             Mines = mines;
         }
 
-        public Mine CreateMine(int cellID)
+        public async Task<Mine> CreateMine(int cellID)
         {
             Mine mine = new Mine(cellID, ID);
-            // TODO: Add mine to DB
+            await Database.AddMine(GameModel.Player.ID, cellID);
             Mines.Add(mine);
 
             return mine;

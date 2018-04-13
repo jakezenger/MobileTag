@@ -121,6 +121,53 @@ namespace MobileTag
             return teamID;
         }
 
+        public async static Task AddMine(int playerID, int cellID)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("AddMine", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
+        public async static Task<List<Mine>> GetMines(int playerID)
+        {
+            List<Mine> mines = new List<Mine>();
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetMines", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    int cellID = (int)reader["CellID"];
+                    Mine mine = new Mine(playerID, cellID);
+                    mines.Add(mine);
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            return mines;
+        }
+
         public async static Task<Player> GetPlayer(string username)
         {
             int playerID = 0;
@@ -145,6 +192,7 @@ namespace MobileTag
                     teamName = (string)reader["TeamName"];
                     cellID = 0; //(int)reader["CellID"];
                     playerWallet.Confinium = (int)reader["Currency"];
+                    mines = await GetMines(playerID);
                 }
                 reader.Close();
             };
