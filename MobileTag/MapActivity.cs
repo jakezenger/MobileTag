@@ -374,6 +374,11 @@ namespace MobileTag
             builder.Show();
         }
 
+        public void DisplayCellInfo(int cellID)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DisplayStatus(string status)
         {
             statusText.Text = status;

@@ -18,6 +18,7 @@ namespace MobileTag.SharedCode
         public void HandleClickEvent(MapActivity mapActivity, Cell cell)
         {
             mapActivity.DisplayStatus(String.Format("Friendly cell! Cell ID: {0}", cell.ID), 3000);
+            //mapActivity.DisplayCellInfo(cell.ID);
         }
     }
 }
