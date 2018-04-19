@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CS0618 // Suppress warning: Type or member is obsolete
+
+using System;
 using Android.App;
 using Android.Content;
 using Android.OS;
