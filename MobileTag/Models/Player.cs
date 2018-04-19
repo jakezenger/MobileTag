@@ -44,7 +44,9 @@ namespace MobileTag.Models
         public async Task<Mine> CreateMine(int cellID)
         {
             Mine mine = new Mine(cellID, ID);
-            await Database.AddMine(GameModel.Player.ID, cellID);
+            await Database.AddMine(ID, cellID);
+            Wallet.SubtractConfinium(GameModel.MINE_BASE_PRICE);
+            await Database.UpdatePlayerWallet(ID, Wallet.Confinium);
             Mines.Add(mine);
 
             return mine;

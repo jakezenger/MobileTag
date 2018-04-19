@@ -44,6 +44,7 @@ namespace MobileTag.Models
         public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
         public static Player Player { get; set; }
         private const int DEFAULT_TAG_AMOUNT = 100;
+        public const int MINE_BASE_PRICE = 500;
         public static void Logout()
         {
             string path = Application.Context.FilesDir.Path;
