@@ -139,6 +139,8 @@ namespace MobileTag.Models
             {
                 TeamID = GameModel.Player.Team.ID;
 
+                await GameModel.Player.Wallet.AddConfinium(GameModel.DEFAULT_TAG_AMOUNT);
+
                 HoldStrength = 500;
             }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -16,19 +16,35 @@ namespace MobileTag.Models
     {
         public int Confinium { get; set; }
 
-        public void AddConfinium(int amountToAdd)
+        public async Task AddConfinium(int amountToAdd)
         {
-            Confinium = Confinium + amountToAdd;
+            int newConfiniumAmount = Confinium + amountToAdd;
+            bool successfulDeposit = await Database.UpdatePlayerWallet(GameModel.Player.ID, newConfiniumAmount);
+
+            if (successfulDeposit == true)
+            {
+                //If database successful, update client player account
+                Confinium = newConfiniumAmount;
+            }
         }
 
-        public bool SubtractConfinium(int amountToSubtract)
+        public async Task SubtractConfinium(int amountToSubtract)
         {
             if((Confinium - amountToSubtract) > 0)
             {
-                Confinium = Confinium - amountToSubtract;
-                return true;
+                int newConfiniumAmount = Confinium - amountToSubtract;
+                bool successfulDeposit = await Database.UpdatePlayerWallet(GameModel.Player.ID, newConfiniumAmount);
+
+                if (successfulDeposit == true)
+                {
+                    //If database successful, update client player account
+                    Confinium = newConfiniumAmount;
+                }
             }
-            return false;
+            else
+            {
+                // TODO: notify the user that they can't spend the amount they want to
+            }
         }
     }
 }

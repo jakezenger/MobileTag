@@ -45,8 +45,8 @@ namespace MobileTag.Models
         {
             Mine mine = new Mine(cellID, ID);
             await Database.AddMine(ID, cellID);
-            Wallet.SubtractConfinium(GameModel.MINE_BASE_PRICE);
-            await Database.UpdatePlayerWallet(ID, Wallet.Confinium);
+            await Wallet.SubtractConfinium(GameModel.MINE_BASE_PRICE);
+
             Mines.Add(mine);
 
             return mine;
