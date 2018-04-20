@@ -124,6 +124,7 @@
     <Compile Include="CreateAccountActivity.cs" />
     <Compile Include="LoginActivity.cs" />
     <Compile Include="MapActivity.cs" />
+    <Compile Include="Models\AntiMine.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\Mine.cs" />
