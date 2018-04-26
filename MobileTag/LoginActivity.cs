@@ -16,7 +16,7 @@ using Android.Text.Method;
 using MobileTag.Models;
 
 namespace MobileTag
-{
+{   
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class LoginActivity : Activity
     {

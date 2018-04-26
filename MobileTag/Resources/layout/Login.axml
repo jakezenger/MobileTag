@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
-  <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
     <LinearLayout
         android:orientation="vertical"
         android:minWidth="25px"
@@ -28,6 +28,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/usernameField"
         android:hint="username"
+        android:textColorHint="@color/primaryTextColor"
+        android:background="#d3d3d3"
         android:singleLine="true"
         android:layout_marginTop="23.0dp" />
     <EditText
@@ -35,14 +37,18 @@
         android:layout_width="278.5dp"
         android:layout_height="wrap_content"
         android:id="@+id/passwordField"
-        android:hint="password" />
+        android:hint="password"
+        android:textColorHint="@color/primaryTextColor"
+        android:background="#d3d3d3"
+        android:layout_marginTop="10.0dp"/>
     <Button
         android:text="Sign In"
         android:layout_width="138.0dp"
         android:layout_height="wrap_content"
         android:id="@+id/signInButton"
         android:layout_marginTop="30.0dp"
-        android:enabled="false" />
+        android:enabled="false"
+        android:background="#d3d3d3" />
     <TextView
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_width="match_parent"

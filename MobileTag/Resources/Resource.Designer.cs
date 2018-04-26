@@ -3501,6 +3501,9 @@ namespace MobileTag
 		public partial class Style
 		{
 			
+			// aapt resource value: 0x7f0d017b
+			public const int ActivityTheme = 2131558779;
+			
 			// aapt resource value: 0x7f0d009f
 			public const int AlertDialog_AppCompat = 2131558559;
 			
@@ -4383,11 +4386,11 @@ namespace MobileTag
 			// aapt resource value: 0x7f0d0116
 			public const int ThemeOverlay_AppCompat_Light = 2131558678;
 			
-			// aapt resource value: 0x7f0d017c
-			public const int Toolbar_TitleText = 2131558780;
+			// aapt resource value: 0x7f0d017d
+			public const int Toolbar_TitleText = 2131558781;
 			
-			// aapt resource value: 0x7f0d017b
-			public const int ToolbarTheme = 2131558779;
+			// aapt resource value: 0x7f0d017c
+			public const int ToolbarTheme = 2131558780;
 			
 			// aapt resource value: 0x7f0d0117
 			public const int Widget_AppCompat_ActionBar = 2131558679;
