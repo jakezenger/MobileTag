@@ -442,7 +442,7 @@ namespace MobileTag
 
                     if (cell.TeamID != GameModel.Player.Team.ID)
                     {
-                        await GameModel.AddCurrency();
+                        await GameModel.Player.Wallet.AddConfinium(GameModel.DEFAULT_TAG_AMOUNT);
                     }
 
                     await cell.Tag(); 
