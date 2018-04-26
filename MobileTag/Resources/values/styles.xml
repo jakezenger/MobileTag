@@ -4,12 +4,17 @@
   <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <!-- Customize your theme here. -->
     <item name="android:colorPrimary">@color/primaryColor</item>
-    <item name="android:textColorPrimary">@color/primaryColor</item>
-    <!--<item name="android:textColor">@color/primaryTextColor</item> -->
+    <item name="android:textColorPrimary">@color/primaryTextColor</item>
+    <!--<item name="android:background">@color/primaryColor</item> -->
+    <item name="android:textColor">@color/primaryTextColor</item>
     <!--<item name="android:actionMenuTextColor">@color/primaryTextColor</item> -->
     <item name="android:titleTextColor">@color/primaryTextColor</item>
-    <item name="android:actionMenuTextColor">@color/primaryColor</item>
-    <!-- <item name="android:titleTextAppearance">@color/primaryTextColor</item> -->
+    <!-- <item name="android:actionMenuTextColor">@color/primaryColor</item> -->
+    <item name="android:titleTextAppearance">@color/primaryTextColor</item>
+  </style>
+
+  <style name="ActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    
   </style>
 
   <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">

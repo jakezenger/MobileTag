@@ -28,6 +28,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/usernameField"
         android:hint="username"
+        android:textColorHint="@color/primaryTextColor"
+        android:background="#d3d3d3"
         android:singleLine="true"
         android:layout_marginTop="23.0dp" />
     <EditText
@@ -35,7 +37,10 @@
         android:layout_width="278.5dp"
         android:layout_height="wrap_content"
         android:id="@+id/passwordField"
-        android:hint="password" />
+        android:hint="password"
+        android:textColorHint="@color/primaryTextColor"
+        android:background="#d3d3d3"
+        android:layout_marginTop="10.0dp" />
     <Spinner
         android:layout_width="278.5dp"
         android:layout_height="wrap_content"
