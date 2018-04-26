@@ -368,7 +368,17 @@ namespace MobileTag
             Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
             builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
-                        await GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude)));
+            {
+                if (GameModel.Player.Wallet.Confinium >= GameModel.MINE_BASE_PRICE)
+                {
+                    await GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude));
+                }
+                else
+                {
+                    Toast.MakeText(this, "You don't have enough confinium in your wallet to purchase a mine.", ToastLength.Long).Show();
+                }
+            });
+
             builder.SetNegativeButton(Resource.String.no, (e, o) => { });
             builder.SetTitle("Build a mine");
             builder.SetMessage("Are you sure you want to build a mine here?");
