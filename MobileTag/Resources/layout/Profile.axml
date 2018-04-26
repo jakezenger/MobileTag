@@ -12,7 +12,8 @@
             android:layout_width="130.0dp"
             android:layout_height="130.0dp"
             android:id="@+id/profilePicImageView"
-            android:layout_marginLeft="15.0dp" />
+            android:layout_marginLeft="15.0dp"
+            android:clickable="true" />
         <TextView
             android:text="[username]"
             android:layout_width="wrap_content"

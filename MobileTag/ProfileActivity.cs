@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using MobileTag.Models;
 
+
 namespace MobileTag
 {
     [Activity(Label = "ProfileActivity")]
@@ -28,6 +29,20 @@ namespace MobileTag
 
             TextView teamNameTextView = FindViewById<TextView>(Resource.Id.teamNameTextView);
             teamNameTextView.Text = GameModel.Player.Team.TeamName;
+
+            TextView cellsClaimedTextView = FindViewById<TextView>(Resource.Id.cellsClaimedLabelTextView);
+
+            cellsClaimedTextView.Text = cellsClaimedTextView.Text + " To be Added";
+
+            ImageView myView = FindViewById<ImageView>(Resource.Id.profilePicImageView);
+
+            myView.Click += MyView_Click;
+        }
+
+        private void MyView_Click(object sender, EventArgs e)
+        {
+            Toast myToast = Toast.MakeText(this, "Clicked the Image", ToastLength.Long);
+            myToast.Show();
         }
     }
 }

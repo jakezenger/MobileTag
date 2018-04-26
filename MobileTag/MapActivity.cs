@@ -101,6 +101,9 @@ namespace MobileTag
                     case Resource.Id.nav_settings:
                         StartActivity(new Intent(this, typeof(SettingsActivity)));
                         break;
+                    case Resource.Id.nav_profile:
+                        StartActivity(new Intent(this, typeof(ProfileActivity)));
+                        break;
                     default:
                         break;
                 }
