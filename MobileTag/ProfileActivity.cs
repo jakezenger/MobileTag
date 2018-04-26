@@ -37,12 +37,21 @@ namespace MobileTag
             ImageView myView = FindViewById<ImageView>(Resource.Id.profilePicImageView);
 
             myView.Click += MyView_Click;
+            SetImage(myView);
         }
 
         private void MyView_Click(object sender, EventArgs e)
         {
             Toast myToast = Toast.MakeText(this, "Clicked the Image", ToastLength.Long);
             myToast.Show();
+        }
+
+        private void SetImage(ImageView myView)
+        {
+
+            // clip art came from https://free.clipartof.com
+            int resourceId = (int)typeof(Resource.Drawable).GetField(GameModel.Player.Team.TeamName).GetValue(null);
+            myView.SetImageResource(resourceId);
         }
     }
 }
