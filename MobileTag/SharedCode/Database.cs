@@ -299,7 +299,7 @@ namespace MobileTag
             return cellList;
         }
 
-        public async static Task UpdateCell(Cell cell, int teamID)
+        public async static Task UpdateCell(Cell cell)
         {
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -307,7 +307,7 @@ namespace MobileTag
                 SqlCommand cmd = new SqlCommand("UpdateCell", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cell.ID;
-                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = cell.TeamID;
                 cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = cell.Latitude;
                 cmd.Parameters.Add("@lng", SqlDbType.Decimal).Value = cell.Longitude;
                 cmd.Parameters.Add("@holdStrength", SqlDbType.Int).Value = cell.HoldStrength;

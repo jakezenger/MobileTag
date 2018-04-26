@@ -135,16 +135,23 @@ namespace MobileTag.Models
             {
                 HoldStrength += 100;
             }
-            else
+            else 
             {
-                TeamID = GameModel.Player.Team.ID;
+                if (HoldStrength >= 100)
+                {
+                    HoldStrength -= 100;
+                }
+                else
+                {
+                    TeamID = GameModel.Player.Team.ID;
 
-                await GameModel.Player.Wallet.AddConfinium(GameModel.DEFAULT_TAG_AMOUNT);
+                    await GameModel.Player.Wallet.AddConfinium(GameModel.DEFAULT_TAG_AMOUNT);
 
-                HoldStrength = 500;
+                    HoldStrength = 100;
+                }
             }
 
-            await Database.UpdateCell(this, TeamID);
+            await Database.UpdateCell(this);
             await BroadcastCellUpdate();
         }
 
