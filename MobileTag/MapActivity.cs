@@ -151,7 +151,9 @@ namespace MobileTag
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
         {
             TextView usernameHeader = FindViewById<TextView>(Resource.Id.nameTxt);
+            TextView userConfinium = FindViewById<TextView>(Resource.Id.confiniumTxt);
             usernameHeader.Text = GameModel.Player.Username;
+            userConfinium.Text = GameModel.Player.Wallet.Confinium.ToString();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
