@@ -182,13 +182,13 @@ namespace MobileTag
                 }
                 else
                 {
-                    Toast.MakeText(this, "You don't have enough confinium in your wallet to purchase an  AntiMine. ", ToastLength.Long).Show();
+                    Toast.MakeText(this, "You don't have enough confinium in your wallet to purchase an AntiMine. ", ToastLength.Long).Show();
                 }
             });
             
             builder.SetNegativeButton(Resource.String.no, (e, o) => { });
             builder.SetTitle("Plant Anti-Mine");
-            builder.SetMessage("Planting an anti-mine will drain the enemies hold strength. \n Do you wish to continue?");
+            builder.SetMessage("Planting an anti-mine will drain the enemy's hold strength. \n Do you wish to continue?");
             builder.Show();
         }
 

@@ -2384,16 +2384,11 @@ namespace MobileTag
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0c00ba
-			public const int CheckBox_MapStyleLight = 2131493050;
-
-			
 			// aapt resource value: 0x7f0c00bb
-			public const int Save_Button = 2131493051;
-
+			public const int CheckBox_MapStyleLight = 2131493051;
 			
-			// aapt resource value: 0x7f0c00bb
-			public const int Save_Button = 2131493051;
+			// aapt resource value: 0x7f0c00bc
+			public const int Save_Button = 2131493052;
 			
 			// aapt resource value: 0x7f0c009f
 			public const int action0 = 2131493023;
@@ -2488,8 +2483,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c00a0
 			public const int cancel_action = 2131493024;
 			
-			// aapt resource value: 0x7f0c00b9
-			public const int cellsClaimedLabelTextView = 2131493049;
+			// aapt resource value: 0x7f0c00ba
+			public const int cellsClaimedLabelTextView = 2131493050;
 			
 			// aapt resource value: 0x7f0c003a
 			public const int center = 2131492922;
@@ -2520,13 +2515,12 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f0c002f
 			public const int collapseActionView = 2131492911;
-
-			// aapt resource value: 0x7f0c00b6
-			public const int confiniumTextView = 2131493046;
-
+			
+			// aapt resource value: 0x7f0c00b7
+			public const int confiniumTextView = 2131493047;
+			
 			// aapt resource value: 0x7f0c0092
 			public const int confiniumTxt = 2131493010;
-
 			
 			// aapt resource value: 0x7f0c0058
 			public const int contentPanel = 2131492952;
@@ -2612,11 +2606,11 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0049
 			public const int @fixed = 2131492937;
 			
-			// aapt resource value: 0x7f0c00bc
-			public const int gifImageView = 2131493052;
+			// aapt resource value: 0x7f0c00bd
+			public const int gifImageView = 2131493053;
 			
-			// aapt resource value: 0x7f0c00b7
-			public const int gridLayout1 = 2131493047;
+			// aapt resource value: 0x7f0c00b8
+			public const int gridLayout1 = 2131493048;
 			
 			// aapt resource value: 0x7f0c0005
 			public const int home = 2131492869;
@@ -2678,8 +2672,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0097
 			public const int map = 2131493015;
 			
-			// aapt resource value: 0x7f0c00be
-			public const int masked = 2131493054;
+			// aapt resource value: 0x7f0c00bf
+			public const int masked = 2131493055;
 			
 			// aapt resource value: 0x7f0c00a2
 			public const int media_actions = 2131493026;
@@ -2696,20 +2690,20 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0091
 			public const int nameTxt = 2131493009;
 			
-			// aapt resource value: 0x7f0c00c2
-			public const int nav_changeTeam = 2131493058;
-			
-			// aapt resource value: 0x7f0c00c0
-			public const int nav_community = 2131493056;
-			
 			// aapt resource value: 0x7f0c00c3
-			public const int nav_logout = 2131493059;
-			
-			// aapt resource value: 0x7f0c00bf
-			public const int nav_profile = 2131493055;
+			public const int nav_changeTeam = 2131493059;
 			
 			// aapt resource value: 0x7f0c00c1
-			public const int nav_settings = 2131493057;
+			public const int nav_community = 2131493057;
+			
+			// aapt resource value: 0x7f0c00c4
+			public const int nav_logout = 2131493060;
+			
+			// aapt resource value: 0x7f0c00c0
+			public const int nav_profile = 2131493056;
+			
+			// aapt resource value: 0x7f0c00c2
+			public const int nav_settings = 2131493058;
 			
 			// aapt resource value: 0x7f0c009b
 			public const int nav_view = 2131493019;
@@ -2879,8 +2873,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0040
 			public const int start = 2131492928;
 			
-			// aapt resource value: 0x7f0c00b8
-			public const int statisticsTextView = 2131493048;
+			// aapt resource value: 0x7f0c00b9
+			public const int statisticsTextView = 2131493049;
 			
 			// aapt resource value: 0x7f0c00a1
 			public const int status_bar_latest_event_content = 2131493025;
@@ -2969,8 +2963,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c000e
 			public const int view_offset_helper = 2131492878;
 			
-			// aapt resource value: 0x7f0c00bd
-			public const int visible = 2131493053;
+			// aapt resource value: 0x7f0c00be
+			public const int visible = 2131493054;
 			
 			// aapt resource value: 0x7f0c0018
 			public const int wide = 2131492888;
