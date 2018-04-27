@@ -30,7 +30,7 @@ namespace MobileTag.Models
 
         public async Task SubtractConfinium(int amountToSubtract)
         {
-            if((Confinium - amountToSubtract) > 0)
+            if((Confinium - amountToSubtract) >= 0)
             {
                 int newConfiniumAmount = Confinium - amountToSubtract;
                 bool successfulDeposit = await Database.UpdatePlayerWallet(GameModel.Player.ID, newConfiniumAmount);
