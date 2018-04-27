@@ -20,8 +20,9 @@ namespace MobileTag.Models
         public int CurrentCellID { get; set; }
         public Wallet Wallet { get; set; }
         public List<Mine> Mines { get; }
+        public List<AntiMine> AntiMines { get; }
 
-        public Player(int id, string username, Team team, int currentCellID, List<Mine> mines, Wallet wallet)
+        public Player(int id, string username, Team team, int currentCellID, List<Mine> mines, List<AntiMine> aMines, Wallet wallet)
         {
             ID = id;
             Team = team;
@@ -29,9 +30,11 @@ namespace MobileTag.Models
             Username = username;
             Wallet = wallet;
             Mines = mines;
+            AntiMines = aMines;
+            //TODO: ADD ANTI MINES EVERYWHERE
         }
 
-        public Player(int id, string username, Team team, decimal lat, decimal lng, List<Mine> mines, Wallet wallet)
+        public Player(int id, string username, Team team, decimal lat, decimal lng, List<Mine> mines, List<AntiMine> aMines, Wallet wallet)
         {
             ID = id;
             Team = team;
@@ -39,6 +42,7 @@ namespace MobileTag.Models
             Username = username;
             Wallet = wallet;
             Mines = mines;
+            AntiMines = aMines;
         }
 
         public async Task<Mine> CreateMine(int cellID)
@@ -50,6 +54,17 @@ namespace MobileTag.Models
             Mines.Add(mine);
 
             return mine;
+        }
+
+        public async Task<AntiMine> CreateAntiMine(int cellID)
+        {
+            AntiMine aMine = new AntiMine(cellID, ID);
+            await Database.AddAntiMine(ID, cellID);
+            await Wallet.SubtractConfinium(GameModel.ANTI_MINE_BASE_PRICE);
+            await Database.UpdatePlayerWallet(ID, Wallet.Confinium);
+            AntiMines.Add(aMine);
+
+            return aMine;
         }
     }
 }

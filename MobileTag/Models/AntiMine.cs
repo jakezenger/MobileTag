@@ -14,9 +14,6 @@ namespace MobileTag.Models
 {
     public class AntiMine : Mine
     {
-        public AntiMine(int cellID, int playerID) : base(cellID, playerID)
-        {
-
-        }
+        public AntiMine(int cellID, int playerID) : base(cellID, playerID) { }
     }
 }

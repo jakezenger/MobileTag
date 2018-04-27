@@ -29,6 +29,7 @@ namespace MobileTag
         private const double CELL_LOAD_RADIUS = .0006;
         private const int ZOOM_LEVEL_LOAD = 15;
         private GoogleMap mMap;
+        public GoogleMap Map => mMap;
         private float currentZoomLevel = 0.0F;
         private LocationManager locMgr;
         private String provider;
@@ -134,18 +135,59 @@ namespace MobileTag
 
             if (GameModel.CellsInView.ContainsKey(clickedCellID))
             {
-                if (clickedCellID == Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude) && GameModel.Player.Team.ID == GameModel.CellsInView[clickedCellID].TeamID)
+                Cell cell = GameModel.CellsInView[clickedCellID];
+
+                if (cell.MapOverlay.IsOnMap)
                 {
-                    PlantMinePrompt();
+                    cell.MapOverlay.Click(this);   
+                }
+                
+            }
+        }
+
+        public void PlantMinePrompt()
+        {
+            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
+            builder.SetCancelable(true);
+            builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
+            {
+                if (GameModel.Player.Wallet.Confinium >= GameModel.MINE_BASE_PRICE)
+                {
+                    await GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude));
                 }
                 else
                 {
-                    Cell cell = GameModel.CellsInView[clickedCellID];
-
-                    if (cell.MapOverlay.IsOnMap)
-                        cell.MapOverlay.Click(this);
+                    Toast.MakeText(this, "You don't have enough confinium in your wallet to purchase a mine. ", ToastLength.Long).Show();
                 }
-            }
+            });
+
+            builder.SetNegativeButton(Resource.String.no, (e, o) => { });
+            builder.SetTitle("Build a mine");
+            builder.SetMessage("Are you sure you want to build a mine here?");
+
+            builder.Show();
+        }
+
+        public void PlantAntiMinePrompt()
+        {
+            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
+            builder.SetCancelable(true);
+            builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
+            {
+                if (GameModel.Player.Wallet.Confinium >= GameModel.ANTI_MINE_BASE_PRICE)
+                {
+                     await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude));
+                }
+                else
+                {
+                    Toast.MakeText(this, "You don't have enough confinium in your wallet to purchase an  AntiMine. ", ToastLength.Long).Show();
+                }
+            });
+            
+            builder.SetNegativeButton(Resource.String.no, (e, o) => { });
+            builder.SetTitle("Plant Anti-Mine");
+            builder.SetMessage("Planting an anti-mine will drain the enemies hold strength. \n Do you wish to continue?");
+            builder.Show();
         }
 
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
@@ -365,19 +407,6 @@ namespace MobileTag
             }
         }
 
-        public void PlantMinePrompt()
-        {
-            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
-            builder.SetCancelable(true);
-            builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
-                        await GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude)));
-            builder.SetNegativeButton(Resource.String.no, (e, o) => { });
-            builder.SetTitle("Build a mine");
-            builder.SetMessage("Are you sure you want to build a mine here?");
-
-            builder.Show();
-        }
-
         public void DisplayCellInfo(int cellID)
         {
             throw new NotImplementedException();
@@ -441,11 +470,6 @@ namespace MobileTag
                 {
                     if (!cell.MapOverlay.IsOnMap)
                         cell.MapOverlay.Draw(mMap);
-
-                    if (cell.TeamID != GameModel.Player.Team.ID)
-                    {
-                        await GameModel.Player.Wallet.AddConfinium(GameModel.DEFAULT_TAG_AMOUNT);
-                    }
 
                     await cell.Tag(); 
                 }
