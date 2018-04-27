@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                        android:id="@+id/drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:fitsSystemWindows="true">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/drawer_layout"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,7 +25,8 @@
             android:layout_height="130.0dp"
             android:id="@+id/profilePicImageView"
             android:layout_marginLeft="15.0dp"
-            android:clickable="true" />
+            android:clickable="true"
+            android:layout_marginRight="20.0dp" />
         <TextView
             android:text="[username]"
             android:layout_width="wrap_content"
@@ -24,7 +37,8 @@
             android:layout_centerVertical="true"
             android:layout_alignBaseline="@id/profilePicImageView"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="39.0dp" />
+            android:layout_marginTop="39.0dp"
+            android:layout_margin="@dimen/abc_action_bar_default_padding_end_material" />
         <TextView
             android:text="[teamname]"
             android:layout_width="wrap_content"
@@ -32,7 +46,21 @@
             android:layout_toRightOf="@id/profilePicImageView"
             android:id="@+id/teamNameTextView"
             android:layout_below="@id/usernameTextView"
-            android:layout_marginTop="13.5dp" />
+            android:layout_marginTop="13.5dp"
+            android:layout_margin="@dimen/abc_action_bar_default_padding_end_material"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+        <TextView
+            android:text="[confinium]"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/teamNameTextView"
+            android:id="@+id/confiniumTextView"
+            android:layout_toRightOf="@id/profileImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8.5dp"
+            android:layout_margin="@dimen/abc_action_bar_default_padding_end_material"
+            android:layout_centerVertical="true" />
     </RelativeLayout>
     <GridLayout
         android:layout_width="match_parent"
@@ -55,3 +83,11 @@
             android:layout_marginTop="10.0dp" />
     </GridLayout>
 </LinearLayout>
+    <android.support.design.widget.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:id="@+id/nav_view"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/nav_menu" />
+</android.support.v4.widget.DrawerLayout>
