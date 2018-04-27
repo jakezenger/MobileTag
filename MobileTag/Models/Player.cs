@@ -60,7 +60,7 @@ namespace MobileTag.Models
         {
             AntiMine aMine = new AntiMine(cellID, ID);
             await Database.AddAntiMine(ID, cellID);
-            Wallet.SubtractConfinium(GameModel.ANTI_MINE_BASE_PRICE);
+            await Wallet.SubtractConfinium(GameModel.ANTI_MINE_BASE_PRICE);
             await Database.UpdatePlayerWallet(ID, Wallet.Confinium);
             AntiMines.Add(aMine);
 
