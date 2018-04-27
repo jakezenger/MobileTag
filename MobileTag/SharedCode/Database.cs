@@ -144,7 +144,7 @@ namespace MobileTag
 
         public async static Task AddAntiMine(int playerID, int cellID)
         {
-            /*Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
                 SqlDataReader reader;
                 SqlCommand cmd = new SqlCommand("AddAntiMine", connection);
@@ -160,7 +160,7 @@ namespace MobileTag
                 reader.Close();
             };
 
-            await ExecuteQueryAsync(readerProcedure);*/
+            await ExecuteQueryAsync(readerProcedure);          
         }
 
         public async static Task<List<Mine>> GetMines(int playerID)
@@ -186,7 +186,7 @@ namespace MobileTag
 
             await ExecuteQueryAsync(readerProcedure);
 
-            return mines;
+            return mines;           
         }
 
         public async static Task<List<AntiMine>> GetAntiMines(int playerID)
