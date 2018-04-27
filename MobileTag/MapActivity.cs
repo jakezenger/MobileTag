@@ -141,7 +141,6 @@ namespace MobileTag
                 {
                     cell.MapOverlay.Click(this);   
                 }
-                
             }
         }
 
