@@ -23,6 +23,7 @@ namespace MobileTag.SharedCode
         private Polygon Polygon;
         public bool IsOnMap { get { lock (locker) { return Polygon != null; } } }
         public int CellID;
+        private IMapOverlayClickHandler MapOverlayClickHandler; // Strategy pattern
 
         private object locker = new object();
 
@@ -36,15 +37,50 @@ namespace MobileTag.SharedCode
             PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
             PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
 
-            Color color = ColorCode.TeamColor(cell.TeamID);
-            PolygonOptions.InvokeFillColor(color); //Transparent (alpha) int [0-255] 255 being opaque
+            UpdateColor(cell.HoldStrength, cell.TeamID);
             PolygonOptions.InvokeStrokeWidth(0);
+
+            if (cell.TeamID == GameModel.Player.Team.ID)
+            {
+                MapOverlayClickHandler = new FriendlyOverlayClickHandler();
+            }
+            else
+            {
+                MapOverlayClickHandler = new EnemyOverlayClickHandler();
+            }
         }
 
-        public void SetColor(Color color)
+        private void SetColor(Color color)
         {
             if (Polygon != null)
+            {
                 Polygon.FillColor = color;
+                PolygonOptions.InvokeFillColor(color);
+            }
+            else
+                PolygonOptions.InvokeFillColor(color);
+        }
+
+        public void UpdateColor(int holdStrength, int teamID)
+        {
+            if (teamID != GameModel.Player.Team.ID && MapOverlayClickHandler is FriendlyOverlayClickHandler)
+            {
+                MapOverlayClickHandler = new EnemyOverlayClickHandler();
+            }
+            else if (teamID == GameModel.Player.Team.ID && MapOverlayClickHandler is EnemyOverlayClickHandler)
+            {
+                MapOverlayClickHandler = new FriendlyOverlayClickHandler();
+            }
+
+            byte alpha = Convert.ToByte((int)(((float)holdStrength / GameModel.maxHoldStrength) * 255));
+
+            if (alpha > 255)
+                alpha = 255;
+
+            Color overlayColor = ColorCode.TeamColor(teamID);
+            overlayColor.A = alpha;
+
+            SetColor(overlayColor);
         }
 
         public void Draw(GoogleMap map)
@@ -54,6 +90,11 @@ namespace MobileTag.SharedCode
                 if (!IsOnMap)
                     Polygon = map.AddPolygon(PolygonOptions);
             }
+        }
+
+        public void Click(MapActivity mapActivity)
+        {
+            MapOverlayClickHandler.HandleClickEvent(mapActivity, GameModel.CellsInView[CellID]);
         }
     }
 }

@@ -124,10 +124,13 @@
     <Compile Include="CreateAccountActivity.cs" />
     <Compile Include="LoginActivity.cs" />
     <Compile Include="MapActivity.cs" />
+    <Compile Include="Models\AntiMine.cs" />
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Models\GameModel.cs" />
+    <Compile Include="Models\Mine.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Team.cs" />
+    <Compile Include="Models\Wallet.cs" />
     <Compile Include="ProfileActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -135,8 +138,11 @@
     <Compile Include="SharedCode\ActivityLink.cs" />
     <Compile Include="SharedCode\ColorCode.cs" />
     <Compile Include="SharedCode\Database.cs" />
+    <Compile Include="SharedCode\EnemyOverlayClickHandler.cs" />
+    <Compile Include="SharedCode\IOverlayClickHandler.cs" />
     <Compile Include="SharedCode\MapOverlay.cs" />
     <Compile Include="SharedCode\CellHub.cs" />
+    <Compile Include="SharedCode\FriendlyOverlayClickHandler.cs" />
     <Compile Include="SplashScreen.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -166,22 +172,13 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\raw\style_json.json" />
+    <AndroidResource Include="Resources\raw\StandardTheme.json" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\drawable\" />
-  </ItemGroup>
-  <ItemGroup>
-    <XamarinComponentReference Include="googleplayservices-maps">
-      <Visible>False</Visible>
-      <Version>42.1001.0.0</Version>
-    </XamarinComponentReference>
-    <XamarinComponentReference Include="xamandroidsupportv7appcompat">
-      <Visible>False</Visible>
-      <Version>25.1.1.0</Version>
-    </XamarinComponentReference>
+    <AndroidResource Include="Resources\Drawable\Pink.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\splash_screen.gif" />
@@ -253,6 +250,18 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_dehaze_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\Green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\Purple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\Red.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

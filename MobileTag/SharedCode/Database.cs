@@ -121,13 +121,61 @@ namespace MobileTag
             return teamID;
         }
 
+        public async static Task AddMine(int playerID, int cellID)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("AddMine", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
+        public async static Task<List<Mine>> GetMines(int playerID)
+        {
+            List<Mine> mines = new List<Mine>();
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetMines", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    int cellID = (int)reader["CellID"];
+                    Mine mine = new Mine(playerID, cellID);
+                    mines.Add(mine);
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            return mines;
+        }
+
         public async static Task<Player> GetPlayer(string username)
         {
             int playerID = 0;
             int teamID = 0;
             string teamName = "";
-
+            List<Mine> mines = new List<Mine>();
             int cellID = 0;
+            Wallet playerWallet = new Wallet();
 
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -143,6 +191,8 @@ namespace MobileTag
                     teamID = (int)reader["TeamID"];
                     teamName = (string)reader["TeamName"];
                     cellID = 0; //(int)reader["CellID"];
+                    playerWallet.Confinium = (int)reader["Currency"];
+                    mines = await GetMines(playerID);
                 }
                 reader.Close();
             };
@@ -150,8 +200,45 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);
 
             Team team = new Team(teamID, teamName);
-            Player player = new Player(playerID, username, team, cellID);
+            Player player = new Player(playerID, username, team, cellID, mines, playerWallet);
             return player;
+        }
+
+        public async static Task<bool> UpdatePlayerWallet(int playerID, int confinium)
+        {
+
+            //TODO: implement database call to update players currency
+            //Stored Procedure not yet implemented. Code below may need altering when database is updated.
+            try
+            {
+                Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+                {
+                    //SqlConnection connection = new SqlConnection(CONNECTION_STRING);
+                    SqlDataReader reader;
+                    SqlCommand cmd = new SqlCommand("UpdateWallet", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@amount", SqlDbType.Int).Value = confinium;
+                    cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+
+
+                    reader = await cmd.ExecuteReaderAsync();
+                    while (reader.Read())
+                    {
+
+                    }
+                    reader.Close();
+                    
+                };
+
+                await ExecuteQueryAsync(readerProcedure);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Failed to update currency: " + ex.ToString());
+            }
+            return false;
+           
         }
 
         public async static Task<Cell> GetCell(int cellID)
@@ -223,6 +310,7 @@ namespace MobileTag
                 cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
                 cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = cell.Latitude;
                 cmd.Parameters.Add("@lng", SqlDbType.Decimal).Value = cell.Longitude;
+                cmd.Parameters.Add("@holdStrength", SqlDbType.Int).Value = cell.HoldStrength;
 
                 reader = await cmd.ExecuteReaderAsync();
 
@@ -322,7 +410,8 @@ namespace MobileTag
                     decimal lat = (decimal)reader["Latitude"];
                     decimal lng = (decimal)reader["Longitude"];
                     int teamID = (int)reader["TeamID"];
-                    Cell cell = new Cell(cellID, lat, lng, teamID);
+                    int holdStrength = (int)reader["HoldStrength"];
+                    Cell cell = new Cell(cellID, lat, lng, teamID, holdStrength);
 
                     cellDict.TryAdd(cellID, cell);
                 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CS0618 // Suppress warning: Type or member is obsolete
+
+using System;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -44,14 +46,16 @@ namespace MobileTag
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
 
-        ConcurrentDictionary<int, MapOverlay> Overlays = new ConcurrentDictionary<int, MapOverlay>();
+        private System.Timers.Timer timer = new System.Timers.Timer();
+
+
         ConcurrentDictionary<int, MapOverlay> OverlaysToDraw = new ConcurrentDictionary<int, MapOverlay>();
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Map);
-         
+
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetActionBar(toolbar);
             toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
@@ -87,12 +91,18 @@ namespace MobileTag
             navigationView.NavigationItemSelected += (sender, e) =>
             {
                 e.MenuItem.SetChecked(true);
-                
+
                 switch (e.MenuItem.ItemId)
                 {
                     case Resource.Id.nav_logout:
                         GameModel.Logout();
                         StartActivity(new Intent(this, typeof(LoginActivity)));
+                        break;
+                    case Resource.Id.nav_settings:
+                        StartActivity(new Intent(this, typeof(SettingsActivity)));
+                        break;
+                    case Resource.Id.nav_profile:
+                        StartActivity(new Intent(this, typeof(ProfileActivity)));
                         break;
                     default:
                         break;
@@ -102,84 +112,6 @@ namespace MobileTag
 
             await cellHubSetupTask;
         }
-
-        private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
-        {
-            TextView usernameHeader = FindViewById<TextView>(Resource.Id.nameTxt);
-            usernameHeader.Text = GameModel.Player.Username;
-        }
-
-        protected override async void OnResume()
-        {
-            base.OnResume();
-
-            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
-            {
-                locMgr = GetSystemService(Context.LocationService) as LocationManager;
-                locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 10, this);
-                locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 10, this);
-            }
-            if (CellHub.Connection.State != ConnectionState.Connected && CellHub.Connection.State != ConnectionState.Connecting)
-            {
-                await CellHub.Connection.Start();
-
-                if (initialCameraLatLng != null)
-                {
-                    // Refresh stale cell data
-                    mMap.Clear();
-                    Overlays.Clear();
-                    OverlaysToDraw.Clear();
-                    GameModel.CellsInView.Clear();
-
-                    await DrawCellsInView();
-                }
-            }
-        }
-
-        protected override void OnPause()
-        {
-            base.OnPause();
-
-            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
-            {
-                locMgr.RemoveUpdates(this);
-            }
-
-            CellHub.Connection.Stop();
-        }
-        
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
-
-            return base.OnOptionsItemSelected(item);
-        }
-
-
-        // SignalR------------------------------------------------------------------------------------------
-
-        // Start the CellHub SignalR connection
-        private async Task SetUpCellHub()
-        {
-            try
-            {
-                CellHub.HubProxy.On<Cell>("broadcastCell", updatedCell =>
-                {
-                    // Handle SignalR cell update notification
-                    Console.WriteLine("Cell {0} updated!", updatedCell.ID);
-                    GameModel.CellsInView[updatedCell.ID] = updatedCell;
-                    UpdateOverlay(updatedCell);
-                });
-
-                await CellHub.Connection.Start();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        // -------------------------------------------------------------------------------------------------
 
         private void SetUpMap()
         {
@@ -192,75 +124,131 @@ namespace MobileTag
         public void OnMapReady(GoogleMap googleMap)
         {
             // Example code for map style: https://developers.google.com/maps/documentation/android-api/styling
-            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, Resource.Raw.style_json));
+            googleMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, GameModel.MapStyle));
             mMap = googleMap;
             mMap.UiSettings.ZoomControlsEnabled = true;
             mMap.SetOnCameraIdleListener(this);
+            mMap.MapClick += MMap_MapClick;
         }
 
-        public async void OnCameraIdle()
+        private void MMap_MapClick(object sender, GoogleMap.MapClickEventArgs e)
         {
-            currentZoomLevel = mMap.CameraPosition.Zoom;
-            LatLng currentCameraLatLng = mMap.CameraPosition.Target;
+            int clickedCellID = Cell.FindID(e.Point);
 
-            if (currentZoomLevel > ZOOM_LEVEL_LOAD)
+            if (GameModel.CellsInView.ContainsKey(clickedCellID))
             {
-                if (InitialCameraLocSet == false)
+                if (clickedCellID == Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude) && GameModel.Player.Team.ID == GameModel.CellsInView[clickedCellID].TeamID)
                 {
-                    initialCameraLatLng = mMap.CameraPosition.Target;
-                    InitialCameraLocSet = true;
-
-                    await DrawCellsInView();
+                    PlantMinePrompt();
                 }
                 else
                 {
-                    double distanceFromInitialCameraPosition = Math.Sqrt(Math.Pow(currentCameraLatLng.Latitude - initialCameraLatLng.Latitude, 2) + Math.Pow(currentCameraLatLng.Longitude - initialCameraLatLng.Longitude, 2));
+                    Cell cell = GameModel.CellsInView[clickedCellID];
 
-                    if (distanceFromInitialCameraPosition > CELL_LOAD_RADIUS)
-                    {
-                        initialCameraLatLng = mMap.CameraPosition.Target;
-
-                        await DrawCellsInView();
-                    }
+                    if (cell.MapOverlay.IsOnMap)
+                        cell.MapOverlay.Click(this);
                 }
             }
         }
 
-        private async Task DrawCellsInView()
+        private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
         {
-            DisplayStatus("Loading new cells...");
+            TextView usernameHeader = FindViewById<TextView>(Resource.Id.nameTxt);
+            usernameHeader.Text = GameModel.Player.Username;
+        }
 
-            await Task.Run(async () =>
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+
+            return base.OnOptionsItemSelected(item);
+        }
+
+        protected override async void OnResume()
+        {
+            base.OnResume();
+
+            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
-                if (Overlays.IsEmpty)
-                {
-                    Overlays = await GameModel.LoadProximalCells(initialCameraLatLng);
+                locMgr = GetSystemService(Context.LocationService) as LocationManager;
+                RequestLocationUpdates();
+            }
+            if (CellHub.Connection.State != ConnectionState.Connected && CellHub.Connection.State != ConnectionState.Connecting)
+            {
+                await CellHub.Connection.Start();
+            }
 
-                    foreach (MapOverlay overlay in Overlays.Values)
-                    {
-                        OverlaysToDraw.TryAdd(overlay.CellID, overlay);
-                    }
-                }
-                else
-                {
-                    // We want to add newly created overlays while retaining all previously existing Polygon references in Overlays
-                    ConcurrentDictionary<int, MapOverlay> temp = await GameModel.LoadProximalCells(initialCameraLatLng);
+            if (initialCameraLatLng != null)
+            {
+                // Refresh stale cell data
+                mMap.Clear();
+                OverlaysToDraw.Clear();
+                GameModel.CellsInView.Clear();
 
-                    foreach (MapOverlay mOverlay in temp.Values)
-                    {
-                        if (!Overlays.Keys.Contains(mOverlay.CellID))
-                        {
-                            // Add the new overlay to Overlays
-                            Overlays.TryAdd(mOverlay.CellID, mOverlay);
-                            OverlaysToDraw.TryAdd(mOverlay.CellID, mOverlay);
-                        }
-                    }
-                }
-            });
-            
-            await DrawOverlays();
+                await DrawCellsInView();
+            }
+        }
 
-            ClearStatus();
+        protected override void OnPause()
+        {
+            base.OnPause();
+
+            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
+            {
+                if (locMgr != null)
+                    locMgr.RemoveUpdates(this);
+            }
+
+            CellHub.Connection.Stop();
+        }
+
+        private void CenterMapCameraOnLocation()
+        {
+            if (mMap.MyLocation != null)
+            {
+                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude), 17);
+                mMap.AnimateCamera(mapCameraPos);
+            }
+        }
+
+        private void LocationButton_Click(object sender, EventArgs e)
+        {
+            if (locationFound == true)
+            {
+                CenterMapCameraOnLocation();
+            }
+            else
+            {
+                Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
+            }
+        }
+
+        private void RequestLocationUpdates()
+        {
+            if (locMgr != null)
+            {
+                locMgr.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 2, this);
+                locMgr.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 2, this);
+            }
+        }
+        
+        private void GetLocation()
+        {
+            locMgr = GetSystemService(Context.LocationService) as LocationManager;
+
+            Criteria locationCriteria = new Criteria();
+            locationCriteria.Accuracy = Accuracy.Fine;
+            locationCriteria.PowerRequirement = Power.Medium;
+            provider = locMgr.GetBestProvider(locationCriteria, true);
+            lastKnownLocation = locMgr.GetLastKnownLocation(provider);
+
+            RequestLocationUpdates();
+
+            if (lastKnownLocation == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Couldn't find location");
+                DisplayStatus("Couldn't find location");
+            }
         }
 
         public void OnLocationChanged(Location location)
@@ -303,7 +291,7 @@ namespace MobileTag
                             GetLocation();
                         }
                         else
-                        {                            
+                        {
                             StartActivity(new Intent(this, typeof(LoginActivity)));
                         }
                     }
@@ -312,33 +300,101 @@ namespace MobileTag
             }
         }
 
-        private void GetLocation()
+        // SignalR------------------------------------------------------------------------------------------
+
+        // Start the CellHub SignalR connection
+        private async Task SetUpCellHub()
         {
-            locMgr = GetSystemService(Context.LocationService) as LocationManager;
-
-            Criteria locationCriteria = new Criteria();
-            locationCriteria.Accuracy = Accuracy.Fine;
-            locationCriteria.PowerRequirement = Power.Medium;
-            provider = locMgr.GetBestProvider(locationCriteria, true);
-            lastKnownLocation = locMgr.GetLastKnownLocation(provider);
-
-            if (lastKnownLocation == null)
+            try
             {
-                System.Diagnostics.Debug.WriteLine("Couldn't find location");
-                DisplayStatus("Couldn't find location");
+                CellHub.HubProxy.On<Cell>("broadcastCell", updatedCell =>
+                {
+                    // Handle SignalR cell update notification
+                    Console.WriteLine("Cell {0} updated!", updatedCell.ID);
+
+                    if (GameModel.CellsInView.ContainsKey(updatedCell.ID))
+                    {
+                        // Set updateCell's MapOverlay to existing MapOverlay so we don't lose that reference and draw on top of the lost overlay
+                        updatedCell.MapOverlay = GameModel.CellsInView[updatedCell.ID].MapOverlay;
+
+                        GameModel.CellsInView[updatedCell.ID] = updatedCell;
+                    }
+                    else
+                    {
+                        GameModel.CellsInView.TryAdd(updatedCell.ID, updatedCell);
+                    }
+
+                    UpdateOverlay(updatedCell);
+                });
+
+                await CellHub.Connection.Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
 
-        private void DisplayStatus(string status)
+        // -------------------------------------------------------------------------------------------------
+
+        
+        public async void OnCameraIdle()
+        {
+            currentZoomLevel = mMap.CameraPosition.Zoom;
+            LatLng currentCameraLatLng = mMap.CameraPosition.Target;
+
+            if (currentZoomLevel > ZOOM_LEVEL_LOAD)
+            {
+                if (InitialCameraLocSet == false)
+                {
+                    initialCameraLatLng = mMap.CameraPosition.Target;
+                    InitialCameraLocSet = true;
+
+                    await DrawCellsInView();
+                }
+                else
+                {
+                    double distanceFromInitialCameraPosition = Math.Sqrt(Math.Pow(currentCameraLatLng.Latitude - initialCameraLatLng.Latitude, 2) + Math.Pow(currentCameraLatLng.Longitude - initialCameraLatLng.Longitude, 2));
+
+                    if (distanceFromInitialCameraPosition > CELL_LOAD_RADIUS)
+                    {
+                        initialCameraLatLng = mMap.CameraPosition.Target;
+
+                        await DrawCellsInView();
+                    }
+                }
+            }
+        }
+
+        public void PlantMinePrompt()
+        {
+            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
+            builder.SetCancelable(true);
+            builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
+                        await GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude)));
+            builder.SetNegativeButton(Resource.String.no, (e, o) => { });
+            builder.SetTitle("Build a mine");
+            builder.SetMessage("Are you sure you want to build a mine here?");
+
+            builder.Show();
+        }
+
+        public void DisplayCellInfo(int cellID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DisplayStatus(string status)
         {
             statusText.Text = status;
         }
 
-        private void DisplayStatus(string status, double length)
+        public void DisplayStatus(string status, double length)
         {
             statusText.Text = status;
 
-            System.Timers.Timer timer = new System.Timers.Timer(length);
+            timer.Stop();
+            timer = new System.Timers.Timer(length);
             timer.AutoReset = false;
 
             timer.Elapsed += (o, e) => {
@@ -351,27 +407,9 @@ namespace MobileTag
 
         private void ClearStatus()
         {
-            statusText.Text = "";
-        }
-
-        private void CenterMapCameraOnLocation()
-        {
-            if (mMap.MyLocation != null)
+            if (timer.Enabled == false)
             {
-                CameraUpdate mapCameraPos = CameraUpdateFactory.NewLatLngZoom(new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude), 17);
-                mMap.AnimateCamera(mapCameraPos);
-            }
-        }
-
-        private void LocationButton_Click(object sender, EventArgs e)
-        {
-            if (locationFound == true)
-            {
-                CenterMapCameraOnLocation();
-            }
-            else
-            {
-                Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
+                statusText.Text = "";
             }
         }
 
@@ -402,9 +440,15 @@ namespace MobileTag
 
                 try
                 {
-                    var tagTask = cell.Tag();
-                    UpdateOverlay(cell);
-                    await tagTask;
+                    if (!cell.MapOverlay.IsOnMap)
+                        cell.MapOverlay.Draw(mMap);
+
+                    if (cell.TeamID != GameModel.Player.Team.ID)
+                    {
+                        await GameModel.AddCurrency();
+                    }
+
+                    await cell.Tag(); 
                 }
                 catch (AggregateException exc)
                 {
@@ -418,36 +462,50 @@ namespace MobileTag
             }
         }
 
+        private async Task DrawCellsInView()
+        {
+            DisplayStatus("Loading new cells...");
+
+            await Task.Run(async () =>
+            {
+                // We want to add newly created overlays while retaining all previously existing Polygon references in CellsInView
+                await GameModel.LoadProximalCells(initialCameraLatLng);
+
+                foreach (Cell cell in GameModel.CellsInView.Values)
+                {
+                    if (cell.TeamID > 0 && !cell.MapOverlay.IsOnMap)
+                    {
+                        OverlaysToDraw.TryAdd(cell.MapOverlay.CellID, cell.MapOverlay);
+                    }
+                }
+            });
+
+            await DrawOverlays();
+
+            ClearStatus();
+        }
+
         public void UpdateOverlay(Cell updatedCell)
         {
-            if (!Overlays.ContainsKey(updatedCell.ID))
+            RunOnUiThread(() =>
             {
-                RunOnUiThread(() =>
-                {
-                    MapOverlay mapOverlay = new MapOverlay(updatedCell);
+                updatedCell.MapOverlay.UpdateColor(updatedCell.HoldStrength, updatedCell.TeamID);
 
-                    mapOverlay.Draw(mMap);
-
-                    Overlays.TryAdd(updatedCell.ID, mapOverlay);
-                });
-            }
-            else
-            {
-                RunOnUiThread(() =>
+                if (!updatedCell.MapOverlay.IsOnMap)
                 {
-                    Overlays[updatedCell.ID].SetColor(ColorCode.TeamColor(updatedCell.TeamID));
-                });
-            }
+                    updatedCell.MapOverlay.Draw(mMap);
+                }
+            });
         }
 
         private async Task DrawOverlays()
         {
-            foreach (MapOverlay Overlay in Overlays.Values)
+            foreach (Cell cell in GameModel.CellsInView.Values)
             {
-                if (OverlaysToDraw.Keys.Contains(Overlay.CellID))
+                if (OverlaysToDraw.ContainsKey(cell.MapOverlay.CellID))
                 {
-                    Overlay.Draw(mMap);
-                    OverlaysToDraw.TryRemove(Overlay.CellID, out MapOverlay value);
+                    cell.MapOverlay.Draw(mMap);
+                    OverlaysToDraw.TryRemove(cell.MapOverlay.CellID, out MapOverlay value);
                     await Task.Delay(40); // Bad practice... but this delay frees up the UI thread for a bit to respond to user input (e.g. map movement)
                 }
             }
