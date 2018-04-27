@@ -16,7 +16,6 @@ namespace MobileTag
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class SettingsActivity : Activity
     {
-        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -29,9 +28,6 @@ namespace MobileTag
                 checkbox.Checked = true;
             else
                 checkbox.Checked = false;
-            
-          
-            
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -44,11 +40,6 @@ namespace MobileTag
             this.Finish();
             var intent = new Intent(this, typeof(MapActivity)).SetFlags(ActivityFlags.ClearTask);
             StartActivity(intent);
-
         }
-
       };
-
-
-
 }

@@ -142,6 +142,27 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);
         }
 
+        public async static Task AddAntiMine(int playerID, int cellID)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("AddAntiMine", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);          
+        }
+
         public async static Task<List<Mine>> GetMines(int playerID)
         {
             List<Mine> mines = new List<Mine>();
@@ -165,7 +186,33 @@ namespace MobileTag
 
             await ExecuteQueryAsync(readerProcedure);
 
-            return mines;
+            return mines;           
+        }
+
+        public async static Task<List<AntiMine>> GetAntiMines(int playerID)
+        {
+            List<AntiMine> antiMines = new List<AntiMine>();
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetAntiMines", connection); //TODO: Setup Database Stored Procedure
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    int cellID = (int)reader["CellID"];
+                    AntiMine aMine = new AntiMine(playerID, cellID);
+                    antiMines.Add(aMine);
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            return antiMines;
         }
 
         public async static Task<Player> GetPlayer(string username)
@@ -174,6 +221,7 @@ namespace MobileTag
             int teamID = 0;
             string teamName = "";
             List<Mine> mines = new List<Mine>();
+            List<AntiMine> aMines = new List<AntiMine>();
             int cellID = 0;
             Wallet playerWallet = new Wallet();
 
@@ -193,6 +241,7 @@ namespace MobileTag
                     cellID = 0; //(int)reader["CellID"];
                     playerWallet.Confinium = (int)reader["Currency"];
                     mines = await GetMines(playerID);
+                    //TODO: aMines = await GetAntiMines(playerID);
                 }
                 reader.Close();
             };
@@ -200,7 +249,7 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);
 
             Team team = new Team(teamID, teamName);
-            Player player = new Player(playerID, username, team, cellID, mines, playerWallet);
+            Player player = new Player(playerID, username, team, cellID, mines, aMines, playerWallet);
             return player;
         }
 
@@ -299,7 +348,7 @@ namespace MobileTag
             return cellList;
         }
 
-        public async static Task UpdateCell(Cell cell, int teamID)
+        public async static Task UpdateCell(Cell cell)
         {
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -307,7 +356,7 @@ namespace MobileTag
                 SqlCommand cmd = new SqlCommand("UpdateCell", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cell.ID;
-                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = cell.TeamID;
                 cmd.Parameters.Add("@lat", SqlDbType.Decimal).Value = cell.Latitude;
                 cmd.Parameters.Add("@lng", SqlDbType.Decimal).Value = cell.Longitude;
                 cmd.Parameters.Add("@holdStrength", SqlDbType.Int).Value = cell.HoldStrength;

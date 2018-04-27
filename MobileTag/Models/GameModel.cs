@@ -43,8 +43,9 @@ namespace MobileTag.Models
 
         public static ConcurrentDictionary<int, Cell> CellsInView = new ConcurrentDictionary<int, Cell>();
         public static Player Player { get; set; }
-        private const int DEFAULT_TAG_AMOUNT = 100;
+        public const int DEFAULT_TAG_AMOUNT = 100;
         public const int MINE_BASE_PRICE = 500;
+        public const int ANTI_MINE_BASE_PRICE = 200;
         public static void Logout()
         {
             string path = Application.Context.FilesDir.Path;
@@ -98,19 +99,6 @@ namespace MobileTag.Models
             {
                 await CellHub.SubscribeToUpdates(NewSubscriptions);
             }
-        }
-
-        internal async static Task AddCurrency()
-        {
-            //TODO: Send currency to database
-            int moneyToDeposit = Player.Wallet.Confinium + DEFAULT_TAG_AMOUNT;
-            bool successfulDeposit = await Database.UpdatePlayerWallet(Player.ID, moneyToDeposit);
-            if (successfulDeposit == true)
-            {
-                //If database successful, update client player account
-                 Player.Wallet.AddConfinium(DEFAULT_TAG_AMOUNT);
-            }
-            
         }
     }
 }

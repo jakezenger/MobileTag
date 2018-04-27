@@ -60,7 +60,7 @@ namespace MobileTag.Tests
             Wallet wallet = new Wallet();
             wallet.Confinium = 10000;
 
-            Player testPlayer = new Player(1, "ethan", team, 0, new List<Mine>() ,wallet);
+            Player testPlayer = new Player(1, "ethan", team, 0, new List<Mine>(), new List<AntiMine>(), wallet);
             Player fromServer = await Database.GetPlayer("ethan");
 
             Assert.AreEqual(testPlayer.ID, fromServer.ID);
