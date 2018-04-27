@@ -102,6 +102,9 @@ namespace MobileTag
                     case Resource.Id.nav_settings:
                         StartActivity(new Intent(this, typeof(SettingsActivity)));
                         break;
+                    case Resource.Id.nav_profile:
+                        StartActivity(new Intent(this, typeof(ProfileActivity)));
+                        break;
                     default:
                         break;
                 }
@@ -192,7 +195,9 @@ namespace MobileTag
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
         {
             TextView usernameHeader = FindViewById<TextView>(Resource.Id.nameTxt);
+            TextView userConfinium = FindViewById<TextView>(Resource.Id.confiniumTxt);
             usernameHeader.Text = GameModel.Player.Username;
+            userConfinium.Text = GameModel.Player.Wallet.Confinium.ToString();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
