@@ -57,6 +57,61 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Map);
 
+            SetUpUI();           
+
+            SetUpMap();
+
+            var cellHubSetupTask = SetUpCellHub();
+
+            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
+            {
+                DisplayStatus("Finding location...");
+                GetLocation();
+            }
+            else
+            {
+                RequestPermissions(LocationPermissions, RequestLocationID);
+            }
+
+            //Drawer navigation menu event handler
+            navigationView.NavigationItemSelected += (sender, e) =>
+            {
+                e.MenuItem.SetChecked(true);
+
+                switch (e.MenuItem.ItemId)
+                {
+                    case Resource.Id.nav_profile:
+                        
+                        break;
+                    case Resource.Id.nav_map:
+                        
+                        break;
+                    case Resource.Id.nav_settings:                        
+                        StartActivity(new Intent(this, typeof(SettingsActivity)));                       
+                        break;
+                    case Resource.Id.nav_logout:
+                        GameModel.Logout();
+                        StartActivity(new Intent(this, typeof(LoginActivity)));
+                        break;
+                    default:
+                        break;
+                }               
+                drawerLayout.CloseDrawers();
+              
+            };           
+            await cellHubSetupTask;
+        }
+
+        private void SetUpMap()
+        {
+            if (mMap == null)
+            {
+                FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
+            }
+        }
+
+        public void SetUpUI()
+        {
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetActionBar(toolbar);
             toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
@@ -74,49 +129,6 @@ namespace MobileTag
 
             tagButton.Click += TagButton_Click;
             locationButton.Click += LocationButton_Click;
-
-            SetUpMap();
-
-            var cellHubSetupTask = SetUpCellHub();
-
-            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
-            {
-                DisplayStatus("Finding location...");
-                GetLocation();
-            }
-            else
-            {
-                RequestPermissions(LocationPermissions, RequestLocationID);
-            }
-
-            navigationView.NavigationItemSelected += (sender, e) =>
-            {
-                e.MenuItem.SetChecked(true);
-
-                switch (e.MenuItem.ItemId)
-                {
-                    case Resource.Id.nav_logout:
-                        GameModel.Logout();
-                        StartActivity(new Intent(this, typeof(LoginActivity)));
-                        break;
-                    case Resource.Id.nav_settings:
-                        StartActivity(new Intent(this, typeof(SettingsActivity)));
-                        break;
-                    default:
-                        break;
-                }
-                drawerLayout.CloseDrawers();
-            };
-
-            await cellHubSetupTask;
-        }
-
-        private void SetUpMap()
-        {
-            if (mMap == null)
-            {
-                FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
-            }
         }
 
         public void OnMapReady(GoogleMap googleMap)
@@ -198,6 +210,7 @@ namespace MobileTag
             userConfinium.Text = GameModel.Player.Wallet.Confinium.ToString();
         }
 
+        //Hamburger Button Pressed
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
@@ -207,7 +220,8 @@ namespace MobileTag
 
         protected override async void OnResume()
         {
-            base.OnResume();
+            base.OnResume();            
+
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {

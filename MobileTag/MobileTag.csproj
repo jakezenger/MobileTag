@@ -171,6 +171,7 @@
     <AndroidResource Include="Resources\layout\SplashScreen.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\menu\nav_menu.xml" />
     <AndroidResource Include="Resources\raw\style_json.json" />
     <AndroidResource Include="Resources\raw\StandardTheme.json" />
   </ItemGroup>
@@ -209,9 +210,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_menu_black_24dp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\menu\nav_menu.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\drawer_header.xml">
