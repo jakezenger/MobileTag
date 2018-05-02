@@ -29,15 +29,7 @@ namespace MobileTag
             // Create your application here
             SetContentView(Resource.Layout.Profile);
 
-            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetActionBar(toolbar);
-            toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
-            drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
-            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-            ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_dehaze_white_24dp);
-            ActionBar.SetDisplayHomeAsUpEnabled(true);
-
-            drawerLayout.DrawerStateChanged += DrawerLayout_DrawerStateChanged;
+            SetUpUI();
 
             TextView usernameTextView = FindViewById<TextView>(Resource.Id.usernameTextView);
             usernameTextView.Text = GameModel.Player.Username;
@@ -62,15 +54,18 @@ namespace MobileTag
 
                 switch (e.MenuItem.ItemId)
                 {
-                    case Resource.Id.nav_logout:
-                        GameModel.Logout();
-                        StartActivity(new Intent(this, typeof(LoginActivity)));
+                    case Resource.Id.nav_profile:
+                        
+                        break;
+                    case Resource.Id.nav_map:
+                        StartActivity(new Intent(this, typeof(MapActivity)));
                         break;
                     case Resource.Id.nav_settings:
                         StartActivity(new Intent(this, typeof(SettingsActivity)));
-                        break;
-                    case Resource.Id.nav_profile:
-                        StartActivity(new Intent(this, typeof(ProfileActivity)));
+                        break;                   
+                    case Resource.Id.nav_logout:
+                        GameModel.Logout();
+                        StartActivity(new Intent(this, typeof(LoginActivity)));
                         break;
                     default:
                         break;
@@ -80,7 +75,22 @@ namespace MobileTag
 
         }
 
-        private void MyView_Click(object sender, EventArgs e)
+        public void SetUpUI()
+        {
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+            toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
+
+            drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+
+            ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_dehaze_white_24dp);
+            ActionBar.SetDisplayHomeAsUpEnabled(true);
+
+            drawerLayout.DrawerStateChanged += DrawerLayout_DrawerStateChanged;
+        }
+
+            private void MyView_Click(object sender, EventArgs e)
         {
             Toast myToast = Toast.MakeText(this, "Clicked the Image", ToastLength.Long);
             myToast.Show();

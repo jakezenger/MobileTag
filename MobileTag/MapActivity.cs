@@ -81,10 +81,10 @@ namespace MobileTag
                 switch (e.MenuItem.ItemId)
                 {
                     case Resource.Id.nav_profile:
-                        
+                        StartActivity(new Intent(this, typeof(ProfileActivity)));
                         break;
                     case Resource.Id.nav_map:
-                        
+                        // we are already in map activity
                         break;
                     case Resource.Id.nav_settings:                        
                         StartActivity(new Intent(this, typeof(SettingsActivity)));                       
