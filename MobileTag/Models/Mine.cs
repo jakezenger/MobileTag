@@ -16,11 +16,21 @@ namespace MobileTag.Models
     {
         public int CellID { get; }
         public int PlayerID { get; }
+        public int Bucket { get; set; }
 
-        public Mine(int cellID, int playerID)
+        public Mine(int cellID, int playerID, int bucket = 0)
         {
             CellID = cellID;
             PlayerID = playerID;
+            Bucket = bucket;
+        }
+
+        public int Yield()
+        {
+            int bucketTemp = Bucket;
+            Bucket = 0;
+
+            return bucketTemp;
         }
     }
 }

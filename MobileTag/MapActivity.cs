@@ -370,6 +370,17 @@ namespace MobileTag
                     UpdateOverlay(updatedCell);
                 });
 
+                CellHub.HubProxy.On<int>("broadcastMine", cellID =>
+                {
+                    // Handle SignalR cell update notification
+                    Console.WriteLine("Mine in cell {0} was updated!", cellID);
+
+                    //RunOnUiThread(() =>
+                    //{
+                        // GameModel.Player.Mines[updatedMine.CellID] = Database.GetMine...??
+                    //});
+                });
+
                 await CellHub.Connection.Start();
             }
             catch (Exception e)
