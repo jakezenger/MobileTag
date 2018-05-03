@@ -254,15 +254,21 @@ namespace MobileTag
             }
         }
 
-        private void LocationButton_Click(object sender, EventArgs e)
+        private async void LocationButton_Click(object sender, EventArgs e)
         {
-            if (locationFound == true)
+            //if (locationFound == true)
+            //{
+            //    CenterMapCameraOnLocation();
+            //}
+            //else
+            //{
+            //    Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
+            //}
+
+            foreach (Mine mine in GameModel.Player.Mines)
             {
-                CenterMapCameraOnLocation();
-            }
-            else
-            {
-                Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
+                int yieldAmount = await mine.Yield();
+                await GameModel.Player.Wallet.AddConfinium(yieldAmount);
             }
         }
 

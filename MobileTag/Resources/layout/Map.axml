@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight=".50"
-                android:text="View Me"
+                android:text="Yield Mines"
                 android:clickable="true" />
         </LinearLayout>
     </LinearLayout>
