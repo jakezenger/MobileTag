@@ -228,6 +228,7 @@ namespace MobileTag
                 OverlaysToDraw.Clear();
                 GameModel.CellsInView.Clear();
 
+                await GameModel.SubscribeToMines();
                 await DrawCellsInView();
             }
         }
