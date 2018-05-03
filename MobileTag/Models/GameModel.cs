@@ -47,18 +47,6 @@ namespace MobileTag.Models
         public const int MINE_BASE_PRICE = 500;
         public const int ANTI_MINE_BASE_PRICE = 200;
 
-        public static async Task SubscribeToMines()
-        {
-            HashSet<int> mines = new HashSet<int>();
-
-            foreach (Mine mine in Player.Mines)
-            {
-                mines.Add(mine.CellID);
-            }
-
-            await CellHub.SubscribeToMineUpdates(mines);
-        }
-
         public static void Logout()
         {
             string path = Application.Context.FilesDir.Path;

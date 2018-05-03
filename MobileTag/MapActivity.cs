@@ -228,7 +228,6 @@ namespace MobileTag
                 OverlaysToDraw.Clear();
                 GameModel.CellsInView.Clear();
 
-                await GameModel.SubscribeToMines();
                 await DrawCellsInView();
             }
         }
@@ -371,16 +370,16 @@ namespace MobileTag
                     UpdateOverlay(updatedCell);
                 });
 
-                CellHub.HubProxy.On<int>("broadcastMine", cellID =>
-                {
-                    // Handle SignalR cell update notification
-                    Console.WriteLine("Mine in cell {0} was updated!", cellID);
+                //CellHub.HubProxy.On<int>("broadcastMine", cellID =>
+                //{
+                //    // Handle SignalR mine update notification
+                //    Console.WriteLine("Mine in cell {0} was updated!", cellID);
 
-                    RunOnUiThread(async () =>
-                    {
-                        GameModel.Player.Mines[cellID].Bucket = await Database.GetMineBucket(cellID, GameModel.Player.ID);
-                    });
-                });
+                //    RunOnUiThread(async () =>
+                //    {
+                //        GameModel.Player.Mines[cellID] = await Database.GetMine(cellID, GameModel.Player.ID);
+                //    });
+                //});
 
                 await CellHub.Connection.Start();
             }

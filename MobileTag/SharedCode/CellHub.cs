@@ -26,18 +26,6 @@ namespace MobileTag.SharedCode
             HubProxy = Connection.CreateHubProxy("cellHub");
         }
 
-        async static public Task SubscribeToMineUpdates(HashSet<int> mineCellIDs)
-        {
-            try
-            {
-                await HubProxy.Invoke("SubscribeToMineUpdates", mineCellIDs);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
         async static public Task SubscribeToCellUpdates(HashSet<int> cellIDs)
         {
             try
