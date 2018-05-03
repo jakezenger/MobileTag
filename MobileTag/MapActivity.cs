@@ -375,10 +375,10 @@ namespace MobileTag
                     // Handle SignalR cell update notification
                     Console.WriteLine("Mine in cell {0} was updated!", cellID);
 
-                    //RunOnUiThread(() =>
-                    //{
-                        // GameModel.Player.Mines[updatedMine.CellID] = Database.GetMine...??
-                    //});
+                    RunOnUiThread(async () =>
+                    {
+                        GameModel.Player.Mines[cellID].Bucket = await Database.GetMineBucket(cellID, GameModel.Player.ID);
+                    });
                 });
 
                 await CellHub.Connection.Start();
@@ -472,7 +472,7 @@ namespace MobileTag
                     // Generate the new cell and add it to CellsInView
                     cell = new Cell(decLat, decLng);
                     GameModel.CellsInView.TryAdd(cell.ID, cell);
-                    await CellHub.SubscribeToUpdates(cell.ID);
+                    await CellHub.SubscribeToCellUpdates(cell.ID);
                 }
                 else
                 {

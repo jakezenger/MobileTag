@@ -121,6 +121,31 @@ namespace MobileTag
             return teamID;
         }
 
+        public async static Task<int> GetMineBucket(int cellID, int playerID)
+        {
+            int bucket = 0;
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetMineBucket", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    bucket = (int)reader["Bucket"];
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            return bucket;
+        }
+
         public async static Task AddMine(int playerID, int cellID)
         {
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
