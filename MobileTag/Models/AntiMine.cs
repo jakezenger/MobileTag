@@ -27,7 +27,7 @@ namespace MobileTag.Models
             CellID = cellID;
             PlayerID = playerID;
 
-            Destroyer = new Timer(10000);
+            Destroyer = new Timer(5000);
             Destroyer.Elapsed += Destroyer_Elapsed;
         }
 
