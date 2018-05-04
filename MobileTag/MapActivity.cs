@@ -265,11 +265,17 @@ namespace MobileTag
             //    Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
             //}
 
+            int totalYield = 0;
+
             foreach (Mine mine in GameModel.Player.Mines)
             {
-                int yieldAmount = await mine.Yield();
-                await GameModel.Player.Wallet.AddConfinium(yieldAmount);
+                totalYield += await mine.Yield();
+                
             }
+
+            await GameModel.Player.Wallet.AddConfinium(totalYield);
+
+            Toast.MakeText(this, "Yielded " + totalYield + " confinium.", ToastLength.Long).Show();
         }
 
         private void RequestLocationUpdates()
