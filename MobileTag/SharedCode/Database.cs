@@ -277,7 +277,7 @@ namespace MobileTag
                 while (reader.Read())
                 {
                     int cellID = (int)reader["CellID"];
-                    AntiMine aMine = new AntiMine(playerID, cellID);
+                    AntiMine aMine = new AntiMine(cellID, playerID);
                     antiMines.Add(aMine);
                 }
                 reader.Close();
@@ -367,7 +367,7 @@ namespace MobileTag
         {
             decimal lat = 0.00m;
             decimal lng = 0.00m;
-            int teamID = 0;
+            int teamID = 0, holdStrength = 0;
 
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -383,13 +383,14 @@ namespace MobileTag
                     lng = Convert.ToDecimal(reader["Longitude"]);
                     teamID = Convert.ToInt32(reader["TeamID"]);
                     cellID = Convert.ToInt32(reader["CellID"]);
+                    holdStrength = Convert.ToInt32(reader["HoldStrength"]);
                 }
                 reader.Close();
             };
 
             await ExecuteQueryAsync(readerProcedure);
 
-            Cell cell = new Cell(cellID, lat, lng, teamID);
+            Cell cell = new Cell(cellID, lat, lng, teamID, holdStrength);
             return cell;
         }
 

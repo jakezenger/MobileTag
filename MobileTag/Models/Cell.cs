@@ -14,6 +14,7 @@ namespace MobileTag.Models
         public int ID { get; }
         public decimal Latitude { get; }
         public decimal Longitude { get; }
+
         public int TeamID
         {
             get
@@ -135,9 +136,13 @@ namespace MobileTag.Models
             if (HoldStrength >= 0 && TeamID != GameModel.Player.Team.ID)
             {
                 if (HoldStrength >= amountToDrain)
+                {
                     HoldStrength -= amountToDrain;
+                }
                 else
+                {
                     HoldStrength = 0;
+                }
 
                 await Database.UpdateCell(this);
                 await BroadcastCellUpdate();

@@ -159,13 +159,14 @@ namespace MobileTag
 
         public void PlantMinePrompt()
         {
+            LatLng loc = new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude);
             Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
             builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
             {
                 if (GameModel.Player.Wallet.Confinium >= GameModel.MINE_BASE_PRICE)
                 {
-                    await GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude));
+                    await GameModel.Player.CreateMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
                 }
                 else
                 {
@@ -182,13 +183,14 @@ namespace MobileTag
 
         public void PlantAntiMinePrompt()
         {
+            LatLng loc = new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude);
             Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
             builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
             {
                 if (GameModel.Player.Wallet.Confinium >= GameModel.ANTI_MINE_BASE_PRICE)
                 {
-                     await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude));
+                     await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
                 }
                 else
                 {
@@ -406,6 +408,8 @@ namespace MobileTag
                 //});
 
                 await CellHub.Connection.Start();
+
+                GameModel.Player.StartAntiMines(this);
             }
             catch (Exception e)
             {

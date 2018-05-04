@@ -13,35 +13,56 @@ using MobileTag.SharedCode;
 
 namespace MobileTag.Models
 {
-    public class AntiMine : Mine
+    public class AntiMine
     {
-        private Cell cell;
+        public int CellID { get; }
+        public int PlayerID { get; }
+        private Timer Destroyer;
         public int DrainStrength = 100;
         public bool Viable = true;
+        public Activity MapActivity { get; set; }
 
-        public AntiMine(int cellID, int playerID) : base(cellID, playerID)
+        public AntiMine(int cellID, int playerID)
         {
-            if (GameModel.CellsInView.ContainsKey(cellID))
-            {
-                cell = GameModel.CellsInView[cellID];
-            }
+            CellID = cellID;
+            PlayerID = playerID;
+
+            Destroyer = new Timer(10000);
+            Destroyer.Elapsed += Destroyer_Elapsed;
         }
 
-        protected override async void Miner_Elapsed(object sender, ElapsedEventArgs e)
+        public void Start()
         {
-            if (cell == null)
+            Destroyer.Start();
+        }
+
+        private async void Destroyer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Cell cell = new Cell(CellID);
+
+            if (!GameModel.CellsInView.ContainsKey(CellID))
             {
                 cell = await Database.GetCell(CellID);
             }
-
-            bool stillViable = await cell.Drain(DrainStrength);
-
-            if (stillViable == false)
+            else
             {
-                Miner.Stop();
-                Viable = false;
+                MapActivity.RunOnUiThread(() =>
+                {
+                    cell = GameModel.CellsInView[CellID];
+                });
+
             }
 
+            MapActivity.RunOnUiThread(async () =>
+            { 
+                bool stillViable = await cell.Drain(DrainStrength);
+            
+                if (stillViable == false)
+                {
+                    Destroyer.Stop();
+                    Viable = false;
+                }
+            });
         }
     }
 }

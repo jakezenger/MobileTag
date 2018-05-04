@@ -18,7 +18,7 @@ namespace MobileTag.Models
         public int CellID { get; }
         public int PlayerID { get; }
         public int Bucket { get; set; }
-        protected Timer Miner { get; set; }
+        private Timer Miner { get; set; }
 
         public Mine(int cellID, int playerID, int bucket = 0)
         {
