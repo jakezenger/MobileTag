@@ -149,6 +149,12 @@ namespace MobileTag
 
         public void PlantMinePrompt()
         {
+            //open up dialog
+            Android.App.FragmentTransaction transaction = FragmentManager.BeginTransaction();
+            dialogCellInfo cellInfoDialog = new dialogCellInfo();
+            cellInfoDialog.Show(transaction,"Dialog Fragment");
+            //dialog end
+
             Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
             builder.SetPositiveButton(Resource.String.yes, async (e, o) =>

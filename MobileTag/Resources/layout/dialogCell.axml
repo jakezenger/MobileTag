@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="300dp"
+    android:minHeight="400dp">
+<!--Line 1-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#202020"
+        android:layout_height="70dp">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="CELL ID"
+            android:layout_height="80dp"
+            android:layout_width="150dp"
+            android:layout_weight=".7"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp" />
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:text="#needsid"
+            android:textColor="#ff0f39"
+            android:textSize="15dp" />
+    </LinearLayout>
+<!--Line 2-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#161616"
+        android:layout_height="70dp">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="TEAM OWNERS"
+            android:layout_height="80dp"
+            android:layout_width="150dp"
+            android:layout_weight=".7"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp" />
+        <TextView
+            android:textColor="#ff0f39"
+            android:textSize="15dp"
+            android:text="Pink: "
+            android:layout_height="80dp"
+            android:layout_width="100dp" />
+    </LinearLayout>
+<!--Line 3-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#0c0c0c"
+        android:layout_height="70dp">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="MINE RESOURCES"
+            android:layout_height="70dp"
+            android:layout_width="150dp"
+            android:layout_weight=".8"
+            android:paddingLeft="20dp"
+            android:gravity="center_vertical" />
+        <Button
+            android:background="@drawable/red_button"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:text="YIELD"
+            style="@style/button_text" />
+    </LinearLayout>
+<!--Line 4-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#161616"
+        android:layout_height="70dp">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="MINE"
+            android:layout_height="70dp"
+            android:layout_width="150dp"
+            android:layout_weight=".8"
+            android:paddingLeft="20dp"
+            android:gravity="center_vertical" />
+        <Button
+            android:background="@drawable/red_button"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:text="PLACE"
+            style="@style/button_text" />
+    </LinearLayout>
+<!--Line 5-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#202020"
+        android:layout_height="match_parent">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="HOLD STRENGTH"
+            android:layout_height="80dp"
+            android:layout_width="150dp"
+            android:layout_weight=".8"
+            android:paddingLeft="20dp" />
+        <Button
+            android:layout_width="110dp"
+            android:layout_height="200dp"
+            android:text="Cancel" />
+    </LinearLayout>
+</LinearLayout>

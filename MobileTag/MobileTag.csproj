@@ -122,6 +122,7 @@
   <ItemGroup>
     <Compile Include="CommunityActivity.cs" />
     <Compile Include="CreateAccountActivity.cs" />
+    <Compile Include="dialogCellInfo.cs" />
     <Compile Include="LoginActivity.cs" />
     <Compile Include="MapActivity.cs" />
     <Compile Include="Models\AntiMine.cs" />
@@ -173,6 +174,9 @@
     </AndroidResource>
     <AndroidResource Include="Resources\raw\style_json.json" />
     <AndroidResource Include="Resources\raw\StandardTheme.json" />
+    <AndroidResource Include="Resources\layout\dialogCell.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
@@ -262,6 +266,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Drawable\Red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\red_button.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
