@@ -69,6 +69,7 @@ namespace MobileTag
 
                 System.IO.File.WriteAllText(filePath2, passwordField.Text);
                 GameModel.Player = await Database.GetPlayer(usernameField.Text.Trim());
+
                 Intent intent = new Intent(this, typeof(MapActivity));
                 StartActivity(intent);
             }

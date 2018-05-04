@@ -121,6 +121,52 @@ namespace MobileTag
             return teamID;
         }
 
+        public async static Task<Mine> GetMine(int cellID, int playerID)
+        {
+            Mine mine = new Mine(cellID, playerID);
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("GetMine", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    mine.Bucket = (int)reader["Bucket"];
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            return mine;
+        }
+
+        public async static Task EmptyMineBucket(int cellID, int playerID)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("EmptyMineBucket", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
         public async static Task AddMine(int playerID, int cellID)
         {
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
@@ -140,6 +186,31 @@ namespace MobileTag
             };
 
             await ExecuteQueryAsync(readerProcedure);
+        }
+
+        public async static Task<int> OperateMine(int playerID, int cellID)
+        {
+            int bucket = 0;
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("OperateMine", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = playerID;
+                cmd.Parameters.Add("@cellID", SqlDbType.Int).Value = cellID;
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    bucket = (int)reader["Bucket"];
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            return bucket;
         }
 
         public async static Task AddAntiMine(int playerID, int cellID)
@@ -178,7 +249,9 @@ namespace MobileTag
                 while (reader.Read())
                 {
                     int cellID = (int)reader["CellID"];
-                    Mine mine = new Mine(playerID, cellID);
+                    int bucket = (int)reader["Bucket"];
+                    Mine mine = new Mine(cellID, playerID, bucket);
+
                     mines.Add(mine);
                 }
                 reader.Close();

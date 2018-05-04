@@ -266,16 +266,28 @@ namespace MobileTag
             }
         }
 
-        private void LocationButton_Click(object sender, EventArgs e)
+        private async void LocationButton_Click(object sender, EventArgs e)
         {
-            if (locationFound == true)
+            //if (locationFound == true)
+            //{
+            //    CenterMapCameraOnLocation();
+            //}
+            //else
+            //{
+            //    Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
+            //}
+
+            int totalYield = 0;
+
+            foreach (Mine mine in GameModel.Player.Mines)
             {
-                CenterMapCameraOnLocation();
+                totalYield += await mine.Yield();
+                
             }
-            else
-            {
-                Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
-            }
+
+            await GameModel.Player.Wallet.AddConfinium(totalYield);
+
+            Toast.MakeText(this, "Yielded " + totalYield + " confinium.", ToastLength.Long).Show();
         }
 
         private void RequestLocationUpdates()
@@ -382,6 +394,17 @@ namespace MobileTag
                     UpdateOverlay(updatedCell);
                 });
 
+                //CellHub.HubProxy.On<int>("broadcastMine", cellID =>
+                //{
+                //    // Handle SignalR mine update notification
+                //    Console.WriteLine("Mine in cell {0} was updated!", cellID);
+
+                //    RunOnUiThread(async () =>
+                //    {
+                //        GameModel.Player.Mines[cellID] = await Database.GetMine(cellID, GameModel.Player.ID);
+                //    });
+                //});
+
                 await CellHub.Connection.Start();
             }
             catch (Exception e)
@@ -473,7 +496,7 @@ namespace MobileTag
                     // Generate the new cell and add it to CellsInView
                     cell = new Cell(decLat, decLng);
                     GameModel.CellsInView.TryAdd(cell.ID, cell);
-                    await CellHub.SubscribeToUpdates(cell.ID);
+                    await CellHub.SubscribeToCellUpdates(cell.ID);
                 }
                 else
                 {

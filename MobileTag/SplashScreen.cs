@@ -70,6 +70,7 @@ namespace MobileTag
                 if (result == 1)
                 {
                     GameModel.Player = await Database.GetPlayer(username.Trim());
+
                     Intent intent = new Intent(this, typeof(MapActivity));
 
                     StartActivity(intent);

@@ -26,7 +26,7 @@ namespace MobileTag.SharedCode
             HubProxy = Connection.CreateHubProxy("cellHub");
         }
 
-        async static public Task SubscribeToUpdates(HashSet<int> cellIDs)
+        async static public Task SubscribeToCellUpdates(HashSet<int> cellIDs)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace MobileTag.SharedCode
             }
         }
 
-        async static public Task SubscribeToUpdates(ConcurrentDictionary<int, Cell> cellsInView)
+        async static public Task SubscribeToCellUpdates(ConcurrentDictionary<int, Cell> cellsInView)
         {
             HashSet<int> cellIDs = new HashSet<int>();
 
@@ -57,7 +57,7 @@ namespace MobileTag.SharedCode
             }
         }
 
-        async static public Task SubscribeToUpdates(int cellID)
+        async static public Task SubscribeToCellUpdates(int cellID)
         {
             try
             {
