@@ -314,7 +314,7 @@ namespace MobileTag
                     cellID = 0; //(int)reader["CellID"];
                     playerWallet.Confinium = (int)reader["Currency"];
                     mines = await GetMines(playerID);
-                    //TODO: aMines = await GetAntiMines(playerID);
+                    aMines = await GetAntiMines(playerID);
                 }
                 reader.Close();
             };
