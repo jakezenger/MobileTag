@@ -235,13 +235,15 @@ namespace MobileTag
                 await CellHub.Connection.Start();
             }
 
+            if (mMap != null)
+                mMap.Clear();
+
+            OverlaysToDraw.Clear();
+            GameModel.CellsInView.Clear();
+
             if (initialCameraLatLng != null)
             {
                 // Refresh stale cell data
-                mMap.Clear();
-                OverlaysToDraw.Clear();
-                GameModel.CellsInView.Clear();
-
                 await DrawCellsInView();
             }
         }
@@ -395,17 +397,6 @@ namespace MobileTag
 
                     UpdateOverlay(updatedCell);
                 });
-
-                //CellHub.HubProxy.On<int>("broadcastMine", cellID =>
-                //{
-                //    // Handle SignalR mine update notification
-                //    Console.WriteLine("Mine in cell {0} was updated!", cellID);
-
-                //    RunOnUiThread(async () =>
-                //    {
-                //        GameModel.Player.Mines[cellID] = await Database.GetMine(cellID, GameModel.Player.ID);
-                //    });
-                //});
 
                 await CellHub.Connection.Start();
 

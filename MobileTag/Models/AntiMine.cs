@@ -50,7 +50,6 @@ namespace MobileTag.Models
                 {
                     cell = GameModel.CellsInView[CellID];
                 });
-
             }
 
             MapActivity.RunOnUiThread(async () =>
