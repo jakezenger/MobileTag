@@ -24,4 +24,17 @@ public static class ColorCode
 
         return rgb;
     }
+
+    public static string TeamName(int teamID)
+    {
+        switch(teamID)
+        {
+            case 1: return "Red";
+            case 2: return "Green";
+            case 3: return "Blue";
+            case 4: return "Purple";
+            case 5: return "Pink";
+            default: return "Unknown";                
+        }
+    }
 }

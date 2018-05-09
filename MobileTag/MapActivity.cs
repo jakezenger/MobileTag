@@ -147,15 +147,27 @@ namespace MobileTag
             }
         }
 
-        public void PlantMinePrompt()
+        public async void PlantMinePrompt()
         {
             //open up dialog
-            Android.App.FragmentTransaction transaction = FragmentManager.BeginTransaction();
-            dialogCellInfo cellInfoDialog = new dialogCellInfo();
-            cellInfoDialog.Show(transaction,"Dialog Fragment");
+            
+            try
+            {
+                var id = Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude);
+                Cell cell = await Database.GetCell(id);
+                Android.App.FragmentTransaction transaction = FragmentManager.BeginTransaction();
+                dialogCellInfo cellInfoDialog = new dialogCellInfo(cell);
+                cellInfoDialog.Show(transaction, "Dialog Fragment");
+            }
+            catch (Exception ex)
+            {
+                string exString = "PlantMinePrompt exception" + ex.ToString();
+                Toast.MakeText(this, exString, ToastLength.Long).Show();
+            }
+            
             //dialog end
 
-            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
+            /*Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
             builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
             {
@@ -174,6 +186,7 @@ namespace MobileTag
             builder.SetMessage("Are you sure you want to build a mine here?");
 
             builder.Show();
+            */
         }
 
         public void PlantAntiMinePrompt()

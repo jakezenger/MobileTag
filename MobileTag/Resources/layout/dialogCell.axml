@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:minWidth="300dp"
     android:minHeight="400dp">
-<!--Line 1-->
+<!--Line 1  #Everything still needs @id's-->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -21,10 +21,11 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp" />
         <TextView
+            android:id="@+id/cellTextID"
             android:layout_width="100dp"
             android:layout_height="80dp"
-            android:text="#needsid"
-            android:textColor="#ff0f39"
+            android:text="id unknown"
+            android:textColor="#ffff00"
             android:textSize="15dp" />
     </LinearLayout>
 <!--Line 2-->
@@ -43,6 +44,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp" />
         <TextView
+            android:id="@+id/teamText"
             android:textColor="#ff0f39"
             android:textSize="15dp"
             android:text="Pink: "
@@ -65,6 +67,7 @@
             android:paddingLeft="20dp"
             android:gravity="center_vertical" />
         <Button
+            android:id="@+id/yieldBtn"
             android:background="@drawable/red_button"
             android:layout_width="110dp"
             android:layout_height="50dp"
@@ -85,8 +88,10 @@
             android:layout_width="150dp"
             android:layout_weight=".8"
             android:paddingLeft="20dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:id="@+id/textView1" />
         <Button
+            android:id="@+id/minePlaceBtn"
             android:background="@drawable/red_button"
             android:layout_width="110dp"
             android:layout_height="50dp"
@@ -107,9 +112,10 @@
             android:layout_width="150dp"
             android:layout_weight=".8"
             android:paddingLeft="20dp" />
-        <Button
+        <ImageButton
+            android:layout_height="50dp"
             android:layout_width="110dp"
-            android:layout_height="200dp"
-            android:text="Cancel" />
+            android:src="@drawable/mining"
+            android:background="#000000" />
     </LinearLayout>
 </LinearLayout>
