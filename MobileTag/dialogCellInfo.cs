@@ -21,22 +21,22 @@ namespace MobileTag
         private TextView cellText;
         private TextView teamText;
         private Cell cellClicked;
-        private Button mineBtn;
-        private Button yieldBtn;
+        private ImageButton mineBtn;
+        private ImageButton yieldBtn;
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             base.OnCreateView(inflater, container, savedInstanceState);
             view = inflater.Inflate(Resource.Layout.dialogCell, container, false);
             cellText = (TextView)view.FindViewById(Resource.Id.cellTextID);
             teamText = (TextView)view.FindViewById(Resource.Id.teamText);
-            mineBtn = (Button)view.FindViewById(Resource.Id.minePlaceBtn);
-            yieldBtn = (Button)view.FindViewById(Resource.Id.yieldBtn);
+            mineBtn = (ImageButton)view.FindViewById(Resource.Id.minePlaceBtn);
+            yieldBtn = (ImageButton)view.FindViewById(Resource.Id.yieldBtn);
             //Dialog.Window.SetBackgroundDrawable(new ColorDrawable(Color.Transparent));
             //Dialog.Window.SetBackgroundDrawable(new ColorDrawable(Color.Argb(255, 0, 0, 0)));
             mineBtn.Click += MineBtn_Click;
             yieldBtn.Click += YieldBtn_Click;
 
-            SetCellText(cellClicked.ID);
+            SetCellText(cellClicked);
             SetTeamColor(cellClicked);
             return view;
         }
@@ -64,9 +64,10 @@ namespace MobileTag
             cellClicked = cell;
         }
 
-        private void SetCellText(int cellID)
+        private void SetCellText(Cell cell)
         {
-            cellText.Text = cellID.ToString();
+            cellText.Text = cell.ID.ToString();
+            cellText.SetTextColor(ColorCode.TeamColor(cell.TeamID));
         }
 
         private void SetTeamColor(Cell cell)

@@ -25,7 +25,7 @@
             android:layout_width="100dp"
             android:layout_height="80dp"
             android:text="id unknown"
-            android:textColor="#ffff00"
+            android:textColor="#a9a9a9"
             android:textSize="15dp" />
     </LinearLayout>
 <!--Line 2-->
@@ -60,19 +60,18 @@
         <TextView
             android:textColor="#a9a9a9"
             android:textSize="15dp"
-            android:text="MINE RESOURCES"
+            android:text="YIELD RESOURCES"
             android:layout_height="70dp"
             android:layout_width="150dp"
             android:layout_weight=".8"
             android:paddingLeft="20dp"
             android:gravity="center_vertical" />
-        <Button
+        <ImageButton
             android:id="@+id/yieldBtn"
-            android:background="@drawable/red_button"
             android:layout_width="110dp"
-            android:layout_height="50dp"
-            android:text="YIELD"
-            style="@style/button_text" />
+            android:layout_height="70dp"
+            android:src="@drawable/mining2"
+            android:background="#000000" />
     </LinearLayout>
 <!--Line 4-->
     <LinearLayout
@@ -83,20 +82,19 @@
         <TextView
             android:textColor="#a9a9a9"
             android:textSize="15dp"
-            android:text="MINE"
+            android:text="PLACE MINE"
             android:layout_height="70dp"
             android:layout_width="150dp"
             android:layout_weight=".8"
             android:paddingLeft="20dp"
             android:gravity="center_vertical"
             android:id="@+id/textView1" />
-        <Button
+        <ImageButton
             android:id="@+id/minePlaceBtn"
-            android:background="@drawable/red_button"
+            android:src="@drawable/mining"
             android:layout_width="110dp"
-            android:layout_height="50dp"
-            android:text="PLACE"
-            style="@style/button_text" />
+            android:layout_height="70dp"
+            android:background="#000000" />
     </LinearLayout>
 <!--Line 5-->
     <LinearLayout
@@ -113,9 +111,8 @@
             android:layout_weight=".8"
             android:paddingLeft="20dp" />
         <ImageButton
-            android:layout_height="50dp"
+            android:layout_height="120dp"
             android:layout_width="110dp"
-            android:src="@drawable/mining"
-            android:background="#000000" />
+            android:background="#202020" />
     </LinearLayout>
 </LinearLayout>
