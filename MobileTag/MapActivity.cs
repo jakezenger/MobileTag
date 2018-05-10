@@ -152,11 +152,10 @@ namespace MobileTag
             //open up dialog
             
             try
-            {
+            {   
                 var id = Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude);
-                Cell cell = await Database.GetCell(id);
                 Android.App.FragmentTransaction transaction = FragmentManager.BeginTransaction();
-                dialogCellInfo cellInfoDialog = new dialogCellInfo(cell);
+                dialogCellInfo cellInfoDialog = new dialogCellInfo(await Database.GetCell(id));
                 cellInfoDialog.Show(transaction, "Dialog Fragment");
             }
             catch (Exception ex)

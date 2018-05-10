@@ -47,9 +47,10 @@
             android:id="@+id/teamText"
             android:textColor="#ff0f39"
             android:textSize="15dp"
-            android:text="Pink: "
+            android:text="None"
             android:layout_height="80dp"
-            android:layout_width="100dp" />
+            android:layout_width="100dp"
+            android:gravity="center_horizontal" />
     </LinearLayout>
 <!--Line 3-->
     <LinearLayout
@@ -71,7 +72,7 @@
             android:layout_width="110dp"
             android:layout_height="70dp"
             android:src="@drawable/mining2"
-            android:background="#000000" />
+            android:background="#0c0c0c" />
     </LinearLayout>
 <!--Line 4-->
     <LinearLayout
@@ -94,7 +95,7 @@
             android:src="@drawable/mining"
             android:layout_width="110dp"
             android:layout_height="70dp"
-            android:background="#000000" />
+            android:background="#161616" />
     </LinearLayout>
 <!--Line 5-->
     <LinearLayout
@@ -102,17 +103,9 @@
         android:layout_width="match_parent"
         android:background="#202020"
         android:layout_height="match_parent">
-        <TextView
-            android:textColor="#a9a9a9"
-            android:textSize="15dp"
-            android:text="HOLD STRENGTH"
-            android:layout_height="80dp"
-            android:layout_width="150dp"
-            android:layout_weight=".8"
-            android:paddingLeft="20dp" />
-        <ImageButton
-            android:layout_height="120dp"
-            android:layout_width="110dp"
-            android:background="#202020" />
+        <microcharts.droid.ChartView
+            android:id="@+id/chartView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 </LinearLayout>

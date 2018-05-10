@@ -37,4 +37,30 @@ public static class ColorCode
             default: return "Unknown";                
         }
     }
+
+    public static Color BrightTeamColor(int teamID)
+    {
+        switch(teamID)
+        {
+            case 1: return Color.Argb(255,255, 80, 80);
+            case 2: return Color.Argb(255,0, 204, 102);
+            case 3: return Color.Argb(255,102, 153, 255);
+            case 4: return Color.Argb(255,204, 102, 255);
+            case 5: return Color.Argb(255, 255, 0, 102);
+            default: return Color.Argb(0, 0, 0, 0);
+        }
+    }
+
+    public static string BrightHexColorCode(int teamID)
+    {
+        switch (teamID)
+        {
+            case 1: return "#ff5050";
+            case 2: return "#00cc66";
+            case 3: return "#6699ff";
+            case 4: return "#cc66ff";
+            case 5: return "#ff0066";
+            default: return "#000000";
+        }
+    }
 }
