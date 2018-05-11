@@ -62,6 +62,7 @@ namespace MobileTag
 
                 switch (e.MenuItem.ItemId)
                 {
+                    //need to put a check for if the activity is already started.
                     case Resource.Id.nav_logout:
                         GameModel.Logout();
                         StartActivity(new Intent(this, typeof(LoginActivity)));
