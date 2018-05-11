@@ -190,7 +190,8 @@ namespace MobileTag
             {
                 if (GameModel.Player.Wallet.Confinium >= GameModel.ANTI_MINE_BASE_PRICE)
                 {
-                     await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
+                    AntiMine aMine = await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
+                    aMine.Start();
                 }
                 else
                 {
