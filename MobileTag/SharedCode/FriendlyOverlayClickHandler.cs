@@ -28,7 +28,13 @@ namespace MobileTag.SharedCode
             //mapActivity.DisplayCellInfo(cell.ID);
 
             if (cell.ID == playerCellID)
+            {
                 mapActivity.PlantMinePrompt();
+            }
+            else
+            {
+                //mapActivity.DefaultCellDialog();
+            }
         }
     }
 }

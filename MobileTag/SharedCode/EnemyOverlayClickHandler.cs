@@ -27,7 +27,14 @@ namespace MobileTag.SharedCode
             mapActivity.DisplayStatus(String.Format("Enemy cell! Cell ID: {0}", cell.ID), 3000);
 
             if (cell.ID == playerCellID)
+            {
                 mapActivity.PlantAntiMinePrompt();
+            }
+            else
+            {
+                //mapActivity.DefaultCellDialog();
+            }
+
         }
     }
 }

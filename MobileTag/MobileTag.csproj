@@ -135,6 +135,7 @@
     <Compile Include="CommunityActivity.cs" />
     <Compile Include="CreateAccountActivity.cs" />
     <Compile Include="dialogCellInfo.cs" />
+    <Compile Include="EnemyDialogCell.cs" />
     <Compile Include="LoginActivity.cs" />
     <Compile Include="MapActivity.cs" />
     <Compile Include="Models\AntiMine.cs" />
@@ -187,6 +188,9 @@
     <AndroidResource Include="Resources\raw\style_json.json" />
     <AndroidResource Include="Resources\raw\StandardTheme.json" />
     <AndroidResource Include="Resources\layout\dialogCell.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\EnemyDialogCell.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
@@ -289,6 +293,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Drawable\mining2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\miner.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
