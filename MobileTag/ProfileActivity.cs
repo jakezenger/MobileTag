@@ -24,6 +24,7 @@ namespace MobileTag
         private NavigationView navigationView;
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Random randomNumber = new Random();
             base.OnCreate(savedInstanceState);
 
             // Create your application here
@@ -47,12 +48,12 @@ namespace MobileTag
 
             TextView cellsClaimedTextView = FindViewById<TextView>(Resource.Id.cellsClaimedLabelTextView);
 
-            cellsClaimedTextView.Text = cellsClaimedTextView.Text + " To be Added";
+            cellsClaimedTextView.Text = cellsClaimedTextView.Text + randomNumber.Next();
 
             ImageView myView = FindViewById<ImageView>(Resource.Id.profilePicImageView);
 
             TextView confiniumTextView = FindViewById<TextView>(Resource.Id.confiniumTextView);
-            confiniumTextView.Text =  "c " + GameModel.Player.Wallet.Confinium;
+            confiniumTextView.Text = "c " + GameModel.Player.Wallet.Confinium + "\nMines: " + " number of mines" + "\n Anti-Mines: " + "number of antimines";
             myView.Click += MyView_Click;
             SetImage(myView);
 
