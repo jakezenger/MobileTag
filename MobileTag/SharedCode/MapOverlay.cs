@@ -118,6 +118,26 @@ namespace MobileTag.SharedCode
             SetColor(overlayColor);
         }
 
+        public void RemoveAntiMine()
+        {
+            if (AntiMinePolygon != null)
+            {
+                AntiMinePolygon.Visible = false;
+                AntiMinePolygon.Remove();
+                AntiMinePolygon = null;
+            }
+        }
+
+        public void RemoveMine()
+        {
+            if (MineCircle != null)
+            {
+                MineCircle.Visible = false;
+                MineCircle.Remove();
+                MineCircle = null;
+            }
+        }
+
         public void Draw(GoogleMap map)
         {
             lock (locker)
@@ -128,18 +148,16 @@ namespace MobileTag.SharedCode
                 }
                 else if (MineIsOnMap && !GameModel.Player.Mines.ContainsKey(CellID))
                 {
-                    MineCircle.Visible = false;
-                    MineCircle.Remove();
+                    RemoveMine();
                 }
 
                 if (!AntiMineIsOnMap && GameModel.Player.AntiMines.ContainsKey(CellID))
                 {
-                    MineCircle = map.AddCircle(mineCircleOptions);
+                    AntiMinePolygon = map.AddPolygon(antiMineTriangleOptions);
                 }
                 else if (AntiMineIsOnMap && !GameModel.Player.AntiMines.ContainsKey(CellID))
                 {
-                    AntiMinePolygon.Visible = false;
-                    AntiMinePolygon.Remove();
+                    RemoveAntiMine();
                 }
 
                 if (!CellIsOnMap)

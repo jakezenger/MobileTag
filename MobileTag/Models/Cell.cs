@@ -165,7 +165,14 @@ namespace MobileTag.Models
                 }
                 else
                 {
+                    // Player has claimed this cell for their faction
+
                     TeamID = GameModel.Player.Team.ID;
+
+                    if (GameModel.Player.AntiMines.ContainsKey(this.ID))
+                    {
+                        GameModel.Player.RemoveAntiMine(this.ID);
+                    }
 
                     await GameModel.Player.Wallet.AddConfinium(GameModel.DEFAULT_TAG_AMOUNT);
 

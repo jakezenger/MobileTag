@@ -76,5 +76,41 @@ namespace MobileTag.Models
                 am.Start();
             }
         }
+
+        public void RemoveAntiMine(AntiMine antiMine)
+        {
+            if (GameModel.CellsInView.ContainsKey(antiMine.CellID))
+            {
+                GameModel.CellsInView[antiMine.CellID].MapOverlay.RemoveAntiMine();
+                AntiMines.TryRemove(antiMine.CellID, out AntiMine value);
+            }
+        }
+
+        public void RemoveAntiMine(int antiMineCellID)
+        {
+            if (GameModel.CellsInView.ContainsKey(antiMineCellID))
+            {
+                GameModel.CellsInView[antiMineCellID].MapOverlay.RemoveAntiMine();
+                AntiMines.TryRemove(antiMineCellID, out AntiMine value);
+            }
+        }
+
+        public void RemoveMine(Mine mine)
+        {
+            if (GameModel.CellsInView.ContainsKey(mine.CellID))
+            {
+                GameModel.CellsInView[mine.CellID].MapOverlay.RemoveAntiMine();
+                Mines.TryRemove(mine.CellID, out Mine value);
+            }
+        }
+
+        public void RemoveMine(int mineCellID)
+        {
+            if (GameModel.CellsInView.ContainsKey(mineCellID))
+            {
+                GameModel.CellsInView[mineCellID].MapOverlay.RemoveMine();
+                Mines.TryRemove(mineCellID, out Mine value);
+            }
+        }
     }
 }

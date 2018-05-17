@@ -191,6 +191,8 @@ namespace MobileTag
                 if (GameModel.Player.Wallet.Confinium >= GameModel.ANTI_MINE_BASE_PRICE)
                 {
                     AntiMine aMine = await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
+                    GameModel.CellsInView[aMine.CellID].MapOverlay.Draw(mMap);
+                    aMine.MapActivity = this;
                     aMine.Start();
                 }
                 else
@@ -273,15 +275,6 @@ namespace MobileTag
 
         private async void LocationButton_Click(object sender, EventArgs e)
         {
-            //if (locationFound == true)
-            //{
-            //    CenterMapCameraOnLocation();
-            //}
-            //else
-            //{
-            //    Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
-            //}
-
             int totalYield = 0;
 
             foreach (Mine mine in GameModel.Player.Mines.Values)
@@ -399,13 +392,13 @@ namespace MobileTag
                     if (updatedCell.TeamID != GameModel.Player.Team.ID && GameModel.Player.Mines.ContainsKey(updatedCell.ID))
                     {
                         // remove player's mine in this cell
-                        GameModel.Player.Mines.TryRemove(updatedCell.ID, out Mine value);
+                        GameModel.Player.RemoveMine(updatedCell.ID);
                     }
 
                     if (updatedCell.TeamID == GameModel.Player.Team.ID && GameModel.Player.AntiMines.ContainsKey(updatedCell.ID))
                     {
                         // remove player's antimine in this cell
-                        GameModel.Player.AntiMines.TryRemove(updatedCell.ID, out AntiMine value);
+                        GameModel.Player.RemoveAntiMine(updatedCell.ID);
                     }
 
                     UpdateOverlay(updatedCell);
