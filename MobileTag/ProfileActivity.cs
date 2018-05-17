@@ -194,18 +194,20 @@ namespace MobileTag
         }
         private string GetRealPathFromURI(Android.Net.Uri contentURI)
         {
-            ICursor cursor = ContentResolver.Query(contentURI, null, null, null, null);
-            cursor.MoveToFirst();
-            string documentId = cursor.GetString(0);
-            documentId = documentId.Split(':')[1];
-            cursor.Close();
+            string path = null;
+            // The projection contains the columns we want to return in our query.
+            string[] projection = new[] { Android.Provider.MediaStore.Audio.Media.InterfaceConsts.Data };
+            using (ICursor cursor = ManagedQuery(contentURI, projection, null, null, null))
+            {
+                if (cursor != null)
+                {
+                    int columnIndex = cursor.GetColumnIndexOrThrow(Android.Provider.MediaStore.Audio.Media.InterfaceConsts.Data);
 
-            cursor = ContentResolver.Query(
-                Android.Provider.MediaStore.Images.Media.ExternalContentUri,
-                null, MediaStore.Images.Media.InterfaceConsts.Id + " = ? ", new[] { documentId }, null);
-            cursor.MoveToFirst();
-            string path = cursor.GetString(cursor.GetColumnIndex(MediaStore.Images.Media.InterfaceConsts.Data));
-            cursor.Close();
+                    cursor.MoveToFirst();
+
+                    path = cursor.GetString(columnIndex);
+                }
+            }
 
             return path;
         }
