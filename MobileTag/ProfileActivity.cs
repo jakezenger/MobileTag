@@ -20,7 +20,7 @@ using Android.Views;
 using Android.Widget;
 using Java.IO;
 using MobileTag.Models;
-using SQLite;
+
 using File = System.IO.File;
 using Path = System.IO.Path;
 using String = System.String;
@@ -38,10 +38,7 @@ namespace MobileTag
         //drawer stuff
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
-        // Documents folder
-        private String path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-        private String dbPath;
-        private SQLiteConnection db;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Random randomNumber = new Random();
@@ -232,17 +229,8 @@ namespace MobileTag
             return base.OnOptionsItemSelected(item);
         }
 
-        // sqlite image byte stuff
-        public class Image
-        {
-            [PrimaryKey, AutoIncrement]
-            public int Id { get; set; }
-            public string FileName { get; set; }
-            public string MimeType { get; set; }
-            public byte[] Content { get; set; }
-
-            public Image() { }
-        }
+       
+     
 
 
     }
