@@ -24,6 +24,7 @@ using MobileTag.Models;
 using File = System.IO.File;
 using Path = System.IO.Path;
 using String = System.String;
+using Uri = Android.Net.Uri;
 
 
 namespace MobileTag
@@ -94,8 +95,11 @@ namespace MobileTag
 
                 drawerLayout.CloseDrawers();
             };
-            string path = Application.Context.FilesDir.Path;
-            var filePath = System.IO.Path.Combine(path, "imagePath.txt");
+            // Documents folder
+            string documentsPath = System.Environment.GetFolderPath(
+                System.Environment.SpecialFolder.Personal);
+           
+            var filePath = System.IO.Path.Combine(documentsPath, "imagePath.png");
             if (System.IO.File.Exists(filePath))
             {
                 LoadImage(filePath);
@@ -137,8 +141,7 @@ namespace MobileTag
             {
                 Android.Net.Uri uri = data.Data;
                 myView.SetImageURI(uri);
-                String ImagePath = GetRealPathFromURI(uri);
-                StoreImagePath(ImagePath);
+                StoreImage(uri);
             }
         }
 
@@ -180,43 +183,46 @@ namespace MobileTag
             myView.SetImageResource(resourceId);
         }
 
-        private void SetImage(ImageView myView, String image)
-        {
-            int resourceId = (int) typeof(Resource.Drawable).GetField(image).GetValue(null);
-            myView.SetImageResource(resourceId);
-        }
+       
         
-        private void SaveImage(String ImageName, byte[] image)
+   
+     
+
+        private void StoreImage(Uri incommingURI)
         {
-            var path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
-            var filename = Path.Combine(path.ToString(), ImageName + ".Jpeg");
-            File.WriteAllBytes(filename, image);
-        }
-        private string GetRealPathFromURI(Android.Net.Uri contentURI)
-        {
-            string path = null;
-            // The projection contains the columns we want to return in our query.
-            string[] projection = new[] { Android.Provider.MediaStore.Audio.Media.InterfaceConsts.Data };
-            using (ICursor cursor = ManagedQuery(contentURI, projection, null, null, null))
-            {
-                if (cursor != null)
+            // Documents folder
+            string documentsPath = System.Environment.GetFolderPath(
+                System.Environment.SpecialFolder.Personal);
+           
+            var filePath = System.IO.Path.Combine(documentsPath, "imagePath.png");
+            System.IO.Stream input = this.ContentResolver.OpenInputStream(incommingURI);
+           
+            byte[] buffer = new byte[16 * 1024];
+
+            using
+            
+                //need to convert to bytes
+                (MemoryStream ms = new MemoryStream())
                 {
-                    int columnIndex = cursor.GetColumnIndexOrThrow(Android.Provider.MediaStore.Audio.Media.InterfaceConsts.Data);
-
-                    cursor.MoveToFirst();
-
-                    path = cursor.GetString(columnIndex);
+                    int read;
+                    while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        ms.Write(buffer, 0, read);
+                    }
+                    pictByteArray = ms.ToArray();
                 }
-            }
 
-            return path;
+               
+
+                System.IO.File.WriteAllBytes(filePath, pictByteArray);
+            
         }
-
-        private void StoreImagePath(String ImagePath)
+       
+        private Android.Graphics.Bitmap NGetBitmap(Android.Net.Uri uriImage)
         {
-            string path = Application.Context.FilesDir.Path;
-            var filePath = System.IO.Path.Combine(path, "imagePath.txt");
-            System.IO.File.WriteAllText(filePath, ImagePath);
+            Android.Graphics.Bitmap mBitmap = null;
+            mBitmap = Android.Provider.MediaStore.Images.Media.GetBitmap(this.ContentResolver, uriImage);
+            return mBitmap;
         }
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
         {
