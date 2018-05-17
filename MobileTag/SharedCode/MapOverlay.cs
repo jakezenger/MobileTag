@@ -52,13 +52,20 @@ namespace MobileTag.SharedCode
 
         private void SetColor(Color color)
         {
-            if (Polygon != null)
+            try
             {
-                Polygon.FillColor = color;
-                PolygonOptions.InvokeFillColor(color);
+                if (Polygon != null)
+                {
+                    Polygon.FillColor = color;
+                    PolygonOptions.InvokeFillColor(color);
+                }
+                else
+                    PolygonOptions.InvokeFillColor(color);
             }
-            else
-                PolygonOptions.InvokeFillColor(color);
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         public void UpdateColor(int holdStrength, int teamID)

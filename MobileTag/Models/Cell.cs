@@ -14,6 +14,7 @@ namespace MobileTag.Models
         public int ID { get; }
         public decimal Latitude { get; }
         public decimal Longitude { get; }
+
         public int TeamID
         {
             get
@@ -129,6 +130,27 @@ namespace MobileTag.Models
             return latLng;
         }
 
+        // returns true if the cell is still viable, false if there's no more HoldStrength left
+        public async Task<bool> Drain(int amountToDrain)
+        {
+            if (HoldStrength >= 0 && TeamID != GameModel.Player.Team.ID)
+            {
+                if (HoldStrength >= amountToDrain)
+                {
+                    HoldStrength -= amountToDrain;
+                }
+                else
+                {
+                    HoldStrength = 0;
+                }
+
+                await Database.UpdateCell(this);
+                await BroadcastCellUpdate();
+            }
+
+            return HoldStrength > 0;
+        }
+
         public async Task Tag()
         {
             if (TeamID == GameModel.Player.Team.ID)
@@ -156,7 +178,7 @@ namespace MobileTag.Models
         }
 
         // Broadcast the updated cell to all of the clients that are currently looking at this cell
-        async private Task BroadcastCellUpdate()
+        async public Task BroadcastCellUpdate()
         {
             if (CellHub.Connection.State == Microsoft.AspNet.SignalR.Client.ConnectionState.Connected)
             {

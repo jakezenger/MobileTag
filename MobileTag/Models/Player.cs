@@ -66,5 +66,14 @@ namespace MobileTag.Models
 
             return aMine;
         }
+
+        public void StartAntiMines(Activity mapActivity)
+        {
+            foreach (AntiMine am in AntiMines)
+            {
+                am.MapActivity = mapActivity;
+                am.Start();
+            }
+        }
     }
 }

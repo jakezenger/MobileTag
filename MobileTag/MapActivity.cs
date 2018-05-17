@@ -57,6 +57,61 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Map);
 
+            SetUpUI();           
+
+            SetUpMap();
+
+            var cellHubSetupTask = SetUpCellHub();
+
+            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
+            {
+                DisplayStatus("Finding location...");
+                GetLocation();
+            }
+            else
+            {
+                RequestPermissions(LocationPermissions, RequestLocationID);
+            }
+
+            //Drawer navigation menu event handler
+            navigationView.NavigationItemSelected += (sender, e) =>
+            {
+                e.MenuItem.SetChecked(true);
+
+                switch (e.MenuItem.ItemId)
+                {
+                    case Resource.Id.nav_profile:
+                        StartActivity(new Intent(this, typeof(ProfileActivity)));
+                        break;
+                    case Resource.Id.nav_map:
+                        // we are already in map activity
+                        break;
+                    case Resource.Id.nav_settings:                        
+                        StartActivity(new Intent(this, typeof(SettingsActivity)));                       
+                        break;
+                    case Resource.Id.nav_logout:
+                        GameModel.Logout();
+                        StartActivity(new Intent(this, typeof(LoginActivity)));
+                        break;
+                    default:
+                        break;
+                }               
+                drawerLayout.CloseDrawers();
+              
+            };           
+            await cellHubSetupTask;
+        }
+
+        private void SetUpMap()
+        {
+            if (mMap == null)
+            {
+                FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
+            }
+        }
+
+        public void SetUpUI()
+        {
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetActionBar(toolbar);
             toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
@@ -74,52 +129,6 @@ namespace MobileTag
 
             tagButton.Click += TagButton_Click;
             locationButton.Click += LocationButton_Click;
-
-            SetUpMap();
-
-            var cellHubSetupTask = SetUpCellHub();
-
-            if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
-            {
-                DisplayStatus("Finding location...");
-                GetLocation();
-            }
-            else
-            {
-                RequestPermissions(LocationPermissions, RequestLocationID);
-            }
-
-            navigationView.NavigationItemSelected += (sender, e) =>
-            {
-                e.MenuItem.SetChecked(true);
-
-                switch (e.MenuItem.ItemId)
-                {
-                    case Resource.Id.nav_logout:
-                        GameModel.Logout();
-                        StartActivity(new Intent(this, typeof(LoginActivity)));
-                        break;
-                    case Resource.Id.nav_settings:
-                        StartActivity(new Intent(this, typeof(SettingsActivity)));
-                        break;
-                    case Resource.Id.nav_profile:
-                        StartActivity(new Intent(this, typeof(ProfileActivity)));
-                        break;
-                    default:
-                        break;
-                }
-                drawerLayout.CloseDrawers();
-            };
-
-            await cellHubSetupTask;
-        }
-
-        private void SetUpMap()
-        {
-            if (mMap == null)
-            {
-                FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map).GetMapAsync(this);
-            }
         }
 
         public void OnMapReady(GoogleMap googleMap)
@@ -150,13 +159,14 @@ namespace MobileTag
 
         public void PlantMinePrompt()
         {
+            LatLng loc = new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude);
             Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
             builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
             {
                 if (GameModel.Player.Wallet.Confinium >= GameModel.MINE_BASE_PRICE)
                 {
-                    await GameModel.Player.CreateMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude));
+                    await GameModel.Player.CreateMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
                 }
                 else
                 {
@@ -173,13 +183,15 @@ namespace MobileTag
 
         public void PlantAntiMinePrompt()
         {
+            LatLng loc = new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude);
             Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
             builder.SetCancelable(true);
             builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
             {
                 if (GameModel.Player.Wallet.Confinium >= GameModel.ANTI_MINE_BASE_PRICE)
                 {
-                     await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude));
+                    AntiMine aMine = await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
+                    aMine.Start();
                 }
                 else
                 {
@@ -201,6 +213,7 @@ namespace MobileTag
             userConfinium.Text = GameModel.Player.Wallet.Confinium.ToString();
         }
 
+        //Hamburger Button Pressed
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
@@ -210,7 +223,8 @@ namespace MobileTag
 
         protected override async void OnResume()
         {
-            base.OnResume();
+            base.OnResume();            
+
 
             if (CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation) == Permission.Granted)
             {
@@ -222,13 +236,15 @@ namespace MobileTag
                 await CellHub.Connection.Start();
             }
 
+            if (mMap != null)
+                mMap.Clear();
+
+            OverlaysToDraw.Clear();
+            GameModel.CellsInView.Clear();
+
             if (initialCameraLatLng != null)
             {
                 // Refresh stale cell data
-                mMap.Clear();
-                OverlaysToDraw.Clear();
-                GameModel.CellsInView.Clear();
-
                 await DrawCellsInView();
             }
         }
@@ -255,16 +271,28 @@ namespace MobileTag
             }
         }
 
-        private void LocationButton_Click(object sender, EventArgs e)
+        private async void LocationButton_Click(object sender, EventArgs e)
         {
-            if (locationFound == true)
+            //if (locationFound == true)
+            //{
+            //    CenterMapCameraOnLocation();
+            //}
+            //else
+            //{
+            //    Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
+            //}
+
+            int totalYield = 0;
+
+            foreach (Mine mine in GameModel.Player.Mines)
             {
-                CenterMapCameraOnLocation();
+                totalYield += await mine.Yield();
+                
             }
-            else
-            {
-                Toast.MakeText(this, "Location unknown...", ToastLength.Long).Show();
-            }
+
+            await GameModel.Player.Wallet.AddConfinium(totalYield);
+
+            Toast.MakeText(this, "Yielded " + totalYield + " confinium.", ToastLength.Long).Show();
         }
 
         private void RequestLocationUpdates()
@@ -372,6 +400,8 @@ namespace MobileTag
                 });
 
                 await CellHub.Connection.Start();
+
+                GameModel.Player.StartAntiMines(this);
             }
             catch (Exception e)
             {
@@ -462,7 +492,7 @@ namespace MobileTag
                     // Generate the new cell and add it to CellsInView
                     cell = new Cell(decLat, decLng);
                     GameModel.CellsInView.TryAdd(cell.ID, cell);
-                    await CellHub.SubscribeToUpdates(cell.ID);
+                    await CellHub.SubscribeToCellUpdates(cell.ID);
                 }
                 else
                 {

@@ -46,6 +46,7 @@ namespace MobileTag.Models
         public const int DEFAULT_TAG_AMOUNT = 100;
         public const int MINE_BASE_PRICE = 500;
         public const int ANTI_MINE_BASE_PRICE = 200;
+
         public static void Logout()
         {
             string path = Application.Context.FilesDir.Path;
@@ -97,7 +98,7 @@ namespace MobileTag.Models
 
             if (NewSubscriptions.Count > 0)
             {
-                await CellHub.SubscribeToUpdates(NewSubscriptions);
+                await CellHub.SubscribeToCellUpdates(NewSubscriptions);
             }
         }
     }
