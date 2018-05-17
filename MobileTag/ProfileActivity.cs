@@ -58,7 +58,9 @@ namespace MobileTag
                         
                         break;
                     case Resource.Id.nav_map:
-                        StartActivity(new Intent(this, typeof(MapActivity)));
+                        //var intent = new Intent(this, typeof(MapActivity)).SetFlags(ActivityFlags.ClearTask);
+                        var intent = new Intent(this, typeof(MapActivity));
+                        StartActivity(intent);
                         break;
                     case Resource.Id.nav_settings:
                         StartActivity(new Intent(this, typeof(SettingsActivity)));
