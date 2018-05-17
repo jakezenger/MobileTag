@@ -2483,8 +2483,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c00a0
 			public const int cancel_action = 2131493024;
 			
-			// aapt resource value: 0x7f0c00ba
-			public const int cellsClaimedLabelTextView = 2131493050;
+			// aapt resource value: 0x7f0c00b9
+			public const int cellsClaimedLabelTextView = 2131493049;
 			
 			// aapt resource value: 0x7f0c003a
 			public const int center = 2131492922;
@@ -2516,8 +2516,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c002f
 			public const int collapseActionView = 2131492911;
 			
-			// aapt resource value: 0x7f0c00b7
-			public const int confiniumTextView = 2131493047;
+			// aapt resource value: 0x7f0c00ba
+			public const int confiniumTextView = 2131493050;
 			
 			// aapt resource value: 0x7f0c0092
 			public const int confiniumTxt = 2131493010;
@@ -2609,8 +2609,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c00bd
 			public const int gifImageView = 2131493053;
 			
-			// aapt resource value: 0x7f0c00b8
-			public const int gridLayout1 = 2131493048;
+			// aapt resource value: 0x7f0c00b7
+			public const int gridLayout1 = 2131493047;
 			
 			// aapt resource value: 0x7f0c0005
 			public const int home = 2131492869;
@@ -2876,8 +2876,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0040
 			public const int start = 2131492928;
 			
-			// aapt resource value: 0x7f0c00b9
-			public const int statisticsTextView = 2131493049;
+			// aapt resource value: 0x7f0c00b8
+			public const int statisticsTextView = 2131493048;
 			
 			// aapt resource value: 0x7f0c00a1
 			public const int status_bar_latest_event_content = 2131493025;
