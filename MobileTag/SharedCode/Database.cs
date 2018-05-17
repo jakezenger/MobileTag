@@ -234,9 +234,9 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);          
         }
 
-        public async static Task<List<Mine>> GetMines(int playerID)
+        public async static Task<ConcurrentDictionary<int, Mine>> GetMines(int playerID)
         {
-            List<Mine> mines = new List<Mine>();
+            ConcurrentDictionary<int, Mine> mines = new ConcurrentDictionary<int, Mine>();
 
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -252,7 +252,7 @@ namespace MobileTag
                     int bucket = (int)reader["Bucket"];
                     Mine mine = new Mine(cellID, playerID, bucket);
 
-                    mines.Add(mine);
+                    mines.TryAdd(mine.CellID, mine);
                 }
                 reader.Close();
             };
@@ -262,9 +262,9 @@ namespace MobileTag
             return mines;           
         }
 
-        public async static Task<List<AntiMine>> GetAntiMines(int playerID)
+        public async static Task<ConcurrentDictionary<int, AntiMine>> GetAntiMines(int playerID)
         {
-            List<AntiMine> antiMines = new List<AntiMine>();
+            ConcurrentDictionary<int, AntiMine> antiMines = new ConcurrentDictionary<int, AntiMine>();
 
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -278,7 +278,7 @@ namespace MobileTag
                 {
                     int cellID = (int)reader["CellID"];
                     AntiMine aMine = new AntiMine(cellID, playerID);
-                    antiMines.Add(aMine);
+                    antiMines.TryAdd(cellID, aMine);
                 }
                 reader.Close();
             };
@@ -293,8 +293,8 @@ namespace MobileTag
             int playerID = 0;
             int teamID = 0;
             string teamName = "";
-            List<Mine> mines = new List<Mine>();
-            List<AntiMine> aMines = new List<AntiMine>();
+            ConcurrentDictionary<int, Mine> mines = new ConcurrentDictionary<int, Mine>();
+            ConcurrentDictionary<int, AntiMine> aMines = new ConcurrentDictionary<int, AntiMine>();
             int cellID = 0;
             Wallet playerWallet = new Wallet();
 
@@ -328,9 +328,6 @@ namespace MobileTag
 
         public async static Task<bool> UpdatePlayerWallet(int playerID, int confinium)
         {
-
-            //TODO: implement database call to update players currency
-            //Stored Procedure not yet implemented. Code below may need altering when database is updated.
             try
             {
                 Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>

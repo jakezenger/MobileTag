@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.Collections.Concurrent;
 
 namespace MobileTag.Models
 {
@@ -19,10 +20,10 @@ namespace MobileTag.Models
         public Team Team { get; set; }
         public int CurrentCellID { get; set; }
         public Wallet Wallet { get; set; }
-        public List<Mine> Mines { get; }
-        public List<AntiMine> AntiMines { get; }
+        public ConcurrentDictionary<int, Mine> Mines { get; }
+        public ConcurrentDictionary<int, AntiMine> AntiMines { get; }
 
-        public Player(int id, string username, Team team, int currentCellID, List<Mine> mines, List<AntiMine> aMines, Wallet wallet)
+        public Player(int id, string username, Team team, int currentCellID, ConcurrentDictionary<int, Mine> mines, ConcurrentDictionary<int, AntiMine> aMines, Wallet wallet)
         {
             ID = id;
             Team = team;
@@ -34,7 +35,7 @@ namespace MobileTag.Models
             //TODO: ADD ANTI MINES EVERYWHERE
         }
 
-        public Player(int id, string username, Team team, decimal lat, decimal lng, List<Mine> mines, List<AntiMine> aMines, Wallet wallet)
+        public Player(int id, string username, Team team, decimal lat, decimal lng, ConcurrentDictionary<int, Mine> mines, ConcurrentDictionary<int, AntiMine> aMines, Wallet wallet)
         {
             ID = id;
             Team = team;
@@ -51,7 +52,7 @@ namespace MobileTag.Models
             await Database.AddMine(ID, cellID);
             await Wallet.SubtractConfinium(GameModel.MINE_BASE_PRICE);
 
-            Mines.Add(mine);
+            Mines.TryAdd(cellID, mine);
 
             return mine;
         }
@@ -62,17 +63,53 @@ namespace MobileTag.Models
             await Database.AddAntiMine(ID, cellID);
             await Wallet.SubtractConfinium(GameModel.ANTI_MINE_BASE_PRICE);
             await Database.UpdatePlayerWallet(ID, Wallet.Confinium);
-            AntiMines.Add(aMine);
+            AntiMines.TryAdd(cellID, aMine);
 
             return aMine;
         }
 
         public void StartAntiMines(Activity mapActivity)
         {
-            foreach (AntiMine am in AntiMines)
+            foreach (AntiMine am in AntiMines.Values)
             {
                 am.MapActivity = mapActivity;
                 am.Start();
+            }
+        }
+
+        public void RemoveAntiMine(AntiMine antiMine)
+        {
+            if (GameModel.CellsInView.ContainsKey(antiMine.CellID))
+            {
+                GameModel.CellsInView[antiMine.CellID].MapOverlay.RemoveAntiMine();
+                AntiMines.TryRemove(antiMine.CellID, out AntiMine value);
+            }
+        }
+
+        public void RemoveAntiMine(int antiMineCellID)
+        {
+            if (GameModel.CellsInView.ContainsKey(antiMineCellID))
+            {
+                GameModel.CellsInView[antiMineCellID].MapOverlay.RemoveAntiMine();
+                AntiMines.TryRemove(antiMineCellID, out AntiMine value);
+            }
+        }
+
+        public void RemoveMine(Mine mine)
+        {
+            if (GameModel.CellsInView.ContainsKey(mine.CellID))
+            {
+                GameModel.CellsInView[mine.CellID].MapOverlay.RemoveAntiMine();
+                Mines.TryRemove(mine.CellID, out Mine value);
+            }
+        }
+
+        public void RemoveMine(int mineCellID)
+        {
+            if (GameModel.CellsInView.ContainsKey(mineCellID))
+            {
+                GameModel.CellsInView[mineCellID].MapOverlay.RemoveMine();
+                Mines.TryRemove(mineCellID, out Mine value);
             }
         }
     }

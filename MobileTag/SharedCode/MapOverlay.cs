@@ -19,9 +19,15 @@ namespace MobileTag.SharedCode
 {
     public class MapOverlay
     {
-        private PolygonOptions PolygonOptions;
-        private Polygon Polygon;
-        public bool IsOnMap { get { lock (locker) { return Polygon != null; } } }
+        private PolygonOptions cellPolygonOptions;
+        private CircleOptions mineCircleOptions;
+        private PolygonOptions antiMineTriangleOptions;
+        private Polygon CellPolygon;
+        private Circle MineCircle;
+        private Polygon AntiMinePolygon;
+        public bool CellIsOnMap { get { lock (locker) { return CellPolygon != null; } } }
+        public bool MineIsOnMap { get { lock (locker) { return MineCircle != null; } } }
+        public bool AntiMineIsOnMap { get { lock (locker) { return AntiMinePolygon != null; } } }
         public int CellID;
         private IMapOverlayClickHandler MapOverlayClickHandler; // Strategy pattern
 
@@ -31,14 +37,36 @@ namespace MobileTag.SharedCode
         {
             CellID = cell.ID;
 
-            PolygonOptions = new PolygonOptions();
-            PolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
-            PolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
-            PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
-            PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
+            // Set cell overlay options
+            cellPolygonOptions = new PolygonOptions();
+            cellPolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
+            cellPolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            cellPolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            cellPolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
+            cellPolygonOptions.InvokeZIndex(100);
+
+            // Set mine overlay options
+            LatLng circleCenter = new LatLng((double)cell.Latitude + ((double)GameModel.FrontierInterval / 2), (double)cell.Longitude + ((double)GameModel.FrontierInterval / 2));
+            mineCircleOptions = new CircleOptions();
+            mineCircleOptions.InvokeCenter(circleCenter);
+            mineCircleOptions.InvokeFillColor(Color.DarkMagenta);
+            mineCircleOptions.InvokeRadius(3);
+            mineCircleOptions.InvokeStrokeWidth(6);
+            mineCircleOptions.InvokeStrokeColor(Color.White);
+            mineCircleOptions.InvokeZIndex(200);
+
+            // Set antimine overlay options
+            antiMineTriangleOptions = new PolygonOptions();
+            antiMineTriangleOptions.Add(new LatLng(((double)cell.Latitude + ((double)GameModel.FrontierInterval) * .75), ((double)cell.Longitude + (double)GameModel.FrontierInterval / 2)));
+            antiMineTriangleOptions.Add(new LatLng(((double)cell.Latitude + ((double)GameModel.FrontierInterval) * .25), ((double)cell.Longitude + (double)GameModel.FrontierInterval * .25)));
+            antiMineTriangleOptions.Add(new LatLng(((double)cell.Latitude + ((double)GameModel.FrontierInterval) * .25), ((double)cell.Longitude + (double)GameModel.FrontierInterval * .75)));
+            antiMineTriangleOptions.InvokeFillColor(Color.DarkOrange);
+            antiMineTriangleOptions.InvokeStrokeWidth(6);
+            antiMineTriangleOptions.InvokeStrokeColor(Color.White);
+            antiMineTriangleOptions.InvokeZIndex(200);
 
             UpdateColor(cell.HoldStrength, cell.TeamID);
-            PolygonOptions.InvokeStrokeWidth(0);
+            cellPolygonOptions.InvokeStrokeWidth(0);
 
             if (cell.TeamID == GameModel.Player.Team.ID)
             {
@@ -54,13 +82,13 @@ namespace MobileTag.SharedCode
         {
             try
             {
-                if (Polygon != null)
+                if (CellPolygon != null)
                 {
-                    Polygon.FillColor = color;
-                    PolygonOptions.InvokeFillColor(color);
+                    CellPolygon.FillColor = color;
+                    cellPolygonOptions.InvokeFillColor(color);
                 }
                 else
-                    PolygonOptions.InvokeFillColor(color);
+                    cellPolygonOptions.InvokeFillColor(color);
             }
             catch (Exception e)
             {
@@ -90,12 +118,52 @@ namespace MobileTag.SharedCode
             SetColor(overlayColor);
         }
 
+        public void RemoveAntiMine()
+        {
+            if (AntiMinePolygon != null)
+            {
+                AntiMinePolygon.Visible = false;
+                AntiMinePolygon.Remove();
+                AntiMinePolygon = null;
+            }
+        }
+
+        public void RemoveMine()
+        {
+            if (MineCircle != null)
+            {
+                MineCircle.Visible = false;
+                MineCircle.Remove();
+                MineCircle = null;
+            }
+        }
+
         public void Draw(GoogleMap map)
         {
             lock (locker)
             {
-                if (!IsOnMap)
-                    Polygon = map.AddPolygon(PolygonOptions);
+                if (!MineIsOnMap && GameModel.Player.Mines.ContainsKey(CellID))
+                {
+                    MineCircle = map.AddCircle(mineCircleOptions);
+                }
+                else if (MineIsOnMap && !GameModel.Player.Mines.ContainsKey(CellID))
+                {
+                    RemoveMine();
+                }
+
+                if (!AntiMineIsOnMap && GameModel.Player.AntiMines.ContainsKey(CellID))
+                {
+                    AntiMinePolygon = map.AddPolygon(antiMineTriangleOptions);
+                }
+                else if (AntiMineIsOnMap && !GameModel.Player.AntiMines.ContainsKey(CellID))
+                {
+                    RemoveAntiMine();
+                }
+
+                if (!CellIsOnMap)
+                {
+                    CellPolygon = map.AddPolygon(cellPolygonOptions);
+                }
             }
         }
 

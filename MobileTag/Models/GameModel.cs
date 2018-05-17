@@ -28,8 +28,6 @@ namespace MobileTag.Models
         public const decimal frontierUpperRightLong = -116.5m;
         public static decimal FrontierInterval => frontierInterval;
 
-      
-
         // Calculated constants
         public const decimal GridHeight = ((frontierUpperRightLat - frontierLowerLeftLat) / frontierInterval);
         public const decimal GridWidth = ((frontierUpperRightLong - frontierLowerLeftLong) / frontierInterval);

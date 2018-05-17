@@ -38,30 +38,31 @@ namespace MobileTag.Models
 
         private async void Destroyer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Cell cell = new Cell(CellID);
+            try
+            {
+                Cell cell = new Cell(CellID);
 
-            if (!GameModel.CellsInView.ContainsKey(CellID))
-            {
-                cell = await Database.GetCell(CellID);
-            }
-            else
-            {
-                MapActivity.RunOnUiThread(() =>
+                if (!GameModel.CellsInView.ContainsKey(CellID))
                 {
-                    cell = GameModel.CellsInView[CellID];
+                    cell = await Database.GetCell(CellID);
+                }
+                else
+                {
+                    MapActivity.RunOnUiThread(() =>
+                    {
+                        cell = GameModel.CellsInView[CellID];
+                    });
+                }
+
+                MapActivity.RunOnUiThread(async () =>
+                {
+                    Viable = await cell.Drain(DrainStrength);
                 });
             }
-
-            MapActivity.RunOnUiThread(async () =>
-            { 
-                bool stillViable = await cell.Drain(DrainStrength);
-            
-                if (stillViable == false)
-                {
-                    Destroyer.Stop();
-                    Viable = false;
-                }
-            });
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.ToString());
+            }
         }
     }
 }
