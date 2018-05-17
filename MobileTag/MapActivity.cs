@@ -175,7 +175,7 @@ namespace MobileTag
             }
             catch (Exception ex)
             {
-                string exString = "PlantMinePrompt exception" + ex.ToString();
+                string exString = "PlantAntiMinePrompt exception" + ex.ToString();
                 Toast.MakeText(this, exString, ToastLength.Long).Show();
             }
         }

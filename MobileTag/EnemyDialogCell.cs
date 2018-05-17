@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Microcharts;
@@ -82,25 +77,16 @@ namespace MobileTag
 
         private void SetChart()
         {
-            /*** Foreach loop gets the same cell clicked for this dialog fragment. 
-             *** The loop is needed to get holdstrength
-             ***/
-            foreach (var cell in GameModel.CellsInView)
-            {
-                if (cell.Value.ID == cellClicked.ID)
-                {
-                    cellClicked.HoldStrength = cell.Value.HoldStrength;
-                    break;
-                }
-            }
+            
+            cellClicked.HoldStrength = GameModel.CellsInView[cellClicked.ID].HoldStrength;
 
             List<Entry> entries = new List<Entry>
             {
-            new Entry(1000-cellClicked.HoldStrength)
+            new Entry(GameModel.maxHoldStrength-cellClicked.HoldStrength)
             {
                 Color=SKColor.Parse("#ffffff"),
                 Label ="Remaining",
-                ValueLabel = (1000-cellClicked.HoldStrength).ToString()
+                ValueLabel = (GameModel.maxHoldStrength-cellClicked.HoldStrength).ToString()
             },
             new Entry(cellClicked.HoldStrength)
             {
