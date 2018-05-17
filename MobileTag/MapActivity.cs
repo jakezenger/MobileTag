@@ -397,6 +397,12 @@ namespace MobileTag
                         GameModel.CellsInView.TryAdd(updatedCell.ID, updatedCell);
                     }
 
+                    if (updatedCell.TeamID != GameModel.Player.Team.ID && GameModel.Player.Mines.ContainsKey(updatedCell.ID))
+                    {
+                        // remove player's mine in this cell
+                        GameModel.Player.Mines.TryRemove(updatedCell.ID, out Mine value);
+                    }
+
                     UpdateOverlay(updatedCell);
                 });
 
@@ -550,6 +556,7 @@ namespace MobileTag
 
                 if (!updatedCell.MapOverlay.CellIsOnMap)
                 {
+                    // Cell isn't on the map yet... draw it!
                     updatedCell.MapOverlay.Draw(mMap);
                 }
             });

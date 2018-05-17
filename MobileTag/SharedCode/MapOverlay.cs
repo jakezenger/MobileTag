@@ -113,6 +113,11 @@ namespace MobileTag.SharedCode
                 {
                     Circle = map.AddCircle(mineCircleOptions);
                 }
+                else if (MineIsOnMap && !GameModel.Player.Mines.ContainsKey(CellID))
+                {
+                    Circle.Visible = false;
+                    Circle.Remove();
+                }
 
                 if (!CellIsOnMap)
                 {
