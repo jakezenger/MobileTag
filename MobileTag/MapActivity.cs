@@ -149,7 +149,7 @@ namespace MobileTag
             {
                 Cell cell = GameModel.CellsInView[clickedCellID];
 
-                if (cell.MapOverlay.IsOnMap)
+                if (cell.MapOverlay.CellIsOnMap)
                 {
                     cell.MapOverlay.Click(this);   
                 }
@@ -166,7 +166,8 @@ namespace MobileTag
             {
                 if (GameModel.Player.Wallet.Confinium >= GameModel.MINE_BASE_PRICE)
                 {
-                    await GameModel.Player.CreateMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
+                    Mine mine = await GameModel.Player.CreateMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
+                    GameModel.CellsInView[mine.CellID].MapOverlay.Draw(mMap);
                 }
                 else
                 {
@@ -284,7 +285,7 @@ namespace MobileTag
 
             int totalYield = 0;
 
-            foreach (Mine mine in GameModel.Player.Mines)
+            foreach (Mine mine in GameModel.Player.Mines.Values)
             {
                 totalYield += await mine.Yield();
                 
@@ -501,7 +502,7 @@ namespace MobileTag
 
                 try
                 {
-                    if (!cell.MapOverlay.IsOnMap)
+                    if (!cell.MapOverlay.CellIsOnMap)
                         cell.MapOverlay.Draw(mMap);
 
                     await cell.Tag(); 
@@ -529,7 +530,7 @@ namespace MobileTag
 
                 foreach (Cell cell in GameModel.CellsInView.Values)
                 {
-                    if (cell.TeamID > 0 && !cell.MapOverlay.IsOnMap)
+                    if (cell.TeamID > 0 && !cell.MapOverlay.CellIsOnMap)
                     {
                         OverlaysToDraw.TryAdd(cell.MapOverlay.CellID, cell.MapOverlay);
                     }
@@ -547,7 +548,7 @@ namespace MobileTag
             {
                 updatedCell.MapOverlay.UpdateColor(updatedCell.HoldStrength, updatedCell.TeamID);
 
-                if (!updatedCell.MapOverlay.IsOnMap)
+                if (!updatedCell.MapOverlay.CellIsOnMap)
                 {
                     updatedCell.MapOverlay.Draw(mMap);
                 }

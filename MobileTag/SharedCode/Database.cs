@@ -234,9 +234,9 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);          
         }
 
-        public async static Task<List<Mine>> GetMines(int playerID)
+        public async static Task<ConcurrentDictionary<int, Mine>> GetMines(int playerID)
         {
-            List<Mine> mines = new List<Mine>();
+            ConcurrentDictionary<int, Mine> mines = new ConcurrentDictionary<int, Mine>();
 
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -252,7 +252,7 @@ namespace MobileTag
                     int bucket = (int)reader["Bucket"];
                     Mine mine = new Mine(cellID, playerID, bucket);
 
-                    mines.Add(mine);
+                    mines.TryAdd(mine.CellID, mine);
                 }
                 reader.Close();
             };
@@ -293,7 +293,7 @@ namespace MobileTag
             int playerID = 0;
             int teamID = 0;
             string teamName = "";
-            List<Mine> mines = new List<Mine>();
+            ConcurrentDictionary<int, Mine> mines = new ConcurrentDictionary<int, Mine>();
             List<AntiMine> aMines = new List<AntiMine>();
             int cellID = 0;
             Wallet playerWallet = new Wallet();

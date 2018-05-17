@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.Collections.Concurrent;
 
 namespace MobileTag.Models
 {
@@ -19,10 +20,10 @@ namespace MobileTag.Models
         public Team Team { get; set; }
         public int CurrentCellID { get; set; }
         public Wallet Wallet { get; set; }
-        public List<Mine> Mines { get; }
+        public ConcurrentDictionary<int, Mine> Mines { get; }
         public List<AntiMine> AntiMines { get; }
 
-        public Player(int id, string username, Team team, int currentCellID, List<Mine> mines, List<AntiMine> aMines, Wallet wallet)
+        public Player(int id, string username, Team team, int currentCellID, ConcurrentDictionary<int, Mine> mines, List<AntiMine> aMines, Wallet wallet)
         {
             ID = id;
             Team = team;
@@ -34,7 +35,7 @@ namespace MobileTag.Models
             //TODO: ADD ANTI MINES EVERYWHERE
         }
 
-        public Player(int id, string username, Team team, decimal lat, decimal lng, List<Mine> mines, List<AntiMine> aMines, Wallet wallet)
+        public Player(int id, string username, Team team, decimal lat, decimal lng, ConcurrentDictionary<int, Mine> mines, List<AntiMine> aMines, Wallet wallet)
         {
             ID = id;
             Team = team;
@@ -51,7 +52,7 @@ namespace MobileTag.Models
             await Database.AddMine(ID, cellID);
             await Wallet.SubtractConfinium(GameModel.MINE_BASE_PRICE);
 
-            Mines.Add(mine);
+            Mines.TryAdd(cellID, mine);
 
             return mine;
         }

@@ -19,9 +19,12 @@ namespace MobileTag.SharedCode
 {
     public class MapOverlay
     {
-        private PolygonOptions PolygonOptions;
+        private PolygonOptions cellPolygonOptions;
+        private CircleOptions mineCircleOptions;
         private Polygon Polygon;
-        public bool IsOnMap { get { lock (locker) { return Polygon != null; } } }
+        private Circle Circle;
+        public bool CellIsOnMap { get { lock (locker) { return Polygon != null; } } }
+        public bool MineIsOnMap { get { lock (locker) { return Circle != null; } } }
         public int CellID;
         private IMapOverlayClickHandler MapOverlayClickHandler; // Strategy pattern
 
@@ -31,14 +34,26 @@ namespace MobileTag.SharedCode
         {
             CellID = cell.ID;
 
-            PolygonOptions = new PolygonOptions();
-            PolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
-            PolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
-            PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
-            PolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
+            // Set cell overlay options
+            cellPolygonOptions = new PolygonOptions();
+            cellPolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude)); //first rectangle point
+            cellPolygonOptions.Add(new LatLng((double)cell.Latitude, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            cellPolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude + (double)GameModel.FrontierInterval));
+            cellPolygonOptions.Add(new LatLng((double)cell.Latitude + (double)GameModel.FrontierInterval, (double)cell.Longitude)); //automatically connects last two points
+            cellPolygonOptions.InvokeZIndex(100);
+
+            // Set mine overlay options
+            LatLng circleCenter = new LatLng((double)cell.Latitude + ((double)GameModel.FrontierInterval / 2), (double)cell.Longitude + ((double)GameModel.FrontierInterval / 2));
+            mineCircleOptions = new CircleOptions();
+            mineCircleOptions.InvokeCenter(circleCenter);
+            mineCircleOptions.InvokeFillColor(Color.DarkMagenta);
+            mineCircleOptions.InvokeRadius(3);
+            mineCircleOptions.InvokeStrokeWidth(6);
+            mineCircleOptions.InvokeStrokeColor(Color.White);
+            mineCircleOptions.InvokeZIndex(200);
 
             UpdateColor(cell.HoldStrength, cell.TeamID);
-            PolygonOptions.InvokeStrokeWidth(0);
+            cellPolygonOptions.InvokeStrokeWidth(0);
 
             if (cell.TeamID == GameModel.Player.Team.ID)
             {
@@ -57,10 +72,10 @@ namespace MobileTag.SharedCode
                 if (Polygon != null)
                 {
                     Polygon.FillColor = color;
-                    PolygonOptions.InvokeFillColor(color);
+                    cellPolygonOptions.InvokeFillColor(color);
                 }
                 else
-                    PolygonOptions.InvokeFillColor(color);
+                    cellPolygonOptions.InvokeFillColor(color);
             }
             catch (Exception e)
             {
@@ -94,8 +109,15 @@ namespace MobileTag.SharedCode
         {
             lock (locker)
             {
-                if (!IsOnMap)
-                    Polygon = map.AddPolygon(PolygonOptions);
+                if (!MineIsOnMap && GameModel.Player.Mines.ContainsKey(CellID))
+                {
+                    Circle = map.AddCircle(mineCircleOptions);
+                }
+
+                if (!CellIsOnMap)
+                {
+                    Polygon = map.AddPolygon(cellPolygonOptions);
+                }
             }
         }
 
