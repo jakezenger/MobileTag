@@ -21,9 +21,9 @@ namespace MobileTag.Models
         public int CurrentCellID { get; set; }
         public Wallet Wallet { get; set; }
         public ConcurrentDictionary<int, Mine> Mines { get; }
-        public List<AntiMine> AntiMines { get; }
+        public ConcurrentDictionary<int, AntiMine> AntiMines { get; }
 
-        public Player(int id, string username, Team team, int currentCellID, ConcurrentDictionary<int, Mine> mines, List<AntiMine> aMines, Wallet wallet)
+        public Player(int id, string username, Team team, int currentCellID, ConcurrentDictionary<int, Mine> mines, ConcurrentDictionary<int, AntiMine> aMines, Wallet wallet)
         {
             ID = id;
             Team = team;
@@ -35,7 +35,7 @@ namespace MobileTag.Models
             //TODO: ADD ANTI MINES EVERYWHERE
         }
 
-        public Player(int id, string username, Team team, decimal lat, decimal lng, ConcurrentDictionary<int, Mine> mines, List<AntiMine> aMines, Wallet wallet)
+        public Player(int id, string username, Team team, decimal lat, decimal lng, ConcurrentDictionary<int, Mine> mines, ConcurrentDictionary<int, AntiMine> aMines, Wallet wallet)
         {
             ID = id;
             Team = team;
@@ -63,14 +63,14 @@ namespace MobileTag.Models
             await Database.AddAntiMine(ID, cellID);
             await Wallet.SubtractConfinium(GameModel.ANTI_MINE_BASE_PRICE);
             await Database.UpdatePlayerWallet(ID, Wallet.Confinium);
-            AntiMines.Add(aMine);
+            AntiMines.TryAdd(cellID, aMine);
 
             return aMine;
         }
 
         public void StartAntiMines(Activity mapActivity)
         {
-            foreach (AntiMine am in AntiMines)
+            foreach (AntiMine am in AntiMines.Values)
             {
                 am.MapActivity = mapActivity;
                 am.Start();

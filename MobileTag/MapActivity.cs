@@ -153,7 +153,6 @@ namespace MobileTag
                 {
                     cell.MapOverlay.Click(this);   
                 }
-                
             }
         }
 
@@ -401,6 +400,12 @@ namespace MobileTag
                     {
                         // remove player's mine in this cell
                         GameModel.Player.Mines.TryRemove(updatedCell.ID, out Mine value);
+                    }
+
+                    if (updatedCell.TeamID == GameModel.Player.Team.ID && GameModel.Player.AntiMines.ContainsKey(updatedCell.ID))
+                    {
+                        // remove player's antimine in this cell
+                        GameModel.Player.AntiMines.TryRemove(updatedCell.ID, out AntiMine value);
                     }
 
                     UpdateOverlay(updatedCell);
