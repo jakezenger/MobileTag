@@ -185,7 +185,7 @@ namespace MobileTag
 
             using
             
-                //need to convert to bytes
+                //need to convert to bytes to store image
                 (MemoryStream ms = new MemoryStream())
                 {
                     int read;
