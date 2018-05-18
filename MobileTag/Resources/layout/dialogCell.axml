@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="300dp"
+    android:minHeight="400dp">
+<!--Line 1  #Everything still needs @id's-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#202020"
+        android:layout_height="70dp">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="CELL ID"
+            android:layout_height="80dp"
+            android:layout_width="150dp"
+            android:layout_weight=".7"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp" />
+        <TextView
+            android:id="@+id/cellTextID"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:text="id unknown"
+            android:textColor="#a9a9a9"
+            android:textSize="15dp" />
+    </LinearLayout>
+<!--Line 2-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#161616"
+        android:layout_height="70dp">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="TEAM OWNERS"
+            android:layout_height="80dp"
+            android:layout_width="150dp"
+            android:layout_weight=".7"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp" />
+        <TextView
+            android:id="@+id/teamText"
+            android:textColor="#ff0f39"
+            android:textSize="15dp"
+            android:text="None"
+            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+<!--Line 3-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#0c0c0c"
+        android:layout_height="70dp">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="YIELD RESOURCES"
+            android:layout_height="70dp"
+            android:layout_width="150dp"
+            android:layout_weight=".8"
+            android:paddingLeft="20dp"
+            android:gravity="center_vertical" />
+        <ImageButton
+            android:id="@+id/yieldBtn"
+            android:layout_width="110dp"
+            android:layout_height="70dp"
+            android:src="@drawable/mining2"
+            android:background="#0c0c0c" />
+    </LinearLayout>
+<!--Line 4-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#161616"
+        android:layout_height="70dp">
+        <TextView
+            android:textColor="#a9a9a9"
+            android:textSize="15dp"
+            android:text="PLACE MINE"
+            android:layout_height="70dp"
+            android:layout_width="150dp"
+            android:layout_weight=".8"
+            android:paddingLeft="20dp"
+            android:gravity="center_vertical"
+            android:id="@+id/textView1" />
+        <ImageButton
+            android:id="@+id/minePlaceBtn"
+            android:src="@drawable/mining"
+            android:layout_width="110dp"
+            android:layout_height="70dp"
+            android:background="#161616" />
+    </LinearLayout>
+<!--Line 5-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#202020"
+        android:layout_height="match_parent">
+        <microcharts.droid.ChartView
+            android:id="@+id/chartView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</LinearLayout>

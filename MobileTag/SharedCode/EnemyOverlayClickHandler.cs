@@ -1,14 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using MobileTag.Models;
 
 namespace MobileTag.SharedCode
@@ -27,7 +17,14 @@ namespace MobileTag.SharedCode
             mapActivity.DisplayStatus(String.Format("Enemy cell! Cell ID: {0}", cell.ID), 3000);
 
             if (cell.ID == playerCellID)
+            {
                 mapActivity.PlantAntiMinePrompt();
+            }
+            else
+            {
+                //mapActivity.DefaultCellDialog();
+            }
+
         }
     }
 }

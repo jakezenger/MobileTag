@@ -156,55 +156,37 @@ namespace MobileTag
             }
         }
 
-        public void PlantMinePrompt()
-        {
-            LatLng loc = new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude);
-            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
-            builder.SetCancelable(true);
-            builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
+        public async void PlantMinePrompt()
+        {           
+            try
+            {   
+                var id = Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude);
+                Android.App.FragmentTransaction transaction = FragmentManager.BeginTransaction();
+                dialogCellInfo cellInfoDialog = new dialogCellInfo(await Database.GetCell(id));
+                cellInfoDialog.Show(transaction, "Dialog Fragment");
+            }
+            catch (Exception ex)
             {
-                if (GameModel.Player.Wallet.Confinium >= GameModel.MINE_BASE_PRICE)
-                {
-                    Mine mine = await GameModel.Player.CreateMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
-                    GameModel.CellsInView[mine.CellID].MapOverlay.Draw(mMap);
-                }
-                else
-                {
-                    Toast.MakeText(this, "You don't have enough confinium in your wallet to purchase a mine. ", ToastLength.Long).Show();
-                }
-            });
+                string exString = "PlantMinePrompt exception" + ex.ToString();
+                Toast.MakeText(this, exString, ToastLength.Long).Show();
+            }
 
-            builder.SetNegativeButton(Resource.String.no, (e, o) => { });
-            builder.SetTitle("Build a mine");
-            builder.SetMessage("Are you sure you want to build a mine here?");
-
-            builder.Show();
         }
 
-        public void PlantAntiMinePrompt()
+        public async void PlantAntiMinePrompt()
         {
-            LatLng loc = new LatLng(mMap.MyLocation.Latitude, mMap.MyLocation.Longitude);
-            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
-            builder.SetCancelable(true);
-            builder.SetPositiveButton(Resource.String.yes, async (e, o) =>
+            try
             {
-                if (GameModel.Player.Wallet.Confinium >= GameModel.ANTI_MINE_BASE_PRICE)
-                {
-                    AntiMine aMine = await GameModel.Player.CreateAntiMine(Cell.FindID((decimal)loc.Latitude, (decimal)loc.Longitude));
-                    GameModel.CellsInView[aMine.CellID].MapOverlay.Draw(mMap);
-                    aMine.MapActivity = this;
-                    aMine.Start();
-                }
-                else
-                {
-                    Toast.MakeText(this, "You don't have enough confinium in your wallet to purchase an  AntiMine. ", ToastLength.Long).Show();
-                }
-            });
-            
-            builder.SetNegativeButton(Resource.String.no, (e, o) => { });
-            builder.SetTitle("Plant Anti-Mine");
-            builder.SetMessage("Planting an anti-mine will drain the enemies hold strength. \n Do you wish to continue?");
-            builder.Show();
+                var id = Cell.FindID((decimal)mMap.MyLocation.Latitude, (decimal)mMap.MyLocation.Longitude);
+                Android.App.FragmentTransaction transaction = FragmentManager.BeginTransaction();
+                EnemyDialogCell cellInfoDialog = new EnemyDialogCell(await Database.GetCell(id));
+                cellInfoDialog.Show(transaction, "Dialog Fragment");
+            }
+            catch (Exception ex)
+            {
+                string exString = "PlantAntiMinePrompt exception" + ex.ToString();
+                Toast.MakeText(this, exString, ToastLength.Long).Show();
+            }
         }
 
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
