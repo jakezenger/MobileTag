@@ -49,7 +49,10 @@ namespace MobileTag
         {
             if (GameModel.Player.Wallet.Confinium >= GameModel.ANTI_MINE_BASE_PRICE)
             {
-                await GameModel.Player.CreateAntiMine(cellClicked.ID);
+                AntiMine aMine = await GameModel.Player.CreateAntiMine(cellClicked.ID);
+                GameModel.CellsInView[aMine.CellID].MapOverlay.Draw(((MapActivity)Activity).Map);
+                aMine.MapActivity = ((MapActivity)Activity);
+                aMine.Start();
                 Toast.MakeText(Context, "Anti Mine Placed!", ToastLength.Long).Show();
             }
             else

@@ -20,8 +20,8 @@ namespace MobileTag.Models
         public Team Team { get; set; }
         public int CurrentCellID { get; set; }
         public Wallet Wallet { get; set; }
-        public ConcurrentDictionary<int, Mine> Mines { get; }
-        public ConcurrentDictionary<int, AntiMine> AntiMines { get; }
+        public ConcurrentDictionary<int, Mine> Mines { get; set; }
+        public ConcurrentDictionary<int, AntiMine> AntiMines { get; set; }
 
         public Player(int id, string username, Team team, int currentCellID, ConcurrentDictionary<int, Mine> mines, ConcurrentDictionary<int, AntiMine> aMines, Wallet wallet)
         {

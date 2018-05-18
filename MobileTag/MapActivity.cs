@@ -225,9 +225,15 @@ namespace MobileTag
 
             OverlaysToDraw.Clear();
             GameModel.CellsInView.Clear();
+            GameModel.Player.AntiMines.Clear();
+            GameModel.Player.Mines.Clear();
 
             if (initialCameraLatLng != null)
             {
+                // Get fresh player data
+                GameModel.Player.AntiMines = await Database.GetAntiMines(GameModel.Player.ID);
+                GameModel.Player.Mines = await Database.GetMines(GameModel.Player.ID);
+
                 // Refresh stale cell data
                 await DrawCellsInView();
             }
@@ -373,14 +379,20 @@ namespace MobileTag
 
                     if (updatedCell.TeamID != GameModel.Player.Team.ID && GameModel.Player.Mines.ContainsKey(updatedCell.ID))
                     {
-                        // remove player's mine in this cell
-                        GameModel.Player.RemoveMine(updatedCell.ID);
+                        RunOnUiThread(() =>
+                        {
+                            // remove player's mine in this cell
+                            GameModel.Player.RemoveMine(updatedCell.ID);
+                        });
                     }
 
                     if (updatedCell.TeamID == GameModel.Player.Team.ID && GameModel.Player.AntiMines.ContainsKey(updatedCell.ID))
                     {
-                        // remove player's antimine in this cell
-                        GameModel.Player.RemoveAntiMine(updatedCell.ID);
+                        RunOnUiThread(() =>
+                        {
+                            // remove player's antimine in this cell
+                            GameModel.Player.RemoveAntiMine(updatedCell.ID);
+                        });
                     }
 
                     UpdateOverlay(updatedCell);

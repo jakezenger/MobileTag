@@ -2502,8 +2502,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0090
 			public const int cellTextID = 2131493008;
 			
-			// aapt resource value: 0x7f0c00c3
-			public const int cellsClaimedLabelTextView = 2131493059;
+			// aapt resource value: 0x7f0c00c2
+			public const int cellsClaimedLabelTextView = 2131493058;
 			
 			// aapt resource value: 0x7f0c003a
 			public const int center = 2131492922;
@@ -2541,8 +2541,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c002f
 			public const int collapseActionView = 2131492911;
 			
-			// aapt resource value: 0x7f0c00c0
-			public const int confiniumTextView = 2131493056;
+			// aapt resource value: 0x7f0c00c3
+			public const int confiniumTextView = 2131493059;
 			
 			// aapt resource value: 0x7f0c0098
 			public const int confiniumTxt = 2131493016;
@@ -2634,8 +2634,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c00c6
 			public const int gifImageView = 2131493062;
 			
-			// aapt resource value: 0x7f0c00c1
-			public const int gridLayout1 = 2131493057;
+			// aapt resource value: 0x7f0c00c0
+			public const int gridLayout1 = 2131493056;
 			
 			// aapt resource value: 0x7f0c0005
 			public const int home = 2131492869;
@@ -2718,20 +2718,23 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0097
 			public const int nameTxt = 2131493015;
 			
-			// aapt resource value: 0x7f0c00cc
-			public const int nav_changeTeam = 2131493068;
+			// aapt resource value: 0x7f0c00cd
+			public const int nav_changeTeam = 2131493069;
+			
+			// aapt resource value: 0x7f0c00cb
+			public const int nav_community = 2131493067;
+			
+			// aapt resource value: 0x7f0c00ce
+			public const int nav_logout = 2131493070;
 			
 			// aapt resource value: 0x7f0c00ca
-			public const int nav_community = 2131493066;
-			
-			// aapt resource value: 0x7f0c00cd
-			public const int nav_logout = 2131493069;
+			public const int nav_map = 2131493066;
 			
 			// aapt resource value: 0x7f0c00c9
 			public const int nav_profile = 2131493065;
 			
-			// aapt resource value: 0x7f0c00cb
-			public const int nav_settings = 2131493067;
+			// aapt resource value: 0x7f0c00cc
+			public const int nav_settings = 2131493068;
 			
 			// aapt resource value: 0x7f0c00a4
 			public const int nav_view = 2131493028;
@@ -2901,8 +2904,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0040
 			public const int start = 2131492928;
 			
-			// aapt resource value: 0x7f0c00c2
-			public const int statisticsTextView = 2131493058;
+			// aapt resource value: 0x7f0c00c1
+			public const int statisticsTextView = 2131493057;
 			
 			// aapt resource value: 0x7f0c00aa
 			public const int status_bar_latest_event_content = 2131493034;

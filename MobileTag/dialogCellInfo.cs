@@ -50,6 +50,8 @@ namespace MobileTag
             if (GameModel.Player.Wallet.Confinium >= GameModel.MINE_BASE_PRICE)
             {
                 await GameModel.Player.CreateMine(cellClicked.ID);
+                GameModel.CellsInView[cellClicked.ID].MapOverlay.Draw(((MapActivity)Activity).Map);
+
                 Toast.MakeText(Context, "Mine Placed!", ToastLength.Long).Show();
             }
             else

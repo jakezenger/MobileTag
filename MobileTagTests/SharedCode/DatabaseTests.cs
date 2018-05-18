@@ -54,7 +54,7 @@ namespace MobileTag.Tests
             Wallet wallet = new Wallet();
             wallet.Confinium = 10000;
 
-            Player testPlayer = new Player(1, "ethan", team, 0, new List<Mine>(), new List<AntiMine>(), wallet);
+            Player testPlayer = new Player(1, "ethan", team, 0, new System.Collections.Concurrent.ConcurrentDictionary<int, Mine>(), new System.Collections.Concurrent.ConcurrentDictionary<int, AntiMine>(), wallet);
             Player fromServer = await Database.GetPlayer("ethan");
 
             Assert.AreEqual(testPlayer.ID, fromServer.ID);
