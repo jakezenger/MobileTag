@@ -91,8 +91,11 @@ namespace MobileTag.Models
         {
             if (GameModel.CellsInView.ContainsKey(antiMineCellID))
             {
+
                 GameModel.CellsInView[antiMineCellID].MapOverlay.RemoveAntiMine();
                 AntiMines.TryRemove(antiMineCellID, out AntiMine value);
+
+                value.Stop();
             }
         }
 
