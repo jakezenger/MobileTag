@@ -50,7 +50,7 @@ namespace MobileTag
                         break;
                     case Resource.Id.nav_logout:
                         GameModel.Logout();
-                        this.Finish();
+                        this.FinishAffinity();
                         StartActivity(new Intent(this, typeof(LoginActivity)));
                         break;
                     default:
