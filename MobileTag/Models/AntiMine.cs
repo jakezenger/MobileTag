@@ -36,6 +36,11 @@ namespace MobileTag.Models
             Destroyer.Start();
         }
 
+        public void Stop()
+        {
+            Destroyer.Stop();
+        }
+
         private async void Destroyer_Elapsed(object sender, ElapsedEventArgs e)
         {
             try
