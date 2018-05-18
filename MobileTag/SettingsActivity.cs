@@ -42,9 +42,11 @@ namespace MobileTag
                 switch (e.MenuItem.ItemId)
                 {
                     case Resource.Id.nav_profile:
+                        this.Finish();
                         StartActivity(new Intent(this, typeof(ProfileActivity)));
                         break;
                     case Resource.Id.nav_map:
+                        this.Finish();
                         StartActivity(new Intent(this, typeof(MapActivity)));
                         break;
                     case Resource.Id.nav_settings:
@@ -52,6 +54,7 @@ namespace MobileTag
                         break;
                     case Resource.Id.nav_logout:
                         GameModel.Logout();
+                        this.Finish();
                         StartActivity(new Intent(this, typeof(LoginActivity)));
                         break;
                     default:

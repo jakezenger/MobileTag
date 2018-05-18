@@ -52,6 +52,8 @@ namespace MobileTag
 
         ConcurrentDictionary<int, MapOverlay> OverlaysToDraw = new ConcurrentDictionary<int, MapOverlay>();
 
+        private bool doubleBackToExitPressedOnce = false;
+
         protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -91,6 +93,7 @@ namespace MobileTag
                         break;
                     case Resource.Id.nav_logout:
                         GameModel.Logout();
+                        this.Finish(); 
                         StartActivity(new Intent(this, typeof(LoginActivity)));
                         break;
                     default:
@@ -247,6 +250,25 @@ namespace MobileTag
                 // Refresh stale cell data
                 await DrawCellsInView();
             }
+        }
+
+       public override void OnBackPressed()
+        {
+
+            if (doubleBackToExitPressedOnce)
+            {
+                //base.OnBackPressed();
+                Java.Lang.JavaSystem.Exit(0);
+                return;
+            }
+
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.MakeText(this, "Press back again to exit", ToastLength.Short).Show();
+
+            new Handler().PostDelayed(() => {
+                doubleBackToExitPressedOnce = false;
+            }, 2000);
         }
 
         protected override void OnPause()
