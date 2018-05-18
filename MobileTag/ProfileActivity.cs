@@ -82,10 +82,12 @@ namespace MobileTag
 
                         break;
                     case Resource.Id.nav_settings:
+                        this.Finish();
                         StartActivity(new Intent(this, typeof(SettingsActivity)));
                         break;
                     case Resource.Id.nav_logout:
                         GameModel.Logout();
+                        this.FinishAffinity();
                         StartActivity(new Intent(this, typeof(LoginActivity)));
                         break;
                     default:
@@ -128,7 +130,7 @@ namespace MobileTag
 
         private void MyView_Click(object sender, EventArgs e)
         {
-            //let user pick an image
+            //let user pick an image for sure
             Intent = new Intent();
             Intent.SetType("image/*");
             Intent.SetAction(Intent.ActionGetContent);
@@ -210,7 +212,9 @@ namespace MobileTag
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
         {
             TextView usernameHeader = FindViewById<TextView>(Resource.Id.nameTxt);
+            TextView userConfinium = FindViewById<TextView>(Resource.Id.confiniumTxt);
             usernameHeader.Text = GameModel.Player.Username;
+            userConfinium.Text = GameModel.Player.Wallet.Confinium.ToString();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)

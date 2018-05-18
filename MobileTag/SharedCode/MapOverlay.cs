@@ -38,7 +38,6 @@ namespace MobileTag.SharedCode
             LatLng circleCenter = new LatLng((double)cell.Latitude + ((double)GameModel.FrontierInterval / 2), (double)cell.Longitude + ((double)GameModel.FrontierInterval / 2));
             mineCircleOptions = new CircleOptions();
             mineCircleOptions.InvokeCenter(circleCenter);
-            mineCircleOptions.InvokeFillColor(Color.DarkMagenta);
             mineCircleOptions.InvokeRadius(3);
             mineCircleOptions.InvokeStrokeWidth(6);
             mineCircleOptions.InvokeStrokeColor(Color.White);
@@ -49,7 +48,6 @@ namespace MobileTag.SharedCode
             antiMineTriangleOptions.Add(new LatLng(((double)cell.Latitude + ((double)GameModel.FrontierInterval) * .75), ((double)cell.Longitude + (double)GameModel.FrontierInterval / 2)));
             antiMineTriangleOptions.Add(new LatLng(((double)cell.Latitude + ((double)GameModel.FrontierInterval) * .25), ((double)cell.Longitude + (double)GameModel.FrontierInterval * .25)));
             antiMineTriangleOptions.Add(new LatLng(((double)cell.Latitude + ((double)GameModel.FrontierInterval) * .25), ((double)cell.Longitude + (double)GameModel.FrontierInterval * .75)));
-            antiMineTriangleOptions.InvokeFillColor(Color.DarkOrange);
             antiMineTriangleOptions.InvokeStrokeWidth(6);
             antiMineTriangleOptions.InvokeStrokeColor(Color.White);
             antiMineTriangleOptions.InvokeZIndex(200);

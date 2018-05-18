@@ -81,6 +81,7 @@ namespace MobileTag.Models
         {
             if (GameModel.CellsInView.ContainsKey(antiMine.CellID))
             {
+                antiMine.Stop();
                 GameModel.CellsInView[antiMine.CellID].MapOverlay.RemoveAntiMine();
                 AntiMines.TryRemove(antiMine.CellID, out AntiMine value);
             }
@@ -90,8 +91,11 @@ namespace MobileTag.Models
         {
             if (GameModel.CellsInView.ContainsKey(antiMineCellID))
             {
+
                 GameModel.CellsInView[antiMineCellID].MapOverlay.RemoveAntiMine();
                 AntiMines.TryRemove(antiMineCellID, out AntiMine value);
+
+                value.Stop();
             }
         }
 

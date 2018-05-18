@@ -13,16 +13,18 @@ using Android.Text;
 using Android.Text.Style;
 using Android.Text.Method;
 using MobileTag.Models;
+using Android.Content.PM;
 
 namespace MobileTag
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
+    [Activity(Label = "@string/app_name", NoHistory = true, Theme = "@style/AppTheme")]
     public class LoginActivity : Activity
     {
         private bool validUsername = false;
         private bool usernameChanged = false;
         private bool passwordChanged = false;
-        private bool validPassword = false;        
+        private bool validPassword = false;
+        private bool doubleBackToExitPressedOnce = false;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -84,6 +86,25 @@ namespace MobileTag
 
                 loginFailedAlert.Show();
             }
+        }
+
+        public override void OnBackPressed()
+        {
+
+            if (doubleBackToExitPressedOnce)
+            {
+                //base.OnBackPressed();
+                Java.Lang.JavaSystem.Exit(0);
+                return;
+            }
+
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.MakeText(this, "Press back again to exit", ToastLength.Short).Show();
+
+            new Handler().PostDelayed(() => {
+                doubleBackToExitPressedOnce = false;
+            }, 2000);
         }
 
         private void PasswordField_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
