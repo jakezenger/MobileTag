@@ -140,7 +140,6 @@ namespace MobileTag
             if ((requestCode == PickImageId) && (resultCode == Result.Ok) && (data != null))
             {
                 Android.Net.Uri uri = data.Data;
-                myView.SetImageURI(uri);
                 StoreImage(uri);
             }
         }
@@ -150,7 +149,12 @@ namespace MobileTag
         {
             Android.Net.Uri uri = Android.Net.Uri.FromFile(new Java.IO.File(filePath));
             System.IO.Stream input = this.ContentResolver.OpenInputStream(uri);
-            myView.SetImageURI(uri);
+            Android.Graphics.Bitmap mBitmap = Android.Provider.MediaStore.Images.Media.GetBitmap(this.ContentResolver, uri);
+            Matrix matrix = new Matrix();
+            matrix.PostRotate(90);
+            Bitmap rotated = Bitmap.CreateBitmap(mBitmap, 0, 0, mBitmap.Width, mBitmap.Height,
+                matrix, true);
+            myView.SetImageBitmap(rotated);
         }
 
 
@@ -191,11 +195,11 @@ namespace MobileTag
                     }
                     pictByteArray = ms.ToArray();
                 }
+           
 
-               
-
-                System.IO.File.WriteAllBytes(filePath, pictByteArray);
             
+            System.IO.File.WriteAllBytes(filePath, pictByteArray);
+            LoadImage(filePath);
         }
        
         private Android.Graphics.Bitmap NGetBitmap(Android.Net.Uri uriImage)
