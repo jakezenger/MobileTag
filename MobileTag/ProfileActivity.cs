@@ -82,10 +82,12 @@ namespace MobileTag
 
                         break;
                     case Resource.Id.nav_settings:
+                        this.Finish();
                         StartActivity(new Intent(this, typeof(SettingsActivity)));
                         break;
                     case Resource.Id.nav_logout:
                         GameModel.Logout();
+                        this.Finish();
                         StartActivity(new Intent(this, typeof(LoginActivity)));
                         break;
                     default:
