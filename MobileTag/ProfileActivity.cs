@@ -128,7 +128,7 @@ namespace MobileTag
 
         private void MyView_Click(object sender, EventArgs e)
         {
-            //let user pick an image
+            //let user pick an image for sure
             Intent = new Intent();
             Intent.SetType("image/*");
             Intent.SetAction(Intent.ActionGetContent);
