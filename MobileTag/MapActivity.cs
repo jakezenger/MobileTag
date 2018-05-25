@@ -231,12 +231,12 @@ namespace MobileTag
             GameModel.Player.AntiMines.Clear();
             GameModel.Player.Mines.Clear();
 
+            // Get fresh player data
+            GameModel.Player.AntiMines = await Database.GetAntiMines(GameModel.Player.ID);
+            GameModel.Player.Mines = await Database.GetMines(GameModel.Player.ID);
+
             if (initialCameraLatLng != null)
             {
-                // Get fresh player data
-                GameModel.Player.AntiMines = await Database.GetAntiMines(GameModel.Player.ID);
-                GameModel.Player.Mines = await Database.GetMines(GameModel.Player.ID);
-
                 // Refresh stale cell data
                 await DrawCellsInView();
             }
