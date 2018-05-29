@@ -21,14 +21,14 @@ namespace MobileTag
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Settings);
             SetUpUI();
-            CheckBox checkbox = FindViewById<CheckBox>(Resource.Id.CheckBox_MapStyleLight);
-            Button SaveButton = FindViewById<Button>(Resource.Id.Save_Button);
-            SaveButton.Click += SaveButton_Click;
+            //CheckBox checkbox = FindViewById<CheckBox>(Resource.Id.CheckBox_MapStyleLight);
+            //Button SaveButton = FindViewById<Button>(Resource.Id.Save_Button);
+            //SaveButton.Click += SaveButton_Click;
             // todo: make this checkbox do something other than display it was selected
-            if (GameModel.MapStyle == Resource.Raw.StandardTheme)
-                checkbox.Checked = true;
-            else
-                checkbox.Checked = false;
+            //if (GameModel.MapStyle == Resource.Raw.StandardTheme)
+            //    checkbox.Checked = true;
+            //else
+            //    checkbox.Checked = false;
 
             //Drawer navigation menu event handler
             navigationView.NavigationItemSelected += (sender, e) =>
@@ -69,15 +69,15 @@ namespace MobileTag
 
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-            CheckBox checkbox = FindViewById<CheckBox>(Resource.Id.CheckBox_MapStyleLight);
-            Button SaveButton = FindViewById<Button>(Resource.Id.Save_Button);
+            //CheckBox checkbox = FindViewById<CheckBox>(Resource.Id.CheckBox_MapStyleLight);
+            //Button SaveButton = FindViewById<Button>(Resource.Id.Save_Button);
 
             ActionBar.SetHomeAsUpIndicator(Resource.Mipmap.ic_dehaze_white_24dp);
             ActionBar.SetDisplayHomeAsUpEnabled(true);
 
             drawerLayout.DrawerStateChanged += DrawerLayout_DrawerStateChanged;
           
-            SaveButton.Click += SaveButton_Click; ;
+            //SaveButton.Click += SaveButton_Click; ;
         }
 
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
@@ -99,9 +99,9 @@ namespace MobileTag
         private void SaveButton_Click(object sender, EventArgs e)
         {
             Toast.MakeText(this, "TestSave", ToastLength.Long).Show();
-            CheckBox checkbox = FindViewById<CheckBox>(Resource.Id.CheckBox_MapStyleLight);
+            // CheckBox checkbox = FindViewById<CheckBox>(Resource.Id.CheckBox_MapStyleLight);
 
-            GameModel.MapStyle = checkbox.Checked ? Resource.Raw.StandardTheme : Resource.Raw.style_json;
+           // GameModel.MapStyle = checkbox.Checked ? Resource.Raw.StandardTheme : Resource.Raw.style_json;
 
             this.Finish();
             var intent = new Intent(this, typeof(MapActivity)).SetFlags(ActivityFlags.ClearTask);
