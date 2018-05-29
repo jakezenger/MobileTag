@@ -48,22 +48,8 @@ namespace MobileTag
             SetContentView(Resource.Layout.Profile);
             
             SetUpUI();
-
-            TextView usernameTextView = FindViewById<TextView>(Resource.Id.usernameTextView);
-            usernameTextView.Text = "\t\tHello " + GameModel.Player.Username;
-
-            TextView teamNameTextView = FindViewById<TextView>(Resource.Id.teamNameTextView);
-            teamNameTextView.Text = "Team:\t\t\t\t" + GameModel.Player.Team.TeamName;
-
-            TextView cellsClaimedTextView = FindViewById<TextView>(Resource.Id.cellsClaimedLabelTextView);
-
-            cellsClaimedTextView.Text = "\t" + cellsClaimedTextView.Text + "\t" + randomNumber.Next();
-
-           myView = FindViewById<ImageView>(Resource.Id.profilePicImageView);
-
-            TextView confiniumTextView = FindViewById<TextView>(Resource.Id.confiniumTextView);
-            confiniumTextView.Text = "\tWallet:\t\t\t\t\t\t\t" + "c\t" + GameModel.Player.Wallet.Confinium + "\n\tMines:\t\t\t\t\t\t\t" + randomNumber.Next() +
-                                     "\n\tAnti-Mines:\t\t\t" + randomNumber.Next();
+            SetText(randomNumber);
+            
             myView.Click += MyView_Click;
             
 
@@ -111,7 +97,24 @@ namespace MobileTag
             }
         }
 
-       
+        private void SetText( Random randomNumber)
+        {
+            TextView usernameTextView = FindViewById<TextView>(Resource.Id.usernameTextView);
+            usernameTextView.Text = "\t\tHello " + GameModel.Player.Username;
+
+            TextView teamNameTextView = FindViewById<TextView>(Resource.Id.teamNameTextView);
+            teamNameTextView.Text = "Team:\t\t\t\t" + GameModel.Player.Team.TeamName;
+
+            TextView cellsClaimedTextView = FindViewById<TextView>(Resource.Id.cellsClaimedLabelTextView);
+
+            cellsClaimedTextView.Text = "\t" + cellsClaimedTextView.Text + "\t" + randomNumber.Next();
+
+            myView = FindViewById<ImageView>(Resource.Id.profilePicImageView);
+
+            TextView confiniumTextView = FindViewById<TextView>(Resource.Id.confiniumTextView);
+            confiniumTextView.Text = "\tWallet:\t\t\t\t\t\t\t" + "c\t" + GameModel.Player.Wallet.Confinium + "\n\tMines:\t\t\t\t\t\t\t" + GameModel.Player.Mines.Count +
+                                     "\n\tAnti-Mines:\t\t\t" + GameModel.Player.AntiMines.Count;
+        }
 
         public void SetUpUI()
         {
