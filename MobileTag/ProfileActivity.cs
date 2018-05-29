@@ -50,20 +50,20 @@ namespace MobileTag
             SetUpUI();
 
             TextView usernameTextView = FindViewById<TextView>(Resource.Id.usernameTextView);
-            usernameTextView.Text = GameModel.Player.Username;
+            usernameTextView.Text = "\t\tHello " + GameModel.Player.Username;
 
             TextView teamNameTextView = FindViewById<TextView>(Resource.Id.teamNameTextView);
-            teamNameTextView.Text = GameModel.Player.Team.TeamName;
+            teamNameTextView.Text = "Team:\t\t\t\t" + GameModel.Player.Team.TeamName;
 
             TextView cellsClaimedTextView = FindViewById<TextView>(Resource.Id.cellsClaimedLabelTextView);
 
-            cellsClaimedTextView.Text = cellsClaimedTextView.Text + randomNumber.Next();
+            cellsClaimedTextView.Text = "\t" + cellsClaimedTextView.Text + "\t" + randomNumber.Next();
 
            myView = FindViewById<ImageView>(Resource.Id.profilePicImageView);
 
             TextView confiniumTextView = FindViewById<TextView>(Resource.Id.confiniumTextView);
-            confiniumTextView.Text = "c " + GameModel.Player.Wallet.Confinium + "\nMines: " + " number of mines" +
-                                     "\n Anti-Mines: " + "number of antimines";
+            confiniumTextView.Text = "\tWallet:\t\t\t\t\t\t\t" + "c\t" + GameModel.Player.Wallet.Confinium + "\n\tMines:\t\t\t\t\t\t\t" + randomNumber.Next() +
+                                     "\n\tAnti-Mines:\t\t\t" + randomNumber.Next();
             myView.Click += MyView_Click;
             
 
