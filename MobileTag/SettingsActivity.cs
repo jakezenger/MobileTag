@@ -77,7 +77,7 @@ namespace MobileTag
 
             drawerLayout.DrawerStateChanged += DrawerLayout_DrawerStateChanged;
           
-            //SaveButton.Click += SaveButton_Click; ;
+            //SaveButton.Click += SaveButton_Click;
         }
 
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)
