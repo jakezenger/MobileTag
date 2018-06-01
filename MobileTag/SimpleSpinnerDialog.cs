@@ -18,7 +18,7 @@ namespace MobileTag
         public string Message { get; set; }
         public string[] Options { get; set; }
         public EventHandler<long> PositiveHandler { get; set; }
-        Spinner spinner;
+        private Spinner spinner;
         private View mView;
         private bool validItemSelected;
 

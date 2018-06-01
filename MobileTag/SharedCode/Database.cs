@@ -486,6 +486,36 @@ namespace MobileTag
 
         }
 
+        public async static Task UpdateUsername(Player player, string newUsername)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlCommand cmd = new SqlCommand("UpdateUsername", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@newUsername", SqlDbType.NVarChar).Value = newUsername;
+                
+                await cmd.ExecuteNonQueryAsync();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
+        public async static Task UpdatePassword(Player player, string newPassword)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlCommand cmd = new SqlCommand("UpdatePassword", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@newPassword", SqlDbType.NVarChar).Value = newPassword;
+
+                await cmd.ExecuteNonQueryAsync();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
         public async static Task AddCell(int cellID, decimal lat, decimal lng)
         {
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>

@@ -125,12 +125,15 @@ namespace MobileTag
         private void ChangePasswordBtn_Click(object sender, EventArgs e)
         {
             SimpleFieldDialog simpleFieldDialog = new SimpleFieldDialog("Enter new password:", "new password");
+            simpleFieldDialog.InputType = Android.Text.InputTypes.TextVariationPassword;
             simpleFieldDialog.PositiveHandler += ChangePassword;
             simpleFieldDialog.Show(FragmentManager, "SimpleFieldDialog");
         }
 
-        private void ChangePassword(object sender, string e)
+        private async void ChangePassword(object sender, string e)
         {
+            await Database.UpdatePassword(GameModel.Player, e);
+
             Toast.MakeText(this, "Password has been changed.", ToastLength.Short).Show();
         }
 
@@ -141,9 +144,12 @@ namespace MobileTag
             simpleFieldDialog.Show(FragmentManager, "SimpleFieldDialog");
         }
 
-        private void ChangeUsername(object sender, string e)
+        private async void ChangeUsername(object sender, string e)
         {
-            Toast.MakeText(this, "Username has been changed.", ToastLength.Short).Show();
+            GameModel.Player.Username = e;
+            await Database.UpdateUsername(GameModel.Player, e);
+
+            Toast.MakeText(this, "Username changed to " + e + ".", ToastLength.Short).Show();
         }
 
         private void DrawerLayout_DrawerStateChanged(object sender, DrawerLayout.DrawerStateChangedEventArgs e)

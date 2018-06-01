@@ -18,8 +18,18 @@ namespace MobileTag
         public string Message { get; set; }
         public string Hint { get; set; }
         public EventHandler<string> PositiveHandler { get; set; }
-        EditText field;
+        private EditText field;
         private View mView;
+        private Android.Text.InputTypes inputType = Android.Text.InputTypes.TextVariationPersonName;
+        public Android.Text.InputTypes InputType {
+            get { return inputType; }
+            set {
+                inputType = value;
+
+                if (field != null)
+                    field.InputType = Android.Text.InputTypes.ClassText | inputType;
+            }
+        }
         
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -28,6 +38,7 @@ namespace MobileTag
 
             field = mView.FindViewById<EditText>(Resource.Id.simpleField);
             field.Hint = Hint;
+            field.InputType = Android.Text.InputTypes.ClassText | InputType;
 
             return mView;
         }
