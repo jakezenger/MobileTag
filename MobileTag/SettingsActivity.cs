@@ -165,18 +165,23 @@ namespace MobileTag
         {
             if (username == "")
             {
-                return false;
+                throw new Exception("Please enter a valid username.");
             }
             else
             {
-                bool usernameAvailable = false;
+                int usernameAvailable = 0;
 
-                Task.Run(async () => usernameAvailable = await Database.IsUsernameAvailable(username));
+                Task.Run(async () =>
+                {
+                    usernameAvailable = await Database.IsUsernameAvailable(username);
+                }).Wait();
 
-                if (usernameAvailable)
+                if (usernameAvailable > 0)
                     return true;
                 else
-                    return false;
+                {
+                    throw new Exception("Username taken. Please enter a different username.");
+                }
             }
         }
 

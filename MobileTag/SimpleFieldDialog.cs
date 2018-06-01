@@ -82,14 +82,17 @@ namespace MobileTag
         {
             if (FinalValidationHandler != null)
             {
-                if (FinalValidationHandler(field.Text))
+                try
                 {
-                    PositiveHandler(e, field.Text);
-                    Dismiss();
+                    if (FinalValidationHandler(field.Text))
+                    {
+                        PositiveHandler(e, field.Text);
+                        Dismiss();
+                    }
                 }
-                else
+                catch (Exception exc)
                 {
-                    field.Error = "";
+                    field.Error = exc.Message;
                 }
             }
             else

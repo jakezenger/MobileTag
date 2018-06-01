@@ -96,9 +96,9 @@ namespace MobileTag
             return userValidity;
         }
 
-        public async static Task<bool> IsUsernameAvailable(string username)
+        public async static Task<int> IsUsernameAvailable(string username)
         {
-            bool available = false;
+            int available = 0;
 
             Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
             {
@@ -111,7 +111,7 @@ namespace MobileTag
 
                 while (reader.Read())
                 {
-                    available = (bool)reader["Result"];
+                    available = (int)reader["Result"];
                 }
                 reader.Close();
             };
