@@ -96,6 +96,31 @@ namespace MobileTag
             return userValidity;
         }
 
+        public async static Task<bool> IsUsernameAvailable(string username)
+        {
+            bool available = false;
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("CheckUsernameAvailability", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    available = (bool)reader["Result"];
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            return available;
+        }
+
         public async static Task<int> GetCellTeam(int cellID)
         {
             int teamID = 0;

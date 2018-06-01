@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -17,6 +18,8 @@ namespace MobileTag
         private DrawerLayout drawerLayout;
         private NavigationView navigationView;
         private string[] teams, themes;
+        private bool passwordChanged = false;
+        private bool validPassword;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -127,7 +130,20 @@ namespace MobileTag
             SimpleFieldDialog simpleFieldDialog = new SimpleFieldDialog("Enter new password:", "new password");
             simpleFieldDialog.InputType = Android.Text.InputTypes.TextVariationPassword;
             simpleFieldDialog.PositiveHandler += ChangePassword;
+            simpleFieldDialog.FinalValidationHandler = ValidatePassword;
             simpleFieldDialog.Show(FragmentManager, "SimpleFieldDialog");
+        }
+
+        private bool ValidatePassword(string password)
+        {
+            if (password == "")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         private async void ChangePassword(object sender, string e)
@@ -141,7 +157,27 @@ namespace MobileTag
         {
             SimpleFieldDialog simpleFieldDialog = new SimpleFieldDialog("Enter new username:", "new username");
             simpleFieldDialog.PositiveHandler += ChangeUsername;
+            simpleFieldDialog.FinalValidationHandler = ValidateUsername;
             simpleFieldDialog.Show(FragmentManager, "SimpleFieldDialog");
+        }
+
+        private bool ValidateUsername(string username)
+        {
+            if (username == "")
+            {
+                return false;
+            }
+            else
+            {
+                bool usernameAvailable = false;
+
+                Task.Run(async () => usernameAvailable = await Database.IsUsernameAvailable(username));
+
+                if (usernameAvailable)
+                    return true;
+                else
+                    return false;
+            }
         }
 
         private async void ChangeUsername(object sender, string e)
@@ -166,15 +202,6 @@ namespace MobileTag
             drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
 
             return base.OnOptionsItemSelected(item);
-        }
-
-        private void SaveButton_Click(object sender, EventArgs e)
-        {
-            Toast.MakeText(this, "Map style updated.", ToastLength.Long).Show();
-
-            this.Finish();
-            var intent = new Intent(this, typeof(MapActivity)).SetFlags(ActivityFlags.ClearTask);
-            StartActivity(intent);
         }
       };
 }

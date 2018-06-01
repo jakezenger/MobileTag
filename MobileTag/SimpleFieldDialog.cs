@@ -18,6 +18,8 @@ namespace MobileTag
         public string Message { get; set; }
         public string Hint { get; set; }
         public EventHandler<string> PositiveHandler { get; set; }
+        public EventHandler<Android.Text.TextChangedEventArgs> TypingValidationHandler { get; set; }
+        public Func<string, bool> FinalValidationHandler;
         private EditText field;
         private View mView;
         private Android.Text.InputTypes inputType = Android.Text.InputTypes.TextVariationPersonName;
@@ -38,6 +40,12 @@ namespace MobileTag
 
             field = mView.FindViewById<EditText>(Resource.Id.simpleField);
             field.Hint = Hint;
+
+            if (TypingValidationHandler != null)
+            {
+                field.TextChanged += TypingValidationHandler;
+            }
+
             field.InputType = Android.Text.InputTypes.ClassText | InputType;
 
             return mView;
@@ -51,18 +59,50 @@ namespace MobileTag
 
             builder.SetView(mView);
             builder.SetMessage(Message);
-            builder.SetPositiveButton("Save", (e, o) => PositiveHandler(e, field.Text));
+            builder.SetPositiveButton("Save", (o, e) =>
+            {
+                PositiveButton_Click(o, e);
+            });
+
             builder.SetNeutralButton("Cancel", (e, o) => { });
             builder.SetCancelable(true);
 
-            return builder.Create();
+            AlertDialog alertDialog = builder.Create();
+
+            alertDialog.ShowEvent += (o, e) =>
+            {
+                Button posButton = alertDialog.GetButton((int)Android.Content.DialogButtonType.Positive);
+                posButton.Click += PositiveButton_Click;
+            };
+
+            return alertDialog;
         }
 
-        public SimpleFieldDialog(string message, string hint, EventHandler<string> handler = null)
+        private void PositiveButton_Click(object sender, EventArgs e)
+        {
+            if (FinalValidationHandler != null)
+            {
+                if (FinalValidationHandler(field.Text))
+                {
+                    PositiveHandler(e, field.Text);
+                    Dismiss();
+                }
+                else
+                {
+                    field.Error = "";
+                }
+            }
+            else
+            {
+                PositiveHandler(e, field.Text);
+                Dismiss();
+            }
+        }
+
+        public SimpleFieldDialog(string message, string hint)
         {
             Message = message;
             Hint = hint;
-            PositiveHandler = handler;
         }
     }
 }
