@@ -2724,14 +2724,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0097
 			public const int nameTxt = 2131493015;
 			
-			// aapt resource value: 0x7f0c00d3
-			public const int nav_changeTeam = 2131493075;
-			
-			// aapt resource value: 0x7f0c00d1
-			public const int nav_community = 2131493073;
-			
-			// aapt resource value: 0x7f0c00d4
-			public const int nav_logout = 2131493076;
+			// aapt resource value: 0x7f0c00d2
+			public const int nav_logout = 2131493074;
 			
 			// aapt resource value: 0x7f0c00d0
 			public const int nav_map = 2131493072;
@@ -2739,8 +2733,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c00cf
 			public const int nav_profile = 2131493071;
 			
-			// aapt resource value: 0x7f0c00d2
-			public const int nav_settings = 2131493074;
+			// aapt resource value: 0x7f0c00d1
+			public const int nav_settings = 2131493073;
 			
 			// aapt resource value: 0x7f0c00a4
 			public const int nav_view = 2131493028;

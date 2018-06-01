@@ -468,6 +468,28 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);
         }
 
+        public async static Task UpdateTeam(Player player, int teamID)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("ChangeTeam", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
         public async static void DeletePlayer(int playerID)
         {
 

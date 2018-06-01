@@ -227,6 +227,10 @@ namespace MobileTag
             {
                 mMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, GameModel.MapStyle));
                 mMap.Clear();
+
+                var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+                SetActionBar(toolbar);
+                toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
             }
 
             OverlaysToDraw.Clear();

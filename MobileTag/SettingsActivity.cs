@@ -113,14 +113,20 @@ namespace MobileTag
 
         private void SwitchTeamBtn_Click(object sender, EventArgs e)
         {
-            SimpleSpinnerDialog simpleSpinnerDialog = new SimpleSpinnerDialog("Select new team:", teams);
+            SimpleSpinnerDialog simpleSpinnerDialog = new SimpleSpinnerDialog("Which faction do you want to join?", teams);
             simpleSpinnerDialog.PositiveHandler += ChangeTeam;
             simpleSpinnerDialog.Show(FragmentManager, "SimpleSpinnerDialog");
         }
 
-        private void ChangeTeam(object sender, long e)
+        private async void ChangeTeam(object sender, long e)
         {
-            int teamID = Array.IndexOf(teams, teams[e]) - 1;
+            int teamID = (int)e;
+
+            await GameModel.Player.SwitchFaction(teamID);
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+            toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
 
             Toast.MakeText(this, "Switched to the " + teams[e] + " faction.", ToastLength.Short).Show();
         }
@@ -138,7 +144,7 @@ namespace MobileTag
         {
             if (password == "")
             {
-                return false;
+                throw new Exception("Please enter a valid password.");
             }
             else
             {
