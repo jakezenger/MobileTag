@@ -278,7 +278,7 @@
     <AndroidResource Include="Resources\Drawable\Green.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\Drawable\Purple.png" />
+    <AndroidResource Include="Resources\Drawable\Orange.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Drawable\Red.png" />

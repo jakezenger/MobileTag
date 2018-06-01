@@ -20,27 +20,24 @@
             <include
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar" />
+            <ImageView
+                android:src="@android:drawable/ic_menu_gallery"
+                android:id="@+id/profilePicImageView"
+                android:clickable="true"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/relativeLayout1">
-                <ImageView
-                    android:src="@android:drawable/ic_menu_gallery"
-                    android:layout_width="130.0dp"
-                    android:layout_height="130.0dp"
-                    android:id="@+id/profilePicImageView"
-                    android:layout_marginLeft="15.0dp"
-                    android:clickable="true"
-                    android:layout_marginRight="20.0dp" />
                 <TextView
                     android:text="[username]"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/profilePicImageView"
                     android:id="@+id/usernameTextView"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:layout_alignBaseline="@id/profilePicImageView"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="39.0dp"
                     android:layout_margin="@dimen/abc_action_bar_default_padding_end_material" />
@@ -48,7 +45,6 @@
                     android:text="[teamname]"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/profilePicImageView"
                     android:id="@+id/teamNameTextView"
                     android:layout_below="@id/usernameTextView"
                     android:layout_marginTop="13.5dp"
@@ -70,12 +66,14 @@
                     android:id="@+id/statisticsTextView"
                     android:layout_columnSpan="2"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20.0dp" />
+                    android:layout_marginTop="20.0dp"
+                    android:textSize="@dimen/abc_action_bar_progress_bar_size" />
                 <TextView
                     android:text="@string/cells_claimed"
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/cellsClaimedLabelTextView"
-                    android:layout_marginTop="10.0dp" />
+                    android:layout_marginTop="10.0dp"
+                    android:textSize="@dimen/abc_action_bar_content_inset_material" />
             </GridLayout>
             <TextView
                 android:text="[confinium]"
@@ -83,8 +81,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/confiniumTextView"
                 android:padding="@dimen/abc_action_bar_default_padding_end_material"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/abc_action_bar_content_inset_material" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/abc_action_bar_content_inset_material"
+                android:textSize="@dimen/abc_action_bar_content_inset_material" />
         </LinearLayout>
     </LinearLayout>
     <android.support.design.widget.NavigationView
