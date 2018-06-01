@@ -61,6 +61,16 @@ namespace MobileTag
             themes = new string[] { "Select theme", "Dark", "Light" };
         }
 
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+            toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
+        }
+    }
+
         public void SetUpUI()
         {
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);

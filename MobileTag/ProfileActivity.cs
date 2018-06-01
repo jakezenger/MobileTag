@@ -111,7 +111,15 @@ namespace MobileTag
             }
         }
 
-       
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+            toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
+        }
+
 
         public void SetUpUI()
         {
