@@ -2373,10 +2373,10 @@ namespace MobileTag
 			public const int notify_panel_notification_icon_bg = 2130837631;
 			
 			// aapt resource value: 0x7f020080
-			public const int Pink = 2130837632;
+			public const int Orange = 2130837632;
 			
 			// aapt resource value: 0x7f020081
-			public const int Purple = 2130837633;
+			public const int Pink = 2130837633;
 			
 			// aapt resource value: 0x7f020082
 			public const int Red = 2130837634;
@@ -2775,8 +2775,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0096
 			public const int profileImageView = 2131493014;
 			
-			// aapt resource value: 0x7f0c00bd
-			public const int profilePicImageView = 2131493053;
+			// aapt resource value: 0x7f0c00bc
+			public const int profilePicImageView = 2131493052;
 			
 			// aapt resource value: 0x7f0c0006
 			public const int progress_circular = 2131492870;
@@ -2787,8 +2787,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0067
 			public const int radio = 2131492967;
 			
-			// aapt resource value: 0x7f0c00bc
-			public const int relativeLayout1 = 2131493052;
+			// aapt resource value: 0x7f0c00bd
+			public const int relativeLayout1 = 2131493053;
 			
 			// aapt resource value: 0x7f0c003f
 			public const int right = 2131492927;
