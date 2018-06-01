@@ -153,11 +153,12 @@
     <Compile Include="SharedCode\ColorCode.cs" />
     <Compile Include="SharedCode\Database.cs" />
     <Compile Include="SharedCode\EnemyOverlayClickHandler.cs" />
-
     <Compile Include="SharedCode\IOverlayClickHandler.cs" />
     <Compile Include="SharedCode\MapOverlay.cs" />
     <Compile Include="SharedCode\CellHub.cs" />
     <Compile Include="SharedCode\FriendlyOverlayClickHandler.cs" />
+    <Compile Include="SimpleFieldDialog.cs" />
+    <Compile Include="SimpleSpinnerDialog.cs" />
     <Compile Include="SplashScreen.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +194,12 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\EnemyDialogCell.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\SimpleFieldDialog.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\SimpleSpinnerDialog.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

@@ -224,7 +224,10 @@ namespace MobileTag
             }
 
             if (mMap != null)
+            {
+                mMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, GameModel.MapStyle));
                 mMap.Clear();
+            }
 
             OverlaysToDraw.Clear();
             GameModel.CellsInView.Clear();

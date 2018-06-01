@@ -2514,6 +2514,9 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c00c6
 			public const int changePasswordButton = 2131493062;
 			
+			// aapt resource value: 0x7f0c00cb
+			public const int changeTeamSpinner = 2131493067;
+			
 			// aapt resource value: 0x7f0c00c5
 			public const int changeUsernameButton = 2131493061;
 			
@@ -2634,8 +2637,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0049
 			public const int @fixed = 2131492937;
 			
-			// aapt resource value: 0x7f0c00ca
-			public const int gifImageView = 2131493066;
+			// aapt resource value: 0x7f0c00cc
+			public const int gifImageView = 2131493068;
 			
 			// aapt resource value: 0x7f0c00c0
 			public const int gridLayout1 = 2131493056;
@@ -2700,8 +2703,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c00a0
 			public const int map = 2131493024;
 			
-			// aapt resource value: 0x7f0c00cc
-			public const int masked = 2131493068;
+			// aapt resource value: 0x7f0c00ce
+			public const int masked = 2131493070;
 			
 			// aapt resource value: 0x7f0c00ab
 			public const int media_actions = 2131493035;
@@ -2721,23 +2724,23 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c0097
 			public const int nameTxt = 2131493015;
 			
+			// aapt resource value: 0x7f0c00d3
+			public const int nav_changeTeam = 2131493075;
+			
 			// aapt resource value: 0x7f0c00d1
-			public const int nav_changeTeam = 2131493073;
+			public const int nav_community = 2131493073;
 			
-			// aapt resource value: 0x7f0c00cf
-			public const int nav_community = 2131493071;
-			
-			// aapt resource value: 0x7f0c00d2
-			public const int nav_logout = 2131493074;
-			
-			// aapt resource value: 0x7f0c00ce
-			public const int nav_map = 2131493070;
-			
-			// aapt resource value: 0x7f0c00cd
-			public const int nav_profile = 2131493069;
+			// aapt resource value: 0x7f0c00d4
+			public const int nav_logout = 2131493076;
 			
 			// aapt resource value: 0x7f0c00d0
-			public const int nav_settings = 2131493072;
+			public const int nav_map = 2131493072;
+			
+			// aapt resource value: 0x7f0c00cf
+			public const int nav_profile = 2131493071;
+			
+			// aapt resource value: 0x7f0c00d2
+			public const int nav_settings = 2131493074;
 			
 			// aapt resource value: 0x7f0c00a4
 			public const int nav_view = 2131493028;
@@ -2873,6 +2876,9 @@ namespace MobileTag
 			
 			// aapt resource value: 0x7f0c009d
 			public const int signInButton = 2131493021;
+			
+			// aapt resource value: 0x7f0c00ca
+			public const int simpleField = 2131493066;
 			
 			// aapt resource value: 0x7f0c0084
 			public const int smallLabel = 2131492996;
@@ -3012,8 +3018,8 @@ namespace MobileTag
 			// aapt resource value: 0x7f0c000e
 			public const int view_offset_helper = 2131492878;
 			
-			// aapt resource value: 0x7f0c00cb
-			public const int visible = 2131493067;
+			// aapt resource value: 0x7f0c00cd
+			public const int visible = 2131493069;
 			
 			// aapt resource value: 0x7f0c0018
 			public const int wide = 2131492888;
@@ -3291,13 +3297,19 @@ namespace MobileTag
 			public const int Settings = 2130968643;
 			
 			// aapt resource value: 0x7f040044
-			public const int SplashScreen = 2130968644;
+			public const int SimpleFieldDialog = 2130968644;
 			
 			// aapt resource value: 0x7f040045
-			public const int support_simple_spinner_dropdown_item = 2130968645;
+			public const int SimpleSpinnerDialog = 2130968645;
 			
 			// aapt resource value: 0x7f040046
-			public const int Toolbar = 2130968646;
+			public const int SplashScreen = 2130968646;
+			
+			// aapt resource value: 0x7f040047
+			public const int support_simple_spinner_dropdown_item = 2130968647;
+			
+			// aapt resource value: 0x7f040048
+			public const int Toolbar = 2130968648;
 			
 			static Layout()
 			{

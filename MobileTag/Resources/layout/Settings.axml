@@ -51,7 +51,7 @@
                 android:gravity="center"
                 android:layout_marginTop="24.5dp" />
             <Button
-                android:text="Switch Team"
+                android:text="Switch Faction"
                 android:layout_width="193.5dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/switchTeamButton"
