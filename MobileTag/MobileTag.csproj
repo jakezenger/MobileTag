@@ -153,7 +153,6 @@
     <Compile Include="SharedCode\ColorCode.cs" />
     <Compile Include="SharedCode\Database.cs" />
     <Compile Include="SharedCode\EnemyOverlayClickHandler.cs" />
-
     <Compile Include="SharedCode\IOverlayClickHandler.cs" />
     <Compile Include="SharedCode\MapOverlay.cs" />
     <Compile Include="SharedCode\CellHub.cs" />
@@ -279,7 +278,7 @@
     <AndroidResource Include="Resources\Drawable\Green.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\Drawable\Purple.png" />
+    <AndroidResource Include="Resources\Drawable\Orange.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Drawable\Red.png" />
