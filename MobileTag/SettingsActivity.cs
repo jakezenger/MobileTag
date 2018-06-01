@@ -69,7 +69,6 @@ namespace MobileTag
             SetActionBar(toolbar);
             toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
         }
-    }
 
         public void SetUpUI()
         {
