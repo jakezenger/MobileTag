@@ -22,18 +22,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/linearLayout1">
-            <CheckBox
-                android:text="Light Map Style"
+            <TextView
+                android:text="Account"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/CheckBox_MapStyleLight" />
+                android:id="@+id/accountTextView"
+                android:gravity="center"
+                android:layout_marginTop="20.0dp" />
+            <Button
+                android:text="Change Username"
+                android:layout_width="193.5dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/changeUsernameButton"
+                android:layout_gravity="center" />
+            <Button
+                android:text="Change Password"
+                android:layout_width="193.5dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/changePasswordButton"
+                android:layout_gravity="center" />
+            <TextView
+                android:text="Gameplay"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView1"
+                android:gravity="center"
+                android:layout_marginTop="24.5dp" />
+            <Button
+                android:text="Switch Faction"
+                android:layout_width="193.5dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/switchTeamButton"
+                android:layout_gravity="center" />
+            <TextView
+                android:text="Display"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:gravity="center"
+                android:layout_marginTop="24.5dp" />
+            <Button
+                android:text="Switch Map Style"
+                android:layout_width="193.5dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/switchMapStyleButton"
+                android:layout_gravity="center" />
         </LinearLayout>
-        <Button
-            android:text="Save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/Save_Button"
-            android:foregroundTint="#fff0ffff" />
     </LinearLayout>
     <android.support.design.widget.NavigationView
         android:layout_width="wrap_content"

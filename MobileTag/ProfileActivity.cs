@@ -115,6 +115,15 @@ namespace MobileTag
             confiniumTextView.Text = "\tWallet:\t\t\t\t\t\t\t\t\t\t" + "c\t" + GameModel.Player.Wallet.Confinium + "\n\tMines:\t\t\t\t\t\t\t\t\t\t" + GameModel.Player.Mines.Count +
                                      "\n\tAnti-Mines:\t\t\t\t" + GameModel.Player.AntiMines.Count;
         }
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+            toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
+        }
+
 
         public void SetUpUI()
         {

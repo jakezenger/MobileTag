@@ -96,6 +96,31 @@ namespace MobileTag
             return userValidity;
         }
 
+        public async static Task<int> IsUsernameAvailable(string username)
+        {
+            int available = 0;
+
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("CheckUsernameAvailability", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
+
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    available = (int)reader["Result"];
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+
+            return available;
+        }
+
         public async static Task<int> GetCellTeam(int cellID)
         {
             int teamID = 0;
@@ -443,6 +468,28 @@ namespace MobileTag
             await ExecuteQueryAsync(readerProcedure);
         }
 
+        public async static Task UpdateTeam(Player player, int teamID)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlDataReader reader;
+                SqlCommand cmd = new SqlCommand("ChangeTeam", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@teamID", SqlDbType.Int).Value = teamID;
+
+                reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+
+                }
+                reader.Close();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
         public async static void DeletePlayer(int playerID)
         {
 
@@ -484,6 +531,36 @@ namespace MobileTag
 
             await ExecuteQueryAsync(readerProcedure);
 
+        }
+
+        public async static Task UpdateUsername(Player player, string newUsername)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlCommand cmd = new SqlCommand("UpdateUsername", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@newUsername", SqlDbType.NVarChar).Value = newUsername;
+                
+                await cmd.ExecuteNonQueryAsync();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
+        }
+
+        public async static Task UpdatePassword(Player player, string newPassword)
+        {
+            Func<SqlConnection, Task> readerProcedure = async (SqlConnection connection) =>
+            {
+                SqlCommand cmd = new SqlCommand("UpdatePassword", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@playerID", SqlDbType.Int).Value = player.ID;
+                cmd.Parameters.Add("@newPassword", SqlDbType.NVarChar).Value = newPassword;
+
+                await cmd.ExecuteNonQueryAsync();
+            };
+
+            await ExecuteQueryAsync(readerProcedure);
         }
 
         public async static Task AddCell(int cellID, decimal lat, decimal lng)

@@ -32,7 +32,6 @@ namespace MobileTag.Models
             Wallet = wallet;
             Mines = mines;
             AntiMines = aMines;
-            //TODO: ADD ANTI MINES EVERYWHERE
         }
 
         public Player(int id, string username, Team team, decimal lat, decimal lng, ConcurrentDictionary<int, Mine> mines, ConcurrentDictionary<int, AntiMine> aMines, Wallet wallet)
@@ -97,6 +96,33 @@ namespace MobileTag.Models
 
                 value.Stop();
             }
+        }
+
+        public async Task SwitchFaction(int newFactionID)
+        {
+            await Database.UpdateTeam(GameModel.Player, newFactionID);
+
+            foreach (AntiMine am in AntiMines.Values)
+            {
+                if (GameModel.CellsInView.ContainsKey(am.CellID))
+                {
+                    am.Stop();
+                    GameModel.CellsInView[am.CellID].MapOverlay.RemoveAntiMine();
+                }
+            }
+
+            foreach (Mine m in Mines.Values)
+            {
+                if (GameModel.CellsInView.ContainsKey(m.CellID))
+                {
+                    GameModel.CellsInView[m.CellID].MapOverlay.RemoveAntiMine();
+                }
+            }
+
+            AntiMines.Clear();
+            Mines.Clear();
+
+            Team = new Team(newFactionID, ColorCode.TeamName(newFactionID));
         }
 
         public void RemoveMine(Mine mine)
