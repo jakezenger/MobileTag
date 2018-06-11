@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace MobileTag
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", LaunchMode = LaunchMode.SingleTask)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", LaunchMode = LaunchMode.SingleTask, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class MapActivity : Activity, IOnMapReadyCallback, Android.Locations.ILocationListener, GoogleMap.IOnCameraIdleListener
     {
         private const double CELL_LOAD_RADIUS = .0006;
@@ -224,19 +224,26 @@ namespace MobileTag
             }
 
             if (mMap != null)
+            {
+                mMap.SetMapStyle(MapStyleOptions.LoadRawResourceStyle(this, GameModel.MapStyle));
                 mMap.Clear();
+
+                var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+                SetActionBar(toolbar);
+                toolbar.SetBackgroundColor(ColorCode.TeamColor(GameModel.Player.Team.ID));
+            }
 
             OverlaysToDraw.Clear();
             GameModel.CellsInView.Clear();
             GameModel.Player.AntiMines.Clear();
             GameModel.Player.Mines.Clear();
 
+            // Get fresh player data
+            GameModel.Player.AntiMines = await Database.GetAntiMines(GameModel.Player.ID);
+            GameModel.Player.Mines = await Database.GetMines(GameModel.Player.ID);
+
             if (initialCameraLatLng != null)
             {
-                // Get fresh player data
-                GameModel.Player.AntiMines = await Database.GetAntiMines(GameModel.Player.ID);
-                GameModel.Player.Mines = await Database.GetMines(GameModel.Player.ID);
-
                 // Refresh stale cell data
                 await DrawCellsInView();
             }

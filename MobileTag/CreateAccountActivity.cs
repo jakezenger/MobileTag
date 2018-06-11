@@ -25,7 +25,7 @@ namespace MobileTag
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetActionBar(toolbar);
 
-            string[] teams = { GetString(Resource.String.select_team_prompt), "Red", "Green", "Blue", "Purple", "Pink" };
+            string[] teams = { GetString(Resource.String.select_team_prompt), "Red", "Green", "Blue", "Orange", "Pink" };
 
             // Populate selectTeamSpinner choices
             Spinner selectTeam = FindViewById<Spinner>(Resource.Id.selectTeamSpinner);
